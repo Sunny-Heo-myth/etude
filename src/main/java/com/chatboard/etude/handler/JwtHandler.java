@@ -8,15 +8,15 @@ import java.util.Date;
 @Component
 public class JwtHandler {
 
-    private String type = "Bearer";
+    private final String type = "Bearer";
 
     private Jws<Claims> parse(String key, String token) {
         return Jwts.parser()
                 .setSigningKey(key)
-                .parseClaimsJws(untype(token));
+                .parseClaimsJws(untyped(token));
     }
 
-    private String untype(String token) {
+    private String untyped(String token) {
         return token.substring(type.length());
     }
 
