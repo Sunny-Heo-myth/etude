@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+// create token
+// validate token
+// extract token subject
 @Service
 @RequiredArgsConstructor
 public class TokenService {
@@ -29,5 +32,21 @@ public class TokenService {
 
     public String createRefreshToken(String subject) {
         return jwtHandler.createToken(refreshKey, subject, refreshTokenMaxAgeSeconds);
+    }
+
+    public boolean validateAccessToken(String token) {
+        return jwtHandler.validate(accessKey, token);
+    }
+
+    public boolean validateRefreshToken(String token) {
+        return jwtHandler.validate(refreshKey, token);
+    }
+
+    public String extractAccessTokenSubject(String token) {
+        return jwtHandler.extractSubject(accessKey, token);
+    }
+
+    public String extractRefreshTokenSubject(String token) {
+        return jwtHandler.extractSubject(refreshKey, token);
     }
 }

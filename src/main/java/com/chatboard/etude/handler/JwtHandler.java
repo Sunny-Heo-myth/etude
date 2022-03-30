@@ -10,6 +10,7 @@ public class JwtHandler {
 
     private final String type = "Bearer";
 
+    // auxiliary
     private Jws<Claims> parse(String key, String token) {
         return Jwts.parser()
                 .setSigningKey(key)
@@ -20,6 +21,7 @@ public class JwtHandler {
         return token.substring(type.length());
     }
 
+    // core
     public String createToken(String encodedKey, String subject, long maxAgeSeconds) {
         Date now = new Date();
         return type + Jwts.builder()
@@ -31,7 +33,9 @@ public class JwtHandler {
     }
 
     public String extractSubject(String encodedKey, String token) {
-        return parse(encodedKey, token).getBody().getSubject();
+        return parse(encodedKey, token)
+                .getBody()
+                .getSubject();
     }
 
     public boolean validate(String encodedKey, String token) {

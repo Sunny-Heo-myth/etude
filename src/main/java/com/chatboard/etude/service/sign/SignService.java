@@ -1,5 +1,7 @@
 package com.chatboard.etude.service.sign;
 
+import com.chatboard.etude.config.token.TokenHelper;
+import com.chatboard.etude.dto.sign.RefreshTokenResponse;
 import com.chatboard.etude.dto.sign.SignInRequest;
 import com.chatboard.etude.dto.sign.SignInResponse;
 import com.chatboard.etude.dto.sign.SignUpRequest;
@@ -15,20 +17,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class SignService {
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
+    private final TokenHelper accessTokenHelper;
+    private final TokenHelper refreshTokenHelper;
+
+    // auxiliary
 
     private void validateSignUpInfo(SignUpRequest request) {
         if (memberRepository.existsByEmail(request.getEmail())) {
             throw new MemberEmailAlreadyExistsException(request.getEmail());
         }
         if (memberRepository.existsByNickname(request.getNickname())) {
-            throw new MemberNickNameAlreadyExistsException(request.getNickname());
+            throw new MemberNicknameAlreadyExistsException(request.getNickname());
         }
     }
 
@@ -42,6 +46,14 @@ public class SignService {
         return String.valueOf(member.getId());
     }
 
+    private void validateRefreshToken(String refreshToken) {
+        if (!refreshTokenHelper.validate(refreshToken)) {
+            throw new AuthenticationEntryPointException();
+        }
+    }
+
+    // core
+
     @Transactional
     public void signUp(SignUpRequest request) {
         validateSignUpInfo(request);
@@ -54,16 +66,23 @@ public class SignService {
         );
     }
 
+    @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest request) {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(LoginFailureException::new);
 
         validatePassword(request, member);
         String subject = createSubject(member);
-        String accessToken = tokenService.createAccessToken(subject);
-        String refreshToken = tokenService.createRefreshToken(subject);
+        String accessToken = accessTokenHelper.createToken(subject);
+        String refreshToken = refreshTokenHelper.createToken(subject);
         return new SignInResponse(accessToken, refreshToken);
     }
 
+    public RefreshTokenResponse refreshToken(String refreshToken) {
+        validateRefreshToken(refreshToken);
+        String subject = refreshTokenHelper.extractSubject(refreshToken);
+        String accessToken = accessTokenHelper.createToken(subject);
+        return new RefreshTokenResponse(accessToken);
+    }
 
 }

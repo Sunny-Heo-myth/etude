@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.chatboard.etude.factory.entity.MemberFactory.createMember;
+import static com.chatboard.etude.factory.entity.MemberFactory.createMemberWithRoles;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,23 +28,13 @@ public class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
     @Autowired
     RoleRepository roleRepository;
+
     @PersistenceContext
     EntityManager entityManager;
 
-    // auxiliary
-    private Member createMemberWithRoles(List<Role> roles) {
-        return new Member("email", "password", "username", "nickname", roles);
-    }
-
-    private Member createMember(String email, String password, String username, String nickname) {
-        return new Member(email, password, username, nickname, emptyList());
-    }
-
-    private Member createMember() {
-        return new Member("email", "password", "username", "nickname", emptyList());
-    }
 
     private void clear() {
         entityManager.flush();
@@ -115,7 +107,22 @@ public class MemberRepositoryTest {
 
         //then
         assertThatThrownBy(() -> memberRepository.findById(member.getId())
-                .orElseThrow(MemberNotFoundException::new)).isInstanceOf(MemberNotFoundException.class);
+                .orElseThrow(MemberNotFoundException::new))
+                .isInstanceOf(MemberNotFoundException.class);
+    }
+
+    @Test
+    void findByEmailTest() {
+        // given
+        Member member = memberRepository.save(createMember());
+        clear();
+
+        // when
+        Member foundMember = memberRepository.findByEmail(member.getEmail())
+                .orElseThrow(MemberNotFoundException::new);
+
+        // then
+        assertThat(foundMember.getEmail()).isEqualTo(member.getEmail());
     }
 
     @Test
@@ -218,8 +225,8 @@ public class MemberRepositoryTest {
         clear();
 
         // then
-        List<MemberRole> result = entityManager.createQuery("select mr from MemberRole mr", MemberRole.class)
-                .getResultList();
+        List<MemberRole> result = entityManager.createQuery(
+                "select mr from MemberRole mr", MemberRole.class).getResultList();
         assertThat(result.size()).isZero();
     }
 

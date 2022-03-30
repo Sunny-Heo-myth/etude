@@ -29,14 +29,10 @@ public class MemberRole {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)){
-            return false;}
-
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         MemberRole that = (MemberRole) o;
-        return member != null
-                && Objects.equals(member, that.member)
-                && role != null
-                && Objects.equals(role, that.role);
+        return member != null && Objects.equals(member, that.member)
+                && role != null && Objects.equals(role, that.role);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.chatboard.etude.controller.response;
+package com.chatboard.etude.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;

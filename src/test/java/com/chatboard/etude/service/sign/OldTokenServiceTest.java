@@ -15,7 +15,7 @@ import static org.mockito.BDDMockito.*;
 // We are only examining TokenService not the other objects which has dependency upon it.
 // So we only provide test environment which is implemented by Mockito framework.
 @ExtendWith(MockitoExtension.class)
-public class TokenServiceTest {
+public class OldTokenServiceTest {
 
     // Make fake object with dependency.
     @InjectMocks
@@ -59,4 +59,67 @@ public class TokenServiceTest {
         assertThat(token).isEqualTo("refresh");
         verify(jwtHandler).createToken(anyString(), anyString(), anyLong());
     }
+
+    @Test
+    void validateAccessTokenTest() {
+        // given
+        given(jwtHandler.validate(anyString(), anyString())).willReturn(true);
+
+        // when, then
+        assertThat(tokenService.validateAccessToken("token")).isTrue();
+    }
+
+    @Test
+    void validateRefreshTokenTest() {
+        // given
+        given(jwtHandler.validate(anyString(), anyString())).willReturn(true);
+
+        // when, then
+        assertThat(tokenService.validateRefreshToken("token")).isTrue();
+    }
+
+    @Test
+    void invalidateAccessTokenTest() {
+        // given
+        given(jwtHandler.validate(anyString(), anyString())).willReturn(false);
+
+        // when, then
+        assertThat(tokenService.validateAccessToken("token")).isFalse();
+    }
+
+    @Test
+    void invalidateRefreshTokenTest() {
+        // given
+        given(jwtHandler.validate(anyString(), anyString())).willReturn(false);
+
+        // when, then
+        assertThat(tokenService.validateRefreshToken("token")).isFalse();
+    }
+
+    @Test
+    void extractAccessTokenSubjectTest() {
+        // given
+        String subject = "subject";
+        given(jwtHandler.extractSubject(anyString(), anyString())).willReturn(subject);
+
+        // when
+        String result = tokenService.extractAccessTokenSubject("token");
+
+        // then
+        assertThat(subject).isEqualTo(result);
+    }
+
+    @Test
+    void extractRefreshTokenSubjectTest() {
+        // given
+        String subject = "subject";
+        given(jwtHandler.extractSubject(anyString(), anyString())).willReturn(subject);
+
+        // when
+        String result = tokenService.extractRefreshTokenSubject("token");
+
+        // then
+        assertThat(subject).isEqualTo(result);
+    }
+
 }

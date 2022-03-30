@@ -8,6 +8,7 @@ import javax.validation.Validator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.chatboard.etude.factory.dto.SignInRequestFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SignInRequestValidationTest {
@@ -16,26 +17,12 @@ public class SignInRequestValidationTest {
 
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    // auxiliary
-
-    private SignInRequest createRequest() {
-        return new SignInRequest("email@email.com", "123456a!");
-    }
-
-    private SignInRequest createRequestWithEmail(String email) {
-        return new SignInRequest(email, "123456a!");
-    }
-
-    private SignInRequest createRequestWithPassword(String password) {
-        return new SignInRequest("email@email.com", password);
-    }
-
     // test
 
     @Test
     void validateTest() {
         // given
-        SignInRequest request = createRequest();
+        SignInRequest request = createSignInRequest();
 
         // when
         Set<ConstraintViolation<SignInRequest>> violations = validator.validate(request);
@@ -48,7 +35,7 @@ public class SignInRequestValidationTest {
     void invalidateByNotFormattedEmailTest() {
         // given
         String invalidValue = "email";
-        SignInRequest request = createRequestWithEmail(invalidValue);
+        SignInRequest request = createSignInRequestWithEmail(invalidValue);
 
         // when
         Set<ConstraintViolation<SignInRequest>> violations = validator.validate(request);
@@ -65,7 +52,7 @@ public class SignInRequestValidationTest {
     void invalidByEmptyEmailTest() {
         // given
         String invalidValue = null;
-        SignInRequest request = createRequestWithEmail(invalidValue);
+        SignInRequest request = createSignInRequestWithEmail(invalidValue);
 
         // when
         Set<ConstraintViolation<SignInRequest>> violations = validator.validate(request);
@@ -82,7 +69,7 @@ public class SignInRequestValidationTest {
     void invalidByBlankEmailTest() {
         // given
         String invalidValue = " ";
-        SignInRequest request = createRequestWithEmail(invalidValue);
+        SignInRequest request = createSignInRequestWithEmail(invalidValue);
 
         // when
         Set<ConstraintViolation<SignInRequest>> violations = validator.validate(request);
@@ -99,7 +86,7 @@ public class SignInRequestValidationTest {
     void invalidByEmptyPasswordTest() {
         // given
         String invalidValue = null;
-        SignInRequest request = createRequestWithPassword(invalidValue);
+        SignInRequest request = createSignInRequestWithPassword(invalidValue);
 
         // when
         Set<ConstraintViolation<SignInRequest>> violations = validator.validate(request);
@@ -116,7 +103,7 @@ public class SignInRequestValidationTest {
     void invalidByBlankPasswordTest() {
         // given
         String invalidValue = " ";
-        SignInRequest request = createRequestWithPassword(invalidValue);
+        SignInRequest request = createSignInRequestWithPassword(invalidValue);
 
         // when
         Set<ConstraintViolation<SignInRequest>> violations = validator.validate(request);
