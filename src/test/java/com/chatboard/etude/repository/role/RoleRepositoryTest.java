@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static com.chatboard.etude.factory.entity.RoleFactory.createRole;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -21,11 +22,6 @@ public class RoleRepositoryTest {
     RoleRepository roleRepository;
     @PersistenceContext
     EntityManager entityManager;
-
-    // auxiliary
-    private Role createRole() {
-        return new Role(RoleType.ROLE_NORMAL);
-    }
 
     private void clear() {
         entityManager.flush();

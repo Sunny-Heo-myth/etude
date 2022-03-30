@@ -1,17 +1,17 @@
 package com.chatboard.etude.service.sign;
 
+import com.chatboard.etude.config.token.TokenHelper;
+import com.chatboard.etude.dto.sign.RefreshTokenResponse;
 import com.chatboard.etude.dto.sign.SignInRequest;
 import com.chatboard.etude.dto.sign.SignInResponse;
 import com.chatboard.etude.dto.sign.SignUpRequest;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
-import com.chatboard.etude.exception.LoginFailureException;
-import com.chatboard.etude.exception.MemberEmailAlreadyExistsException;
-import com.chatboard.etude.exception.MemberNickNameAlreadyExistsException;
-import com.chatboard.etude.exception.RoleNotFoundException;
+import com.chatboard.etude.exception.*;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 // why import static?
 import java.util.Optional;
 
+import static com.chatboard.etude.factory.dto.SignInRequestFactory.createSignInRequest;
+import static com.chatboard.etude.factory.dto.SignUpRequestFactory.createSignUpRequest;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -33,23 +35,28 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class SignServiceTest {
 
-    @InjectMocks
     SignService signService;
-
     @Mock
     MemberRepository memberRepository;
-
     @Mock
     RoleRepository roleRepository;
-
     @Mock
     PasswordEncoder passwordEncoder;
-
     @Mock
-    TokenService tokenService;
+    TokenHelper accessTokenHelper;
+    @Mock
+    TokenHelper refreshTokenHelper;
 
-    private SignUpRequest createSignUpRequest() {
-        return new SignUpRequest("email", "password", "username", "nickname");
+    // Mockito can not recognize same type of @Mock.
+    @BeforeEach
+    void beforeEach() {
+        signService = new SignService(
+                memberRepository,
+                roleRepository,
+                passwordEncoder,
+                accessTokenHelper,
+                refreshTokenHelper
+        );
     }
 
     private Member createMember() {
@@ -66,7 +73,8 @@ public class SignServiceTest {
         // when
         signService.signUp(request);
 
-        // then (verify whether Password encoder did encode & memberRepository did save)
+        // then
+        // (verify whether Password encoder did encode & memberRepository did save)
         verify(passwordEncoder).encode(request.getPassword());
         verify(memberRepository).save(any());
     }
@@ -90,7 +98,7 @@ public class SignServiceTest {
 
         //wen, then
         assertThatThrownBy(() -> signService.signUp(createSignUpRequest()))
-                .isInstanceOf(MemberNickNameAlreadyExistsException.class);
+                .isInstanceOf(MemberNicknameAlreadyExistsException.class);
     }
 
     @Test
@@ -113,14 +121,14 @@ public class SignServiceTest {
         given(passwordEncoder.matches(anyString(), anyString()))
                 .willReturn(true);
 
-        given(tokenService.createAccessToken(anyString()))
+        given(accessTokenHelper.createToken(anyString()))
                 .willReturn("access");
 
-        given(tokenService.createRefreshToken(anyString()))
+        given(refreshTokenHelper.createToken(anyString()))
                 .willReturn("refresh");
 
         // when
-        SignInResponse response = signService.signIn(new SignInRequest("email", "password"));
+        SignInResponse response = signService.signIn(createSignInRequest("email", "password"));
 
         // then
         assertThat(response.getAccessToken()).isEqualTo("access");
@@ -134,7 +142,7 @@ public class SignServiceTest {
                 .willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> signService.signIn(new SignInRequest("email", "password")))
+        assertThatThrownBy(() -> signService.signIn(createSignInRequest("email", "password")))
                 .isInstanceOf(LoginFailureException.class);
     }
 
@@ -148,7 +156,35 @@ public class SignServiceTest {
                 .willReturn(false);
 
         // when, then
-        assertThatThrownBy(() -> signService.signIn(new SignInRequest("email", "password")))
+        assertThatThrownBy(() -> signService.signIn(createSignInRequest("email", "password")))
                 .isInstanceOf(LoginFailureException.class);
+    }
+
+    @Test
+    void refreshTokenTest() {
+        // given
+        String refreshToken = "refreshToken";
+        String subject = "subject";
+        String accessToken = "accessToken";
+        given(refreshTokenHelper.validate(refreshToken)).willReturn(true);
+        given(refreshTokenHelper.extractSubject(refreshToken)).willReturn(subject);
+        given(accessTokenHelper.createToken(subject)).willReturn(accessToken);
+
+        // when
+        RefreshTokenResponse response = signService.refreshToken(refreshToken);
+
+        // then
+        assertThat(response.getAccessToken()).isEqualTo(accessToken);
+    }
+
+    @Test
+    void refreshTokenExceptionMyInvalidTokenTest() {
+        // given
+        String refreshToken = "refreshToken";
+        given(refreshTokenHelper.validate(refreshToken)).willReturn(false);
+
+        // when, then
+        assertThatThrownBy(() -> signService.refreshToken(refreshToken))
+                .isInstanceOf(AuthenticationEntryPointException.class);
     }
 }

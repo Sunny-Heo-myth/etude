@@ -15,6 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.chatboard.etude.factory.dto.RefreshTokenResponseFactory.createRefreshTokenResponse;
+import static com.chatboard.etude.factory.dto.SignInRequestFactory.createSignInRequest;
+import static com.chatboard.etude.factory.dto.SignInResponseFactory.createSignInResponse;
+import static com.chatboard.etude.factory.dto.SignUpRequestFactory.createSignUpRequest;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -41,14 +45,13 @@ public class SignControllerTest {
     @Test
     void signUpTest() throws Exception {
         // given
-        SignUpRequest request = new SignUpRequest("email@email.com", "123456a!", "username", "nickname");
+        SignUpRequest request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
 
         // when, then
         mockMvc.perform(
                 post("/api/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                )
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
 
         verify(signService).signUp(request);
@@ -57,16 +60,15 @@ public class SignControllerTest {
     @Test
     void signInTest() throws Exception {
         // given
-        SignInRequest request = new SignInRequest("email@email.com", "123456a!");
+        SignInRequest request = createSignInRequest("email@email.com", "123456a!");
         given(signService.signIn(request))
-                .willReturn(new SignInResponse("access", "refresh"));
+                .willReturn(createSignInResponse("access", "refresh"));
 
         // when, then
         mockMvc.perform(
                 post("/api/sign-in")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                )
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.data.accessToken").value("access"))
                 .andExpect(jsonPath("$.result.data.refreshToken").value("refresh"));
@@ -77,15 +79,27 @@ public class SignControllerTest {
     @Test
     void ignoreNullValueInJsonResponseTest() throws Exception {
         // given
-        SignUpRequest request = new SignUpRequest("email@email.com", "123456a!", "username", "nickname");
+        SignUpRequest request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
 
         // when, then
         mockMvc.perform(
                 post("/api/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-                )
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.result").doesNotExist());
+    }
+
+    @Test
+    void refreshTokenTest() throws Exception {
+        // given
+        given(signService.refreshToken("refreshToken")).willReturn(createRefreshTokenResponse("accessToken"));
+
+        // when, then
+        mockMvc.perform(
+                post("/api/refresh-token")
+                        .header("Authorization", "refreshToken"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.data.accessToken").value("accessToken"));
     }
 }
