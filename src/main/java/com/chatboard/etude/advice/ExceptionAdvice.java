@@ -74,4 +74,18 @@ public class ExceptionAdvice {
     public Response missingRequestHeaderException(MissingRequestHeaderException e) {
         return Response.failure(-1009, e.getHeaderName() + "request header omitted.");
     }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response categoryNotFoundException() {
+        return Response.failure(-1010, "non-exist category.");
+    }
+
+    @ExceptionHandler(CannotConvertNestedStructureException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response cannotConvertNestedStructureException(CannotConvertNestedStructureException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1011, "Failed to convert into nested structure.");
+    }
+
 }
