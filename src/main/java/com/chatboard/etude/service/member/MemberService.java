@@ -1,6 +1,7 @@
 package com.chatboard.etude.service.member;
 
 import com.chatboard.etude.dto.member.MemberDto;
+import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +22,9 @@ public class MemberService {
 
     @Transactional
     public void delete(Long id) {
-        if (notExistsMember(id)) {
-            throw new MemberNotFoundException();
-        }
-        memberRepository.deleteById(id);
+        Member member = memberRepository.findById(id)
+                .orElseThrow(MemberNotFoundException::new);
+        memberRepository.delete(member);
     }
 
-    private boolean notExistsMember(Long id) {
-        return !memberRepository.existsById(id);
-    }
 }

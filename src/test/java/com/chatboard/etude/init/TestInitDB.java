@@ -1,9 +1,11 @@
 package com.chatboard.etude.init;
 
+import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.exception.RoleNotFoundException;
+import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ public class TestInitDB {
     MemberRepository memberRepository;
     @Autowired
     PasswordEncoder encoder;
+    @Autowired
+    CategoryRepository categoryRepository;
 
     private final String adminEmail = "admin@admin.com";
     private final String member1Email = "member1@member.com";
@@ -34,6 +38,7 @@ public class TestInitDB {
         initRole();
         initTestAdmin();
         initTestMember();
+        initCategory();
     }
 
     private void initRole() {
@@ -66,6 +71,12 @@ public class TestInitDB {
                                         .orElseThrow(RoleNotFoundException::new)))
                 )
         );
+    }
+
+    private void initCategory() {
+        Category category1 = new Category("category1", null);
+        Category category2 = new Category("category2", category1);
+        categoryRepository.saveAll(List.of(category1, category2));
     }
 
     public String getAdminEmail() {

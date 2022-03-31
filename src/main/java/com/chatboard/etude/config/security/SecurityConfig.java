@@ -41,14 +41,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers(HttpMethod.POST, "/api/sign-in", "/api/sign-up", "/api/refresh-token").permitAll()
                         .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .antMatchers(HttpMethod.DELETE, "/api/members/{id}/**").access("@memberGuard.check(#id)")
+                        .antMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
                         .anyRequest().hasAnyRole("ADMIN")
+
                 .and()
                     .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
                     .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
-                    .addFilterBefore(new JwtAuthenticationFilter(accessTokenHelper, userDetailsService),
-                            UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(new JwtAuthenticationFilter(accessTokenHelper, userDetailsService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
