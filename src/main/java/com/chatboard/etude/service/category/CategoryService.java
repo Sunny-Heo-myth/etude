@@ -29,13 +29,9 @@ public class CategoryService {
 
     @Transactional
     public void delete(Long id) {
-        if (notExistsCategory(id)) {
-            throw new CategoryNotFoundException();
-        }
-        categoryRepository.deleteById(id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(CategoryNotFoundException::new);
+        categoryRepository.delete(category);
     }
 
-    private boolean notExistsCategory(Long id) {
-        return !categoryRepository.existsById(id);
-    }
 }

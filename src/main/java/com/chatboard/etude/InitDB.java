@@ -1,9 +1,11 @@
 package com.chatboard.etude;
 
+import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.exception.RoleNotFoundException;
+import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +31,17 @@ public class InitDB {
     private final RoleRepository roleRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CategoryRepository categoryRepository;
 
     @EventListener(ApplicationReadyEvent.class) //
     @Transactional
     public void initDB() {
         log.info("initialize database.");
+
         initRole();
         initTestAdmin();
         initTestMember();
+        initCategory();
     }
 
     private void initRole() {
@@ -78,5 +83,16 @@ public class InitDB {
                                 .orElseThrow(RoleNotFoundException::new)))
                 )
         );
+    }
+
+    private void initCategory() {
+        Category c1 = categoryRepository.save(new Category("category1", null));
+        Category c2 = categoryRepository.save(new Category("category2", c1));
+        Category c3 = categoryRepository.save(new Category("category3", c1));
+        Category c4 = categoryRepository.save(new Category("category4", c2));
+        Category c5 = categoryRepository.save(new Category("category5", c2));
+        Category c6 = categoryRepository.save(new Category("category6", c4));
+        Category c7 = categoryRepository.save(new Category("category7", c3));
+        Category c8 = categoryRepository.save(new Category("category8", null));
     }
 }

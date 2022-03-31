@@ -72,6 +72,7 @@ public class SignService {
                 .orElseThrow(LoginFailureException::new);
 
         validatePassword(request, member);
+
         String subject = createSubject(member);
         String accessToken = accessTokenHelper.createToken(subject);
         String refreshToken = refreshTokenHelper.createToken(subject);
