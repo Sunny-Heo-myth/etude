@@ -1,11 +1,12 @@
 package com.chatboard.etude.repository.role;
 
+import com.chatboard.etude.config.etudeTest.TestConfiguration;
 import com.chatboard.etude.entity.member.Role;
-import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.exception.RoleNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
+@Import(TestConfiguration.class)
 public class RoleRepositoryTest {
 
     @Autowired

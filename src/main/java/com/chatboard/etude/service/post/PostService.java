@@ -31,6 +31,12 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new));
     }
 
+    public PostListDto readAll(PostReadCondition condition) {
+        return PostListDto.toDto(
+                postRepository.findAllByCondition(condition)
+        );
+    }
+
     @Transactional
     public PostCreateResponse create(PostCreateRequest request) {
         Post post = postRepository.save(

@@ -2,6 +2,7 @@ package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.aop.AssignMemberId;
 import com.chatboard.etude.dto.post.PostCreateRequest;
+import com.chatboard.etude.dto.post.PostReadCondition;
 import com.chatboard.etude.dto.post.PostUpdateRequest;
 import com.chatboard.etude.dto.response.Response;
 import com.chatboard.etude.service.post.PostService;
@@ -29,6 +30,13 @@ public class PostController {
     public Response read(
             @ApiParam(value = "post id", required = true) @PathVariable Long id) {
         return Response.success(postService.read(id));
+    }
+
+    @ApiOperation(value = "post list read", notes = "Read post list.")
+    @GetMapping("/api/posts")
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAll(@Valid PostReadCondition condition) {
+        return Response.success(postService.readAll(condition));
     }
 
     @ApiOperation(value = "post create", notes = "Create post.")

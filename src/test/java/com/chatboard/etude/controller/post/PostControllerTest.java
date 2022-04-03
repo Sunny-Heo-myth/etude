@@ -1,6 +1,7 @@
 package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.dto.post.PostCreateRequest;
+import com.chatboard.etude.dto.post.PostReadCondition;
 import com.chatboard.etude.dto.post.PostUpdateRequest;
 import com.chatboard.etude.service.post.PostService;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static com.chatboard.etude.factory.dto.PostCreateRequestFactory.createPostCreateRequest;
 import static com.chatboard.etude.factory.dto.PostCreateRequestFactory.createPostCreateRequestWithImages;
+import static com.chatboard.etude.factory.dto.PostReadConditionFactory.createPostReadCondition;
 import static com.chatboard.etude.factory.dto.PostUpdateRequestFactory.createPostUpdateRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -52,6 +54,27 @@ public class PostControllerTest {
                 get("/api/posts/{id}", id))
                 .andExpect(status().isOk());
         verify(postService).read(id);
+    }
+
+    @Test
+    void readAllTest() throws Exception {
+        // given
+        PostReadCondition condition = createPostReadCondition(0, 1, List.of(1L, 2L), List.of(1L, 2L));
+
+        // when, then
+        mockMvc.perform(
+                get("/api/posts")
+                        .param("page", String.valueOf(condition.getPage()))
+                        .param("size", String.valueOf(condition.getSize()))
+                        .param("categoryId",
+                                String.valueOf(condition.getCategoryId().get(0)),
+                                String.valueOf(condition.getCategoryId().get(1)))
+                        .param("memberId",
+                                String.valueOf(condition.getMemberId().get(0)),
+                                String.valueOf(condition.getMemberId().get(1))))
+                .andExpect(status().isOk());
+
+        verify(postService).readAll(condition);
     }
 
     @Test

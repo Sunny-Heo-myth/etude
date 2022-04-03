@@ -1,5 +1,6 @@
 package com.chatboard.etude.repository.post;
 
+import com.chatboard.etude.config.etudeTest.TestConfiguration;
 import com.chatboard.etude.dto.post.PostUpdateRequest;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -32,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
+@Import(TestConfiguration.class)
 public class PostRepositoryTest {
 
     @Autowired
