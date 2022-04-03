@@ -36,8 +36,16 @@ dependencies {
 
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+    // Querydsl
+    implementation 'com.querydsl:querydsl-jpa'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+

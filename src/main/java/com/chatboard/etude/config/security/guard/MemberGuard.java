@@ -12,16 +12,16 @@ import java.util.Set;
 @Slf4j
 public class MemberGuard {
 
-    private final AuthorizationHelper authorizationHelper;
+    private final AuthenticationHelper authenticationHelper;
 
     private boolean hasAuthority(Long id) {
-        Long memberId = AuthorizationHelper.extractMemberId();
-        Set<RoleType> memberRoles = AuthorizationHelper.extractMemberRoles();
+        Long memberId = AuthenticationHelper.extractMemberId();
+        Set<RoleType> memberRoles = AuthenticationHelper.extractMemberRoles();
         return id.equals(memberId) || memberRoles.contains(RoleType.ROLE_ADMIN);
     }
 
     public boolean check(Long id) {
-        return AuthorizationHelper.isAuthenticated()
+        return AuthenticationHelper.isAuthenticated()
                 && hasAuthority(id);
     }
 }
