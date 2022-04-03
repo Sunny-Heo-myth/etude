@@ -21,7 +21,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @ApiOperation(value = "read all category",
-            notes = "This requset reads all catetgories.")
+            notes = "This request reads all categories.")
     @GetMapping("api/categories")
     @ResponseStatus(HttpStatus.OK)
     public Response readAll() {

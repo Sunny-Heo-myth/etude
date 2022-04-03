@@ -14,15 +14,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class AuthorizationHelper {
-
-    private static CustomUserDetails getUserDetails() {
-        return (CustomUserDetails) getAuthentication().getPrincipal();
-    }
-
-    private static Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
+public class AuthenticationHelper {
 
     public static boolean isAuthenticated() {
         return getAuthentication() instanceof CustomAuthenticationToken
@@ -38,6 +30,14 @@ public class AuthorizationHelper {
                 .map(GrantedAuthority::getAuthority)
                 .map(RoleType::valueOf)
                 .collect(Collectors.toSet());
+    }
+
+    private static CustomUserDetails getUserDetails() {
+        return (CustomUserDetails) getAuthentication().getPrincipal();
+    }
+
+    private static Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
 }
