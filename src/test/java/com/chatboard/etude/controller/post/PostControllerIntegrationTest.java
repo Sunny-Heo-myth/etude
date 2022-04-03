@@ -1,6 +1,7 @@
 package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.dto.post.PostCreateRequest;
+import com.chatboard.etude.dto.post.PostReadCondition;
 import com.chatboard.etude.dto.sign.SignInResponse;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
@@ -28,13 +29,13 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static com.chatboard.etude.factory.dto.PostCreateRequestFactory.createPostCreateRequest;
+import static com.chatboard.etude.factory.dto.PostReadConditionFactory.createPostReadCondition;
 import static com.chatboard.etude.factory.dto.SignInRequestFactory.createSignInRequest;
 import static com.chatboard.etude.factory.entity.PostFactory.createPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -78,6 +79,25 @@ public class PostControllerIntegrationTest {
         category = categoryRepository.findAll().get(0);
     }
 
+    @Test
+    void readAllTest() throws Exception {
+        // given
+        PostReadCondition condition = createPostReadCondition(0, 1);
+
+        // when, then
+        mockMvc.perform(
+                get("/api/posts")
+                        .param("page", String.valueOf(condition.getPage()))
+                        .param("size", String.valueOf(condition.getSize()))
+                        .param("categoryId",
+                                String.valueOf(1),
+                                String.valueOf(2))
+                        .param("memberId",
+                                String.valueOf(1),
+                                String.valueOf(2)))
+                .andExpect(status().isOk());
+
+    }
     @Test
     void createTest() throws Exception {
         // given
@@ -235,7 +255,6 @@ public class PostControllerIntegrationTest {
                                 .header("Authorization", notOwnerSignInResponse.getAccessToken()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/exception/access-denied"));
-
     }
 
     @Test

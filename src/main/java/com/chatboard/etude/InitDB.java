@@ -4,9 +4,11 @@ import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
+import com.chatboard.etude.entity.post.Post;
 import com.chatboard.etude.exception.RoleNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
+import com.chatboard.etude.repository.post.PostRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Component
@@ -32,16 +35,28 @@ public class InitDB {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final CategoryRepository categoryRepository;
+    private final PostRepository postRepository;
 
     @EventListener(ApplicationReadyEvent.class) //
     @Transactional
     public void initDB() {
-        log.info("initialize database.");
+        
 
         initRole();
         initTestAdmin();
         initTestMember();
         initCategory();
+        initPost();
+        log.info("initialize database.");
+    }
+
+    private void initPost() {
+        Member member = memberRepository.findAll().get(0);
+        Category category = categoryRepository.findAll().get(0);
+        IntStream.range(0, 100000)
+                .forEach(i -> postRepository.save(
+                        new Post("title" + i, "content" + i, (long) i, member, category, List.of())
+                ));
     }
 
     private void initRole() {

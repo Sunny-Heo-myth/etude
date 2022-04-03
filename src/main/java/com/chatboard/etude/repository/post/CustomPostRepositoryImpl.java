@@ -21,6 +21,7 @@ import static com.chatboard.etude.entity.post.QPost.post;
 import static com.querydsl.core.types.Projections.constructor;
 
 @Transactional(readOnly = true)
+// @Repository in QuerydslRepositorySupport
 public class CustomPostRepositoryImpl extends QuerydslRepositorySupport implements CustomPostRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
@@ -34,14 +35,22 @@ public class CustomPostRepositoryImpl extends QuerydslRepositorySupport implemen
     public Page<PostSimpleDto> findAllByCondition(PostReadCondition condition) {
         Pageable pageable = PageRequest.of(condition.getPage(), condition.getSize());
         Predicate predicate = createPredicate(condition);
+
+        //  return as page implement with find query and count query
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
 
     private List<PostSimpleDto> fetchAll(Predicate predicate, Pageable pageable) {
-        return getQuerydsl().applyPagination(
+        return getQuerydsl().applyPagination(   // build query with paging applied.
                 pageable,
                 jpaQueryFactory
-                        .select(constructor(PostSimpleDto.class, post.id, post.title, post.member.nickname, post.createdAt))
+                        .select(constructor(
+                                PostSimpleDto.class,
+                                post.id,
+                                post.title,
+                                post.member.nickname,
+                                post.createdAt))
+
                         .from(post)
                         .join(post.member)
                         .where(predicate)
@@ -49,17 +58,17 @@ public class CustomPostRepositoryImpl extends QuerydslRepositorySupport implemen
         ).fetch();
     }
 
+    private Predicate createPredicate(PostReadCondition condition) {
+        return new BooleanBuilder()
+                .and(orConditionsByEqCategoryIds(condition.getCategoryId()))
+                .and(orConditionsByEqMemberIds(condition.getMemberId()));
+    }
+
     private Long fetchCount(Predicate predicate) {
         return jpaQueryFactory.select(post.count())
                 .from(post)
                 .where(predicate)
                 .fetchOne();
-    }
-
-    private Predicate createPredicate(PostReadCondition condition) {
-        return new BooleanBuilder()
-                .and(orConditionsByEqCategoryIds(condition.getCategoryId()))
-                .and(orConditionsByEqMemberIds(condition.getMemberId()));
     }
 
     private Predicate orConditionsByEqCategoryIds(List<Long> categoryIds) {

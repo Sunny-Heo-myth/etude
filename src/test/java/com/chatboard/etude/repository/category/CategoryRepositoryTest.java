@@ -1,11 +1,13 @@
 package com.chatboard.etude.repository.category;
 
+import com.chatboard.etude.config.etudeTest.TestConfiguration;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.exception.CategoryNotFoundException;
 import com.chatboard.etude.factory.entity.CategoryFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.persistence.EntityManager;
@@ -21,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
+@Import(TestConfiguration.class)
 public class CategoryRepositoryTest {
     @Autowired
     CategoryRepository categoryRepository;
