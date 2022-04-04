@@ -1,12 +1,14 @@
 package com.chatboard.etude;
 
 import com.chatboard.etude.entity.category.Category;
+import com.chatboard.etude.entity.comment.Comment;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.entity.post.Post;
 import com.chatboard.etude.exception.RoleNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
+import com.chatboard.etude.repository.comment.CommentRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
@@ -36,6 +38,7 @@ public class InitDB {
     private final PasswordEncoder passwordEncoder;
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     @EventListener(ApplicationReadyEvent.class) //
     @Transactional
@@ -47,6 +50,7 @@ public class InitDB {
         initTestMember();
         initCategory();
         initPost();
+        initComment();
         log.info("initialize database.");
     }
 
@@ -109,5 +113,18 @@ public class InitDB {
         Category c6 = categoryRepository.save(new Category("category6", c4));
         Category c7 = categoryRepository.save(new Category("category7", c3));
         Category c8 = categoryRepository.save(new Category("category8", null));
+    }
+
+    private void initComment() {
+        Member member = memberRepository.findAll().get(0);
+        Post post = postRepository.findAll().get(0);
+        Comment c1 = commentRepository.save(new Comment("content", member, post, null));
+        Comment c2 = commentRepository.save(new Comment("content", member, post, c1));
+        Comment c3 = commentRepository.save(new Comment("content", member, post, c1));
+        Comment c4 = commentRepository.save(new Comment("content", member, post, c2));
+        Comment c5 = commentRepository.save(new Comment("content", member, post, c2));
+        Comment c6 = commentRepository.save(new Comment("content", member, post, c4));
+        Comment c7 = commentRepository.save(new Comment("content", member, post, c3));
+        Comment c8 = commentRepository.save(new Comment("content", member, post, null));
     }
 }

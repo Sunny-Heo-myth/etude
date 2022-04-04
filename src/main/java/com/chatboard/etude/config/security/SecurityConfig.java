@@ -38,16 +38,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
+                        // general & sign
                         .antMatchers(HttpMethod.POST, "/api/sign-in", "/api/sign-up", "/api/refresh-token").permitAll()
                         .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        // members
                         .antMatchers(HttpMethod.DELETE, "/api/members/{id}/**").access("@memberGuard.check(#id)")  // .authenticated()
+                        // categories
                         .antMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
-                        .antMatchers(HttpMethod.GET, "/image/**").permitAll()
-                        .antMatchers(HttpMethod.POST, "/api/posts").authenticated()
+                        // posts
                         .antMatchers(HttpMethod.POST, "/api/posts").authenticated()
                         .antMatchers(HttpMethod.PUT, "/api/posts/{id}").access("@postGuard.check(#id)")
                         .antMatchers(HttpMethod.DELETE, "/api/posts/{id}").access("@postGuard.check(#id)")
+                        .antMatchers(HttpMethod.GET, "/image/**").permitAll()
+                        // comments
+                        .antMatchers(HttpMethod.POST, "/api/comments").authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/api/comments/{id}").access("@commentGuard.check(#id)")
+                        // for admin member
                         .anyRequest().hasAnyRole("ADMIN")
 
                 .and()

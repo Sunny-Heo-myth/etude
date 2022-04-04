@@ -1,6 +1,6 @@
 package com.chatboard.etude.repository.post;
 
-import com.chatboard.etude.config.etudeTest.TestConfiguration;
+import com.chatboard.etude.config.QuerydslConfig;
 import com.chatboard.etude.dto.post.PostUpdateRequest;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import(TestConfiguration.class)
+@Import(QuerydslConfig.class)
 public class PostRepositoryTest {
 
     @Autowired
