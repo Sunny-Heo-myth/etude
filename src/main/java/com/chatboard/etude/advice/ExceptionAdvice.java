@@ -113,4 +113,11 @@ public class ExceptionAdvice {
         log.info("e = {}", e.getMessage());
         return Response.failure(-1014, "Failed to upload file.");
     }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Response commentNotFoundException(CommentNotFoundException e) {
+        log.info("e = {}", e.getMessage());
+        return Response.failure(-1015, "Failed to find comment.");
+    }
 }

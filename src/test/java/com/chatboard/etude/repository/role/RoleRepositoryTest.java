@@ -1,6 +1,6 @@
 package com.chatboard.etude.repository.role;
 
-import com.chatboard.etude.config.etudeTest.TestConfiguration;
+import com.chatboard.etude.config.QuerydslConfig;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.exception.RoleNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@Import(TestConfiguration.class)
+@Import(QuerydslConfig.class)
 public class RoleRepositoryTest {
 
     @Autowired

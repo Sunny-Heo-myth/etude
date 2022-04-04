@@ -5,23 +5,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class MemberGuard {
+public class MemberGuard extends Guard{
 
-    private final AuthenticationHelper authenticationHelper;
+    private final List<RoleType> roleTypes = List.of(RoleType.ROLE_ADMIN);
 
-    private boolean hasAuthority(Long id) {
-        Long memberId = AuthenticationHelper.extractMemberId();
-        Set<RoleType> memberRoles = AuthenticationHelper.extractMemberRoles();
-        return id.equals(memberId) || memberRoles.contains(RoleType.ROLE_ADMIN);
+    @Override
+    protected List<RoleType> getRoleTypes() {
+        return roleTypes;
     }
 
-    public boolean check(Long id) {
-        return AuthenticationHelper.isAuthenticated()
-                && hasAuthority(id);
+    @Override
+    protected boolean isResourceOwner(Long id) {
+        return id.equals(AuthenticationHelper.extractMemberId());
     }
 }

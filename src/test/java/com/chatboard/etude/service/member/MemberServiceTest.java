@@ -46,7 +46,7 @@ public class MemberServiceTest {
     @Test
     void readExceptionByMemberNotFoundTest() {
         // given
-        given(memberRepository.findById(any())).willReturn(Optional.ofNullable(null));
+        given(memberRepository.findById(any())).willReturn(Optional.empty());
 
         // when, then
         assertThatThrownBy(() -> memberService.read(1L))
@@ -68,7 +68,7 @@ public class MemberServiceTest {
     @Test
     void deleteExceptionByMemberNotFoundTest() {
         // given
-        given(memberRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
+        given(memberRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
         assertThatThrownBy(() -> memberService.delete(1L))

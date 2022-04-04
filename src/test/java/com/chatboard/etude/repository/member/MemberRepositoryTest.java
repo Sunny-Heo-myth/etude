@@ -1,6 +1,6 @@
 package com.chatboard.etude.repository.member;
 
-import com.chatboard.etude.config.etudeTest.TestConfiguration;
+import com.chatboard.etude.config.QuerydslConfig;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.MemberRole;
 import com.chatboard.etude.entity.member.Role;
@@ -10,6 +10,7 @@ import com.chatboard.etude.repository.role.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -25,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest    // test only with jpa related : bean registered related with jpa
-@Import(TestConfiguration.class)
+@Import(QuerydslConfig.class)
 public class MemberRepositoryTest {
 
     @Autowired
