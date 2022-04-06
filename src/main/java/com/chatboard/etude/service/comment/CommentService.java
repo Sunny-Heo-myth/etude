@@ -33,7 +33,7 @@ public class CommentService {
 
     @Transactional
     public void create(CommentCreateRequest request) {
-        commentRepository.save(CommentCreateRequest.toEntity(
+        Comment comment = commentRepository.save(CommentCreateRequest.toEntity(
                 request,
                 memberRepository,
                 postRepository,

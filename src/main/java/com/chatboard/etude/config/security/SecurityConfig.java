@@ -37,24 +37,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                // the order of url list DOES MATTER !!!!
                     .authorizeRequests()
-                        // general & sign
+                        .antMatchers(HttpMethod.GET, "/image/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/api/sign-in", "/api/sign-up", "/api/refresh-token").permitAll()
-                        .antMatchers(HttpMethod.GET, "/api/**").permitAll()
-                        // members
                         .antMatchers(HttpMethod.DELETE, "/api/members/{id}/**").access("@memberGuard.check(#id)")  // .authenticated()
-                        // categories
                         .antMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
-                        // posts
                         .antMatchers(HttpMethod.POST, "/api/posts").authenticated()
                         .antMatchers(HttpMethod.PUT, "/api/posts/{id}").access("@postGuard.check(#id)")
                         .antMatchers(HttpMethod.DELETE, "/api/posts/{id}").access("@postGuard.check(#id)")
-                        .antMatchers(HttpMethod.GET, "/image/**").permitAll()
-                        // comments
                         .antMatchers(HttpMethod.POST, "/api/comments").authenticated()
                         .antMatchers(HttpMethod.DELETE, "/api/comments/{id}").access("@commentGuard.check(#id)")
-                        // for admin member
+                        .antMatchers(HttpMethod.GET, "/api/messages/sender", "/api/messages/receiver").authenticated()
+                        .antMatchers(HttpMethod.GET, "/api/messages/{id}").access("@messageGuard.check(#id)")
+                        .antMatchers(HttpMethod.POST, "/api/messages").authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/api/messages/sender/{id}").access("@messageSenderGuard.check(#id)")
+                        .antMatchers(HttpMethod.DELETE, "/api/messages/receiver/{id}").access("@messageReceiverGuard.check(#id)")
+                        .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .anyRequest().hasAnyRole("ADMIN")
 
                 .and()
