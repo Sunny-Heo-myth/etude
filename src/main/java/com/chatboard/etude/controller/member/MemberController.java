@@ -2,6 +2,7 @@ package com.chatboard.etude.controller.member;
 
 import com.chatboard.etude.dto.response.Response;
 import com.chatboard.etude.service.member.MemberService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Api(value = "member controller", tags = "member")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
