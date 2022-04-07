@@ -32,13 +32,4 @@ public class CategoryCreateRequest {
             example = "7")
     private Long parentId;
 
-    public static Category toEntity(CategoryCreateRequest request, CategoryRepository categoryRepository) {
-        return new Category(request.getName(),
-                Optional.ofNullable(request.getParentId())
-                        .map(id -> categoryRepository.findById(id)
-                                // when there is Category with received id.
-                                .orElseThrow(CategoryNotFoundException::new))
-                        // when this category is root.
-                        .orElse(null));
-    }
 }

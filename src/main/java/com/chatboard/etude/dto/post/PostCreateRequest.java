@@ -64,21 +64,5 @@ public class PostCreateRequest {
     @ApiModelProperty(value = "image", notes = "Append image.")
     private List<MultipartFile> images = new ArrayList<>();
 
-    public static Post toEntity(PostCreateRequest request,
-                                MemberRepository memberRepository,
-                                CategoryRepository categoryRepository) {
-        return new Post(
-                request.title,
-                request.content,
-                request.price,
-                memberRepository.findById(request.getMemberId())
-                        .orElseThrow(MemberNotFoundException::new),
-                categoryRepository.findById(request.getCategoryId())
-                        .orElseThrow(CategoryNotFoundException::new),
-                request.images.stream()
-                        .map(file -> new Image(file.getOriginalFilename()))
-                        .collect(Collectors.toList())
-        );
-    }
 
 }

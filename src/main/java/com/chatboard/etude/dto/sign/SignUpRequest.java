@@ -62,12 +62,4 @@ public class SignUpRequest {
             message = "Please use only Korean and English alphabet as a nickname.")
     private String nickname;
 
-    public static Member toEntity(SignUpRequest request, Role role, PasswordEncoder encoder) {
-        return new Member(request.getEmail(),
-                encoder.encode(request.getPassword()),
-                request.username,
-                request.nickname,
-                List.of(role));
-    }
-
 }
