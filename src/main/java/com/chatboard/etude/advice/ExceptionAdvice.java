@@ -42,12 +42,6 @@ public class ExceptionAdvice {
         return Response.failure(-1003, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
     }
 
-    @ExceptionHandler(BindException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Response bindException(BindException e) {
-        return Response.failure(-1003, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
-    }
-
     @ExceptionHandler(LoginFailureException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Response loginFailureException() {
@@ -58,6 +52,12 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.CONFLICT)
     public Response memberEmailAlreadyExistsException(MemberEmailAlreadyExistsException e) {
         return Response.failure(-1005, e.getMessage() + "is duplicated email.");
+    }
+
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response bindException(BindException e) {
+        return Response.failure(-1003, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
     }
 
     @ExceptionHandler(MemberNicknameAlreadyExistsException.class)
@@ -127,5 +127,11 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response messageNotFoundException() {
         return Response.failure(-1016, "Failed to find message.");
+    }
+
+    @ExceptionHandler(RefreshTokenFailureException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response RefreshTokenFailureException() {
+        return Response.failure(-1017, "Failed to refresh token.");
     }
 }

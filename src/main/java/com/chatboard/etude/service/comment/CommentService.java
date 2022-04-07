@@ -9,6 +9,7 @@ import com.chatboard.etude.repository.comment.CommentRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    // As the type of alarm
+    private final ApplicationEventPublisher publisher;
 
     public List<CommentDto> readAll(CommentReadCondition condition) {
         return CommentDto.toDtoList(
@@ -39,6 +42,7 @@ public class CommentService {
                 postRepository,
                 commentRepository
         ));
+        comment.publishCreatedEvent(publisher);
     }
 
     @Transactional

@@ -13,6 +13,7 @@ public class MemberDto {
     private String username;
     private String nickname;
 
+    // Member to MemberDto
     public static MemberDto toDto(Member member) {
         return new MemberDto(member.getId(),
                 member.getEmail(),
@@ -20,4 +21,7 @@ public class MemberDto {
                 member.getNickname());
     }
 
+    public static MemberDto empty() {
+        return new MemberDto(null, "", "" ,"");
+    }
 }
