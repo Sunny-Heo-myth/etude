@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.chatboard.etude.factory.entity.MemberFactory.createMember;
 import static com.chatboard.etude.factory.entity.MemberFactory.createMemberWithRoles;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -192,7 +193,7 @@ public class MemberRepositoryTest {
         List<RoleType> roleTypes = List.of(RoleType.ROLE_NORMAL, RoleType.ROLE_SPECIAL_BUYER, RoleType.ROLE_ADMIN);
         List<Role> roles = roleTypes.stream()
                 .map(Role::new)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         roleRepository.saveAll(roles);
         clear();
@@ -215,7 +216,7 @@ public class MemberRepositoryTest {
         List<RoleType> roleTypes = List.of(RoleType.ROLE_NORMAL, RoleType.ROLE_SPECIAL_BUYER, RoleType.ROLE_ADMIN);
         List<Role> roles = roleTypes.stream()
                 .map(Role::new)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         roleRepository.saveAll(roles);
         clear();
@@ -231,6 +232,26 @@ public class MemberRepositoryTest {
         List<MemberRole> result = entityManager.createQuery(
                 "select mr from MemberRole mr", MemberRole.class).getResultList();
         assertThat(result.size()).isZero();
+    }
+
+    @Test
+    void findWithRolesByEmailTest() {
+        // given
+        List<RoleType> roleTypes = List.of(RoleType.ROLE_NORMAL, RoleType.ROLE_SPECIAL_BUYER, RoleType.ROLE_ADMIN);
+        List<Role> roles = roleTypes.stream()
+                .map(Role::new)
+                .collect(toList());
+        roleRepository.saveAll(roles);
+        Member member = memberRepository.save(createMemberWithRoles(roleRepository.findAll()));
+        clear();
+
+        // when
+        Member foundMember = memberRepository.findWithRolesByEmail(member.getEmail()).orElseThrow(MemberNotFoundException::new);
+
+        // then
+        List<RoleType> result = foundMember.getRoles().stream().map(memberRole -> memberRole.getRole().getRoleType()).collect(toList());
+        assertThat(result.size()).isEqualTo(roleTypes.size());
+        assertThat(result).contains(roleTypes.get(0), roleTypes.get(1), roleTypes.get(2));
     }
 
 }

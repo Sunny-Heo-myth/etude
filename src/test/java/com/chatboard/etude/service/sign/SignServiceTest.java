@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 // why import static?
+import java.util.List;
 import java.util.Optional;
 
 import static com.chatboard.etude.factory.dto.SignInRequestFactory.createSignInRequest;
@@ -59,10 +60,6 @@ public class SignServiceTest {
         );
     }
 
-    private Member createMember() {
-        return new Member("email", "password", "username", "nickname", emptyList());
-    }
-
     @Test
     void signUpTest() {
         // given
@@ -96,7 +93,7 @@ public class SignServiceTest {
         given(memberRepository.existsByNickname(anyString()))
                 .willReturn(true);
 
-        //wen, then
+        // when, then
         assertThatThrownBy(() -> signService.signUp(createSignUpRequest()))
                 .isInstanceOf(MemberNicknameAlreadyExistsException.class);
     }
@@ -115,16 +112,16 @@ public class SignServiceTest {
     @Test
     void signInTest() {
         // given
-        given(memberRepository.findByEmail(any()))
+        given(memberRepository.findWithRolesByEmail(any()))
                 .willReturn(Optional.of(createMember()));
 
         given(passwordEncoder.matches(anyString(), anyString()))
                 .willReturn(true);
 
-        given(accessTokenHelper.createToken(anyString()))
+        given(accessTokenHelper.createToken(any()))
                 .willReturn("access");
 
-        given(refreshTokenHelper.createToken(anyString()))
+        given(refreshTokenHelper.createToken(any()))
                 .willReturn("refresh");
 
         // when
@@ -138,7 +135,7 @@ public class SignServiceTest {
     @Test
     void signInExceptionByNoneMemberTest() {
         // given
-        given(memberRepository.findByEmail(any()))
+        given(memberRepository.findWithRolesByEmail(any()))
                 .willReturn(Optional.empty());
 
         // when, then
@@ -149,7 +146,7 @@ public class SignServiceTest {
     @Test
     void signInExceptionByInvalidPasswordTest() {
         // given
-        given(memberRepository.findByEmail(any()))
+        given(memberRepository.findWithRolesByEmail(any()))
                 .willReturn(Optional.of(createMember()));
 
         given(passwordEncoder.matches(anyString(), anyString()))
@@ -166,9 +163,9 @@ public class SignServiceTest {
         String refreshToken = "refreshToken";
         String subject = "subject";
         String accessToken = "accessToken";
-        given(refreshTokenHelper.validate(refreshToken)).willReturn(true);
-        given(refreshTokenHelper.extractSubject(refreshToken)).willReturn(subject);
-        given(accessTokenHelper.createToken(subject)).willReturn(accessToken);
+        given(refreshTokenHelper.parse(refreshToken))
+                .willReturn(Optional.of(new TokenHelper.PrivateClaims("memberId", List.of("ROLE_NORMAL"))));
+        given(accessTokenHelper.createToken(any())).willReturn(accessToken);
 
         // when
         RefreshTokenResponse response = signService.refreshToken(refreshToken);
@@ -181,10 +178,14 @@ public class SignServiceTest {
     void refreshTokenExceptionMyInvalidTokenTest() {
         // given
         String refreshToken = "refreshToken";
-        given(refreshTokenHelper.validate(refreshToken)).willReturn(false);
+        given(refreshTokenHelper.parse(refreshToken)).willReturn(Optional.empty());
 
         // when, then
         assertThatThrownBy(() -> signService.refreshToken(refreshToken))
-                .isInstanceOf(AuthenticationEntryPointException.class);
+                .isInstanceOf(RefreshTokenFailureException.class);
+    }
+
+    private Member createMember() {
+        return new Member("email", "password", "username", "nickname", emptyList());
     }
 }

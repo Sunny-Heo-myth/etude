@@ -4,9 +4,12 @@ import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
+import com.chatboard.etude.entity.message.Message;
+import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.exception.RoleNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
+import com.chatboard.etude.repository.message.MessageRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,10 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Component
 public class TestInitDB {
+
     @Autowired
     RoleRepository roleRepository;
     @Autowired
@@ -27,6 +32,8 @@ public class TestInitDB {
     PasswordEncoder encoder;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    MessageRepository messageRepository;
 
     private final String adminEmail = "admin@admin.com";
     private final String member1Email = "member1@member.com";
@@ -39,6 +46,7 @@ public class TestInitDB {
         initTestAdmin();
         initTestMember();
         initCategory();
+        initMessage();
     }
 
     private void initRole() {
@@ -77,6 +85,12 @@ public class TestInitDB {
         Category category1 = new Category("category1", null);
         Category category2 = new Category("category2", category1);
         categoryRepository.saveAll(List.of(category1, category2));
+    }
+
+    private void initMessage() {
+        Member sender = memberRepository.findByEmail(getMember1Email()).orElseThrow(MemberNotFoundException::new);
+        Member receiver = memberRepository.findByEmail(getMember2Email()).orElseThrow(MemberNotFoundException::new);
+        IntStream.range(0, 5).forEach(i -> messageRepository.save(new Message("content" + i, sender, receiver)));
     }
 
     public String getAdminEmail() {

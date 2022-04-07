@@ -12,6 +12,6 @@ import javax.validation.constraints.PositiveOrZero;
 @NoArgsConstructor
 public class CommentReadCondition {
     @NotNull(message = "Enter the post number.")
-    @PositiveOrZero(message = "Enter non-negative post number.")
+    @PositiveOrZero(message = "Enter the non-negative post number.")
     private Long postId;
 }

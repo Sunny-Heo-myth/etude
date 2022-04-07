@@ -7,11 +7,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberDto {
+
     private Long id;
     private String email;
     private String username;
     private String nickname;
 
+    // Member to MemberDto
     public static MemberDto toDto(Member member) {
         return new MemberDto(member.getId(),
                 member.getEmail(),
@@ -19,4 +21,7 @@ public class MemberDto {
                 member.getNickname());
     }
 
+    public static MemberDto empty() {
+        return new MemberDto(null, "", "" ,"");
+    }
 }

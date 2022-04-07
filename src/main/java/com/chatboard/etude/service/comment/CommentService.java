@@ -13,6 +13,7 @@ import com.chatboard.etude.repository.comment.CommentRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    // As the type of alarm
+    private final ApplicationEventPublisher publisher;
 
     public List<CommentDto> readAll(CommentReadCondition condition) {
         return CommentDto.toDtoList(
@@ -38,20 +41,6 @@ public class CommentService {
 
     @Transactional
     public void create(CommentCreateRequest request) {
-        Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(MemberNotFoundException::new);
-
-        Post post = postRepository.findById(request.getPostId())
-                .orElseThrow(PostNotFoundException::new);
-
-        Comment parent = Optional.ofNullable(request.getParentId())
-                // if there is parentId in request, do map() and assign parent comment instance.
-                .map(parentId -> commentRepository.findById(parentId)
-                        .orElseThrow(CommentNotFoundException::new))
-                // or parent comment instance will remain as null. (which means this comment is root comment.)
-                .orElse(null);
-
-        Comment comment = commentRepository.save(new Comment(request.getContent(), member, post, parent));
 
     }
 
