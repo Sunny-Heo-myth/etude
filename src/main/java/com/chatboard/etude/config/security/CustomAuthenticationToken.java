@@ -7,7 +7,6 @@ import java.util.Collection;
 
 public class CustomAuthenticationToken extends AbstractAuthenticationToken {
 
-    private String type;
     private final CustomUserDetails principal;
 
     /**
@@ -19,18 +18,19 @@ public class CustomAuthenticationToken extends AbstractAuthenticationToken {
     public CustomAuthenticationToken(CustomUserDetails principal,
                                      Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
+        super.setAuthenticated(true);
         this.principal = principal;
-        setAuthenticated(true);
-    }
-
-    @Override
-    public Object getCredentials() {
-        return new UnsupportedOperationException();
     }
 
     @Override
     public CustomUserDetails getPrincipal() {
         return principal;
     }
+
+    @Override
+    public Object getCredentials() {
+        throw new UnsupportedOperationException();
+    }
+
 
 }

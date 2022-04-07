@@ -2,6 +2,7 @@ package com.chatboard.etude.service.comment;
 
 import com.chatboard.etude.dto.comment.CommentDto;
 import com.chatboard.etude.entity.comment.Comment;
+import com.chatboard.etude.event.comment.CommentCreatedEvent;
 import com.chatboard.etude.exception.CommentNotFoundException;
 import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.exception.PostNotFoundException;
@@ -11,9 +12,11 @@ import com.chatboard.etude.repository.post.PostRepository;
 import com.chatboard.etude.service.comment.CommentService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +44,8 @@ public class CommentServiceTest {
     MemberRepository memberRepository;
     @Mock
     PostRepository postRepository;
+    @Mock
+    ApplicationEventPublisher publisher;
 
     @Test
     void readAllTest() {
@@ -77,14 +82,21 @@ public class CommentServiceTest {
     @Test
     void createTest() {
         // given
+        ArgumentCaptor<Object> eventCaptor = ArgumentCaptor.forClass(Object.class);
+
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(createMember()));
         given(postRepository.findById(anyLong())).willReturn(Optional.of(createPost()));
+        given(commentRepository.save(any())).willReturn(createComment(null));
 
         // when
         commentService.create(createCommentCreateRequest());
 
         // then
         verify(commentRepository).save(any());
+        verify(publisher).publishEvent(eventCaptor.capture());
+
+        Object event = eventCaptor.getValue();
+        assertThat(event).isInstanceOf(CommentCreatedEvent.class);
     }
 
     @Test

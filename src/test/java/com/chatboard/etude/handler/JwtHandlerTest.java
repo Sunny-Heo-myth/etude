@@ -1,82 +1,74 @@
 package com.chatboard.etude.handler;
 
+import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 
 import java.util.Base64;
+import java.util.Map;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class JwtHandlerTest {
-    JwtHandler jwtHandler = new JwtHandler();
 
-    // Auxiliary
-    private String createToken(String encodedKey, String subject, long maxAgeSeconds) {
-        return jwtHandler.createToken(
-                encodedKey,
-                subject,
-                maxAgeSeconds
-        );
-    }
+    JwtHandler jwtHandler = new JwtHandler();
 
     @Test
     void createTokenTest() {
         // given, when
-        String encodedKey = Base64.getEncoder().encodeToString("myKey".getBytes());
-        String token = createToken(encodedKey, "subject", 60L);
+        String encodedKey = "myKey";
+        String token = createToken(encodedKey, Map.of(), 60L);
 
         // then
-        assertThat(token).contains("Bearer");
+        assertThat(token).contains("Bearer ");
     }
 
     @Test
-    void extractSubjectTest() {
+    void parseTest() {
         // given
-        String encodedKey = Base64.getEncoder().encodeToString("myKey".getBytes());
-        String subject = "subject";
-        String token = createToken(encodedKey, subject, 60L);
+        String key = "key";
+        String value = "value";
+        String token = createToken(key, Map.of(key, value), 60L);
 
         // when
-        String extractedSubject = jwtHandler.extractSubject(encodedKey, token);
+        Claims claims = jwtHandler.parse(key, token)
+                .orElseThrow(RuntimeException::new);
 
         // then
-        assertThat(extractedSubject).isEqualTo(subject);
+        assertThat(claims.get(key)).isEqualTo(value);
     }
 
     @Test
-    void validateTest() {
+    void parseByInvalidKeyTest() {
         // given
         String encodedKey = Base64.getEncoder().encodeToString("myKey".getBytes());
-        String token = createToken(encodedKey, "subject", 60L);
+        String token = createToken(encodedKey, Map.of(), 60L);
 
         // when
-        boolean isValid = jwtHandler.validate(encodedKey, token);
+        Optional<Claims> claims = jwtHandler.parse("invalidKey", token);
 
         // then
-        assertThat(isValid).isTrue();
+        assertThat(claims).isEmpty();
     }
 
     @Test
-    void invalidateByInvalidKeyTest() {
+    void parseByExpiredTokenTest() {
         // given
         String encodedKey = Base64.getEncoder().encodeToString("myKey".getBytes());
-        String token = createToken(encodedKey, "subject", 60L);
+        String token = createToken(encodedKey, Map.of(), 0L);
 
         // when
-        boolean isValid = jwtHandler.validate("invalid", token);
+        Optional<Claims> claims = jwtHandler.parse("invalidKey", token);
 
         // then
-        assertThat(isValid).isFalse();
+        assertThat(claims).isEmpty();
     }
 
-    @Test
-    void invalidateByExpiredTokenTest() {
-        // given
-        String encodedKey = Base64.getEncoder().encodeToString("myKey".getBytes());
-        String token = createToken(encodedKey, "subject", 0L);
-
-        // when
-        boolean isValid = jwtHandler.validate(encodedKey, token);
-
-        //then
-        assertThat(isValid).isFalse();
+    public String createToken(String encodedKey, Map<String, Object> claims, long maxAgeSeconds) {
+        return jwtHandler.createToken(
+                encodedKey,
+                claims,
+                maxAgeSeconds
+        );
     }
 }

@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class LineAlarmService implements AlarmService{
+
     @Override
     public void alarm(AlarmInfoDto alarmInfoDto) {
         log.info("Line message to = {} : {}",
-                alarmInfoDto.getTargetMemberDto().getEmail(), alarmInfoDto.getMessage());
+                alarmInfoDto.getTargetMemberDto().getNickname(), alarmInfoDto.getMessage());
     }
 }

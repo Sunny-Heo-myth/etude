@@ -1,14 +1,17 @@
 package com.chatboard.etude.entity.comment;
 
+import com.chatboard.etude.dto.member.MemberDto;
 import com.chatboard.etude.entity.common.EntityDate;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Post;
+import com.chatboard.etude.event.comment.CommentCreatedEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.context.ApplicationEventPublisher;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -85,12 +88,25 @@ public class Comment extends EntityDate {
 
     private boolean isDeletableParent() {
         return getParent() != null && getParent().isDeleted();
-                // there is a parent with this comment
-                // and this parent is in deleted state
+                // there is a parent with this comment.
+                // and this parent is in deleted state.
     }
 
     private boolean hasChildren() {
         return this.getChildren().size() != 0;
     }
 
+    public void publishCreatedEvent(ApplicationEventPublisher publisher) {
+        publisher.publishEvent(
+                new CommentCreatedEvent(
+                        MemberDto.toDto(getMember()),
+                        MemberDto.toDto(getPost().getMember()),
+                        Optional.ofNullable(getParent())
+                                .map(Comment::getMember)
+                                .map(MemberDto::toDto)
+                                .orElseGet(MemberDto::empty),   // empty dto value
+                        getContent()
+                )
+        );
+    }
 }

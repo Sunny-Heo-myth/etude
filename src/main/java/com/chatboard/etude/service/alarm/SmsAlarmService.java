@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class SmsAlarmService implements AlarmService{
+
     @Override
     public void alarm(AlarmInfoDto alarmInfoDto) {
         log.info("Sms to = {} : {}",
-                alarmInfoDto.getTargetMemberDto().getEmail(), alarmInfoDto.getMessage());
+                alarmInfoDto.getTargetMemberDto().getUsername(), alarmInfoDto.getMessage());
     }
 }
