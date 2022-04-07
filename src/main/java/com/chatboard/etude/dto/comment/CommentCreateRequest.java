@@ -41,25 +41,4 @@ public class CommentCreateRequest {
     @ApiModelProperty(value = "parent comment id", notes = "Enter parent comment id.", example = "7")
     private Long parentId;
 
-    public static Comment toEntity(
-            CommentCreateRequest request,
-            MemberRepository memberRepository,
-            PostRepository postRepository,
-            CommentRepository commentRepository) {
-
-        return new Comment(
-                request.content,
-                memberRepository.findById(request.memberId)
-                        .orElseThrow(MemberNotFoundException::new),
-
-                postRepository.findById(request.postId)
-                        .orElseThrow(PostNotFoundException::new),
-
-                Optional.ofNullable(request.parentId)   // If parentId is not null, find comment with parentId,
-                        .map(parentId -> commentRepository.findById(parentId)
-                                .orElseThrow(CommentNotFoundException::new) // or throw not found.
-                        )
-                        .orElse(null)   // parentId can be null which means this is root comment.
-        );
-    }
 }
