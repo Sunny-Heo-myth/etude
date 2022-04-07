@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Api(value = "Sign controller", tags = "Sign")
@@ -33,18 +34,22 @@ public class SignService {
 
     @Transactional
     public void signUp(SignUpRequest request) {
+
         validateSignUpInfo(request);
 
-        memberRepository.save(SignUpRequest.toEntity(
-                request,
-                roleRepository.findByRoleType(RoleType.ROLE_NORMAL)
-                        .orElseThrow(RoleNotFoundException::new),
-                passwordEncoder)
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.ROLE_NORMAL)
+                .orElseThrow(RoleNotFoundException::new));
+
+        memberRepository.save(
+                new Member(request.getEmail(), encodedPassword, request.getUsername(), request.getNickname(), roles)
         );
     }
 
     @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest request) {
+
         Member member = memberRepository.findWithRolesByEmail(request.getEmail())
                 .orElseThrow(LoginFailureException::new);
 
@@ -57,6 +62,7 @@ public class SignService {
     }
 
     public RefreshTokenResponse refreshToken(String refreshToken) {
+
         TokenHelper.PrivateClaims privateClaims = refreshTokenHelper.parse(refreshToken)
                 .orElseThrow(RefreshTokenFailureException::new);
 

@@ -40,14 +40,4 @@ public class MessageCreateRequest {
     @Positive(message = "Enter the positive receiver id.")
     private Long receiverId;
 
-    public static Message toEntity(MessageCreateRequest request, MemberRepository memberRepository) {
-        return new Message(
-                request.content,
-                memberRepository.findById(request.memberId)
-                        .orElseThrow(MemberNotFoundException::new),
-                memberRepository.findById(request.receiverId)
-                        .orElseThrow(MemberNotFoundException::new)
-        );
-    }
-
 }

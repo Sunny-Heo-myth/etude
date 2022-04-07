@@ -4,7 +4,9 @@ import com.chatboard.etude.dto.message.MessageCreateRequest;
 import com.chatboard.etude.dto.message.MessageDto;
 import com.chatboard.etude.dto.message.MessageListDto;
 import com.chatboard.etude.dto.message.MessageReadCondition;
+import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.message.Message;
+import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.exception.MessageNotFoundException;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.message.MessageRepository;
@@ -43,7 +45,16 @@ public class MessageService {
 
     @Transactional
     public void create(MessageCreateRequest request) {
-        messageRepository.save(MessageCreateRequest.toEntity(request, memberRepository));
+
+        Member sender = memberRepository.findById(request.getMemberId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        Member receiver = memberRepository.findById(request.getReceiverId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        Message message = new Message(request.getContent(), sender, receiver);
+
+        messageRepository.save(message);
     }
 
     @Transactional

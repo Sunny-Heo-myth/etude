@@ -1,8 +1,12 @@
 package com.chatboard.etude.service.post;
 
 import com.chatboard.etude.dto.post.*;
+import com.chatboard.etude.entity.category.Category;
+import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Image;
 import com.chatboard.etude.entity.post.Post;
+import com.chatboard.etude.exception.CategoryNotFoundException;
+import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.exception.PostNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -39,13 +44,22 @@ public class PostService {
 
     @Transactional
     public PostCreateResponse create(PostCreateRequest request) {
+
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(CategoryNotFoundException::new);
+
+        List<Image> images = request.getImages().stream()
+                .map(image -> new Image(image.getOriginalFilename()))
+                .collect(Collectors.toList());
+
         Post post = postRepository.save(
-                PostCreateRequest.toEntity(
-                        request,
-                        memberRepository,
-                        categoryRepository
-                )
+                new Post(request.getTitle(), request.getContent(), request.getPrice(),
+                        member, category, images)
         );
+
         uploadImages(post.getImages(), request.getImages());
         return new PostCreateResponse(post.getId());
     }

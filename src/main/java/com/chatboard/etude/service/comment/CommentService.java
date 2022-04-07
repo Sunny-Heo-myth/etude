@@ -42,6 +42,19 @@ public class CommentService {
     @Transactional
     public void create(CommentCreateRequest request) {
 
+        Member member = memberRepository.findById(request.getMemberId())
+                .orElseThrow(MemberNotFoundException::new);
+
+        Post post = postRepository.findById(request.getPostId())
+                .orElseThrow(PostNotFoundException::new);
+
+        Comment parent = Optional.ofNullable(request.getParentId())
+                .map(parentId -> commentRepository.findById(parentId)
+                        .orElseThrow(CommentNotFoundException::new))
+                .orElse(null);
+
+        Comment comment = commentRepository.save(new Comment(request.getContent(), member, post, parent));
+        comment.publishCreatedEvent(publisher);
     }
 
     @Transactional
