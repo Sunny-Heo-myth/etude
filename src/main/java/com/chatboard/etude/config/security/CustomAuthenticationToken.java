@@ -9,17 +9,12 @@ public class CustomAuthenticationToken extends AbstractAuthenticationToken {
 
     private final CustomUserDetails principal;
 
-    /**
-     * Creates a token with the supplied array of authorities.
-     *
-     * @param authorities the collection of <tt>GrantedAuthority</tt>s for the principal
-     *                    represented by this authentication object.
-     */
     public CustomAuthenticationToken(CustomUserDetails principal,
                                      Collection<? extends GrantedAuthority> authorities) {
+
         super(authorities);
-        super.setAuthenticated(true);
         this.principal = principal;
+        setAuthenticated(true);
     }
 
     @Override

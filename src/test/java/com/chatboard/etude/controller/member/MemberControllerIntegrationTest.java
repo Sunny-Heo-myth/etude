@@ -120,8 +120,7 @@ public class MemberControllerIntegrationTest {
         // when, then
         mockMvc.perform(
                 delete("/api/members/{id}", member.getId()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/entry-point"));
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -129,6 +128,7 @@ public class MemberControllerIntegrationTest {
         // given
         Member member = memberRepository.findByEmail(testInitDB.getMember1Email())
                 .orElseThrow(MemberNotFoundException::new);
+
         SignInResponse attackerResponse = signService.signIn(
                 createSignInRequest(testInitDB.getMember2Email(), testInitDB.getPassword()));
 
@@ -136,8 +136,7 @@ public class MemberControllerIntegrationTest {
         mockMvc.perform(
                 delete("/api/members/{id}", member.getId())
                         .header("Authorization", attackerResponse.getAccessToken()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/access-denied"));
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -152,7 +151,6 @@ public class MemberControllerIntegrationTest {
         mockMvc.perform(
                 delete("/api/members/{id}", member.getId())
                         .header("Authorization", response.getRefreshToken()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/entry-point"));
+                .andExpect(status().isUnauthorized());
     }
 }

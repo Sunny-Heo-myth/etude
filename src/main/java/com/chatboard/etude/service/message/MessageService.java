@@ -12,6 +12,7 @@ import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.message.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ public class MessageService {
         ));
     }
 
+    @PreAuthorize("@messageGuard.check(#id)")
     public MessageDto read(Long id) {
         return MessageDto.toDto(
                 messageRepository.findWithSenderAndReceiverById(id)
@@ -58,11 +60,13 @@ public class MessageService {
     }
 
     @Transactional
+    @PreAuthorize("@messageSenderGuard.check(#id)")
     public void deleteBySender(Long id) {
         delete(id, Message::deleteBySender);
     }
 
     @Transactional
+    @PreAuthorize("@messageReceiverGuard.check(#id)")
     public void deleteByReceiver(Long id) {
         delete(id, Message::deleteByReceiver);
     }

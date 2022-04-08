@@ -1,6 +1,6 @@
 package com.chatboard.etude.aop;
 
-import com.chatboard.etude.config.security.guard.AuthenticationHelper;
+import com.chatboard.etude.config.security.guard.AuthHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -18,13 +18,13 @@ import java.util.Optional;
 @Slf4j
 public class AssignMemberIdAspect {
 
-    private final AuthenticationHelper authenticationHelper;
+    private final AuthHelper authHelper;
 
     @Before("@annotation(com.chatboard.etude.aop.AssignMemberId)")
     public void assignMemberId(JoinPoint joinPoint) {
         Arrays.stream(joinPoint.getArgs())
                 .forEach(arg -> getMethod(arg.getClass(),"setMemberId")
-                        .ifPresent(setMemberId -> invokeMethod(arg, setMemberId, AuthenticationHelper.extractMemberId())));
+                        .ifPresent(setMemberId -> invokeMethod(arg, setMemberId, AuthHelper.extractMemberId())));
 
     }
 

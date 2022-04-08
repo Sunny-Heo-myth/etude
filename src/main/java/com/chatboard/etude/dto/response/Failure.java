@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class Failure implements Result{
+public class Failure implements Result {
+
     private String message;
 }

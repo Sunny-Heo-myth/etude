@@ -3,6 +3,7 @@ package com.chatboard.etude.config.security.guard;
 import com.chatboard.etude.config.security.CustomAuthenticationToken;
 import com.chatboard.etude.config.security.CustomUserDetails;
 import com.chatboard.etude.entity.member.RoleType;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,11 +14,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-@Slf4j
-public class AuthenticationHelper {
+@NoArgsConstructor
+public class AuthHelper {
 
     public static boolean isAuthenticated() {
-        return getAuthentication() instanceof CustomAuthenticationToken
+        return getAuthentication() instanceof
+                CustomAuthenticationToken
                 && getAuthentication().isAuthenticated();
     }
 

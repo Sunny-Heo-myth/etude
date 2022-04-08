@@ -23,10 +23,16 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
         extractToken(request)
                 .map(userDetailsService::loadUserByUsername)
                         .ifPresent(this::setAuthentication);
         chain.doFilter(request, response);
+    }
+
+    private Optional<String> extractToken(ServletRequest request) {
+        return Optional.ofNullable(((HttpServletRequest) request)   // casting first bracket.
+                .getHeader("Authorization"));
     }
 
     private void setAuthentication(CustomUserDetails userDetails) {
@@ -36,10 +42,4 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                         new CustomAuthenticationToken(userDetails, userDetails.getAuthorities()));
     }
 
-    private Optional<String> extractToken(ServletRequest request) {
-        return Optional.ofNullable(((HttpServletRequest) request)   // casting first bracket.
-                .getHeader("Authorization"));
-    }
-
-    // if non-null, otherwise returns an empty Optional(new Optional<>()).
 }

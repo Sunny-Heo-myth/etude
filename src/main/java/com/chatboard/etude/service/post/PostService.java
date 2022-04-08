@@ -13,6 +13,7 @@ import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
 import com.chatboard.etude.service.file.FileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,21 +66,31 @@ public class PostService {
     }
 
     @Transactional
-    public PostUpdateResponse update(Long id, PostUpdateRequest request) {
+    @PreAuthorize("@postGuard.check(#id)")
+    public void delete(Long id) {
+
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        Post.ImageUpdatedResult result = post.update(request);
-        uploadImages(result.getAddedImages(), result.getAddedImageFiles());
-        deleteImages(result.getDeletedImages());
-        return new PostUpdateResponse(id);
+
+        deleteImages(post.getImages());
+
+        postRepository.delete(post);
     }
 
     @Transactional
-    public void delete(Long id) {
+    @PreAuthorize("@postGuard.check(#id)")
+    public PostUpdateResponse update(Long id, PostUpdateRequest request) {
+
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
-        deleteImages(post.getImages());
-        postRepository.delete(post);
+
+        Post.ImageUpdatedResult result = post.update(request);
+
+        uploadImages(result.getAddedImages(), result.getAddedImageFiles());
+
+        deleteImages(result.getDeletedImages());
+
+        return new PostUpdateResponse(id);
     }
 
     private void uploadImages(List<Image> images, List<MultipartFile> files) {

@@ -25,7 +25,7 @@ public class MessageCreateRequest {
             notes = "Enter the message.",
             required = true,
             example = "my message")
-    @NotBlank(message = "Enter the message")
+    @NotBlank(message = "{messageCreateRequest.content.notBlank}")
     private String content;
 
     @ApiModelProperty(hidden = true)
@@ -36,8 +36,8 @@ public class MessageCreateRequest {
             value = "receiver id",
             notes = "Enter the receiver id.",
             example = "7")
-    @NotNull(message = "Enter the receiver id.")
-    @Positive(message = "Enter the positive receiver id.")
+    @NotNull(message = "{messageCreateRequest.receiverId.notNull}")
+    @Positive(message = "{messageCreateRequest.receiverId.positive}")
     private Long receiverId;
 
 }

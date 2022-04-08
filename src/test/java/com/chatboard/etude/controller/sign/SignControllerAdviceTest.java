@@ -4,6 +4,7 @@ import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.dto.sign.SignInRequest;
 import com.chatboard.etude.dto.sign.SignUpRequest;
 import com.chatboard.etude.exception.*;
+import com.chatboard.etude.handler.ResponseHandler;
 import com.chatboard.etude.service.sign.SignService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -34,14 +36,21 @@ public class SignControllerAdviceTest {
 
     @Mock
     SignService signService;
+    @Mock
+    ResponseHandler responseHandler;
 
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void beforeEach() {
+
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setBasenames("i18n/exception");
+
         mockMvc = MockMvcBuilders.standaloneSetup(signController)
-                .setControllerAdvice(new ExceptionAdvice())
+                .setControllerAdvice(new ExceptionAdvice(responseHandler))
                 .build();
     }
 
@@ -134,14 +143,13 @@ public class SignControllerAdviceTest {
     @Test
     void refreshTokenAuthenticationEntryPointException() throws Exception {
         // given
-        given(signService.refreshToken(anyString())).willThrow(AuthenticationEntryPointException.class);
+        given(signService.refreshToken(anyString())).willThrow(RefreshTokenFailureException.class);
 
         // when, then
         mockMvc.perform(
                 post("/api/refresh-token")
                         .header("Authorization", "refreshToken"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value(-1001));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -149,8 +157,7 @@ public class SignControllerAdviceTest {
         // given, when, then
         mockMvc.perform(
                 post("/api/refresh-token"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(-1009));
+                .andExpect(status().isBadRequest());
     }
 
 }

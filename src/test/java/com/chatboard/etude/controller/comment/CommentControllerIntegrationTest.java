@@ -52,6 +52,7 @@ public class CommentControllerIntegrationTest {
     WebApplicationContext context;
     @Autowired
     MockMvc mockMvc;
+
     @Autowired
     TestInitDB testInitDB;
 
@@ -131,8 +132,7 @@ public class CommentControllerIntegrationTest {
                 post("/api/comments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/entry-point"));
+                .andExpect(status().isUnauthorized());
 
     }
 
@@ -176,12 +176,11 @@ public class CommentControllerIntegrationTest {
         // when, then
         mockMvc.perform(
                         delete("/api/comments/{id}", comment.getId()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/entry-point"));
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void deleteUnauthorizedByNotResourceOwnerTest() throws Exception {
+    void deleteAccessDeniedByNotResourceOwnerTest() throws Exception {
         // given
         Comment comment = commentRepository.save(createComment(member1, post, null));
         SignInResponse invalidSignInResponse = signService.signIn(createSignInRequest(
@@ -189,9 +188,8 @@ public class CommentControllerIntegrationTest {
 
         // when, then
         mockMvc.perform(
-                        delete("/api/comments/{id}", comment.getId())
-                        .header("Authorization", invalidSignInResponse.getAccessToken()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/access-denied"));
+                    delete("/api/comments/{id}", comment.getId())
+                    .header("Authorization", invalidSignInResponse.getAccessToken()))
+                .andExpect(status().isForbidden());
     }
 }

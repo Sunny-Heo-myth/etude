@@ -31,22 +31,22 @@ public class PostCreateRequest {
             notes = "Enter post title.",
             required = true,
             example = "my title")
-    @NotBlank(message = "Enter post title.")
+    @NotBlank(message = "{postCreateRequest.title.notBlank}")
     private String title;
 
     @ApiModelProperty(value = "post content",
             notes = "Enter post content.",
             required = true,
             example = "my content")
-    @NotBlank(message = "Enter post content.")
+    @NotBlank(message = "{postCreateRequest.content.notBlank}")
     private String content;
 
     @ApiModelProperty(value = "price",
             notes = "Enter price.",
             required = true,
             example = "50000")
-    @NotNull(message = "Enter price.")
-    @PositiveOrZero(message = "Enter above 0.")
+    @NotNull(message = "{postCreateRequest.price.notNull}")
+    @PositiveOrZero(message = "{postCreateRequest.price.positiveOrZero}")
     private Long price;
 
     @ApiModelProperty(hidden = true)
@@ -57,8 +57,8 @@ public class PostCreateRequest {
             notes = "Enter category id.",
             required = true,
             example = "3")
-    @NotNull(message = "Enter category id.")
-    @PositiveOrZero(message = "Enter valid category id.")
+    @NotNull(message = "{postCreateRequest.categoryId.notNull}")
+    @PositiveOrZero(message = "{postCreateRequest.categoryId.positiveOrZero}")
     private Long categoryId;
 
     @ApiModelProperty(value = "image", notes = "Append image.")

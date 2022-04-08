@@ -21,13 +21,13 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        throw new UnsupportedOperationException();
+    public String getUsername() {
+        return userId;
     }
 
     @Override
-    public String getUsername() {
-        return userId;
+    public String getPassword() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

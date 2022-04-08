@@ -41,27 +41,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
     }
 
-    //    private final MemberRepository memberRepository;
-//
-//    @Override
-//    // **does not load user by username but user id.
-//    public CustomUserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-//        // If there is no effect for user by using old token, we do not need to access database for every request.
-//        // Or we can save UserDetails in speedy memory DB.
-//        // though, in this project, there is no API which changes subject of a token.
-//        Member member = memberRepository.findWithRolesById(Long.valueOf(userId))
-//                // when member is deleted already but the issued token is still valid
-//                .orElseGet(() -> new Member(null, null, null, null, List.of()));
-//
-//        return new CustomUserDetails(
-//                String.valueOf(member.getId()),
-//                member.getRoles().stream()
-//                        .map(MemberRole::getRole)
-//                        .map(Role::getRoleType)
-//                        .map(RoleType::name)
-//                        .map(SimpleGrantedAuthority::new)
-//                        .collect(Collectors.toSet())
-//        );
-//    }
-
 }

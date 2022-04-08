@@ -2,6 +2,7 @@ package com.chatboard.etude.controller.member;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.exception.MemberNotFoundException;
+import com.chatboard.etude.handler.ResponseHandler;
 import com.chatboard.etude.service.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -25,16 +27,23 @@ public class MemberControllerAdviceTest {
 
     @InjectMocks
     MemberController memberController;
-
     @Mock
     MemberService memberService;
+    @Mock
+    ResponseHandler responseHandler;
 
     MockMvc mockMvc;
 
     @BeforeEach
     void beforeEach() {
+
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setBasenames("i18n/exception");
+
         mockMvc = MockMvcBuilders.standaloneSetup(memberController)
-                .setControllerAdvice(new ExceptionAdvice()).build();
+                .setControllerAdvice(new ExceptionAdvice(responseHandler))
+                .build();
     }
 
     @Test
@@ -45,8 +54,7 @@ public class MemberControllerAdviceTest {
         // when, then
         mockMvc.perform(
                 get("/api/members/{id}", 1L))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1007));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -57,7 +65,6 @@ public class MemberControllerAdviceTest {
         // when, then
         mockMvc.perform(
                 delete("/api/members/{id}", 1L))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1007));
+                .andExpect(status().isNotFound());
     }
 }

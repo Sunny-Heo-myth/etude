@@ -1,16 +1,18 @@
 package com.chatboard.etude.config.security.guard;
 
+import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.entity.message.Message;
-import com.chatboard.etude.exception.AccessDeniedException;
 import com.chatboard.etude.repository.message.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MessageReceiverGuard extends Guard{
 
     private final MessageRepository messageRepository;
@@ -23,11 +25,10 @@ public class MessageReceiverGuard extends Guard{
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        Message message = messageRepository.findById(id)
-                .orElseThrow(() -> {
-                    throw new AccessDeniedException("");
-                });
-
-        return message.getReceiver().getId().equals(AuthenticationHelper.extractMemberId());
+        return messageRepository.findById(id)
+                .map(Message::getReceiver)
+                .map(Member::getId)
+                .filter(receiverId -> receiverId.equals(AuthHelper.extractMemberId()))
+                .isPresent();
     }
 }

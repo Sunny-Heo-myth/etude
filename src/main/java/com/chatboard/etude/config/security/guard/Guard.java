@@ -6,9 +6,10 @@ import java.util.List;
 
 public abstract class Guard {
 
+    // authentication and authorization is not our main service
+    // both auth-strategies are not business logic and will not be the part of service logics.
     public final boolean check(Long id) {
-        return AuthenticationHelper.isAuthenticated()
-                && (hasRole(getRoleTypes()) || isResourceOwner(id));
+        return hasRole(getRoleTypes()) || isResourceOwner(id);
     }
 
     abstract protected List<RoleType> getRoleTypes();
@@ -16,6 +17,6 @@ public abstract class Guard {
     abstract protected boolean isResourceOwner(Long id);
 
     private boolean hasRole(List<RoleType> roleTypes) {
-        return AuthenticationHelper.extractMemberRoles().containsAll(roleTypes);
+        return AuthHelper.extractMemberRoles().containsAll(roleTypes);
     }
 }
