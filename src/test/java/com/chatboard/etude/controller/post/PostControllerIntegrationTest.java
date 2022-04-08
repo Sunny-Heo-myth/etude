@@ -140,8 +140,7 @@ public class PostControllerIntegrationTest {
                             return requestProcessor;
                         })
                         .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/entry-point"));
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -186,16 +185,16 @@ public class PostControllerIntegrationTest {
 
         // when, then
         mockMvc.perform(
-                        multipart("/api/posts/{id}", post.getId())
-                                .param("title", updatedTitle)
-                                .param("content", updatedContent)
-                                .param("price", String.valueOf(updatedPrice))
-                                .with(requestProcessor -> {
-                                    requestProcessor.setMethod("PUT");
-                                    return requestProcessor;
-                                })
-                                .contentType(MediaType.MULTIPART_FORM_DATA)
-                                .header("Authorization", signInResponse.getAccessToken()))
+                multipart("/api/posts/{id}", post.getId())
+                        .param("title", updatedTitle)
+                        .param("content", updatedContent)
+                        .param("price", String.valueOf(updatedPrice))
+                        .with(requestProcessor -> {
+                            requestProcessor.setMethod("PUT");
+                            return requestProcessor;
+                        })
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header("Authorization", signInResponse.getAccessToken()))
                 .andExpect(status().isOk());
 
         Post updatedPost = postRepository.findById(post.getId())
@@ -217,18 +216,17 @@ public class PostControllerIntegrationTest {
 
         // when, then
         mockMvc.perform(
-                        multipart("/api/posts/{id}", post.getId())
-                                .param("title", updatedTitle)
-                                .param("content", updatedContent)
-                                .param("price", String.valueOf(updatedPrice))
-                                .with(requestProcessor -> {
-                                    requestProcessor.setMethod("PUT");
-                                    return requestProcessor;
-                                })
-                                .contentType(MediaType.MULTIPART_FORM_DATA))
+                multipart("/api/posts/{id}", post.getId())
+                        .param("title", updatedTitle)
+                        .param("content", updatedContent)
+                        .param("price", String.valueOf(updatedPrice))
+                        .with(requestProcessor -> {
+                            requestProcessor.setMethod("PUT");
+                            return requestProcessor;
+                        })
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
 
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/entry-point"));
+                .andExpect(status().isUnauthorized());
 
     }
 
@@ -243,18 +241,17 @@ public class PostControllerIntegrationTest {
 
         // when, then
         mockMvc.perform(
-                        multipart("/api/posts/{id}", post.getId())
-                                .param("title", updatedTitle)
-                                .param("content", updatedContent)
-                                .param("price", String.valueOf(updatedPrice))
-                                .with(requestProcessor -> {
-                                    requestProcessor.setMethod("PUT");
-                                    return requestProcessor;
-                                })
-                                .contentType(MediaType.MULTIPART_FORM_DATA)
-                                .header("Authorization", notOwnerSignInResponse.getAccessToken()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/exception/access-denied"));
+                multipart("/api/posts/{id}", post.getId())
+                        .param("title", updatedTitle)
+                        .param("content", updatedContent)
+                        .param("price", String.valueOf(updatedPrice))
+                        .with(requestProcessor -> {
+                            requestProcessor.setMethod("PUT");
+                            return requestProcessor;
+                        })
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .header("Authorization", notOwnerSignInResponse.getAccessToken()))
+                .andExpect(status().isForbidden());
     }
 
     @Test

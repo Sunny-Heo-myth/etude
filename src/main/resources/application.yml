@@ -15,10 +15,12 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
+  messages:
+    basename: i18n/exception, i18n/validation
+
   jpa:
     properties:
       hibernate:
         default_batch_fetch_size: 100
     hibernate:
-
       ddl-auto: create

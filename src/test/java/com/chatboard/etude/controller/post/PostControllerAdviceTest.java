@@ -6,6 +6,7 @@ import com.chatboard.etude.exception.CategoryNotFoundException;
 import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.exception.PostNotFoundException;
 import com.chatboard.etude.exception.UnsupportedImageFormatException;
+import com.chatboard.etude.handler.ResponseHandler;
 import com.chatboard.etude.service.post.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -33,13 +35,20 @@ public class PostControllerAdviceTest {
     PostController postController;
     @Mock
     PostService postService;
+    @Mock
+    ResponseHandler responseHandler;
 
     MockMvc mockMvc;
 
     @BeforeEach
     void beforeEach() {
+
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setBasenames("i18n/exception");
+
         mockMvc = MockMvcBuilders.standaloneSetup(postController)
-                .setControllerAdvice(new ExceptionAdvice())
+                .setControllerAdvice(new ExceptionAdvice(responseHandler))
                 .build();
     }
 
@@ -50,8 +59,7 @@ public class PostControllerAdviceTest {
 
         // when, then
         performCreate()
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1007));
+                .andExpect(status().isNotFound());
 
     }
 
@@ -62,8 +70,7 @@ public class PostControllerAdviceTest {
 
         // when, then
         performCreate()
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1010));
+                .andExpect(status().isNotFound());
 
     }
 
@@ -74,24 +81,8 @@ public class PostControllerAdviceTest {
 
         // when, then
         performCreate()
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1013));
+                .andExpect(status().isNotFound());
 
-    }
-
-    private ResultActions performCreate() throws Exception {
-        PostCreateRequest request = createPostCreateRequest();
-        return mockMvc.perform(
-                multipart("/api/posts")
-                        .param("title", request.getTitle())
-                        .param("content", request.getContent())
-                        .param("price", String.valueOf(request.getPrice()))
-                        .param("categoryId", String.valueOf(request.getCategoryId()))
-                        .with(requestProcessor -> {
-                            requestProcessor.setMethod("POST");
-                            return requestProcessor;
-                        })
-                        .contentType(MediaType.MULTIPART_FORM_DATA));
     }
 
     @Test
@@ -102,8 +93,7 @@ public class PostControllerAdviceTest {
         // when, then
         mockMvc.perform(
                 get("/api/posts/{id}", 1L))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1012));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -122,8 +112,7 @@ public class PostControllerAdviceTest {
                                     return requestProcessor;
                                 })
                                 .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1012));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -134,8 +123,22 @@ public class PostControllerAdviceTest {
         // when, then
         mockMvc.perform(
                 delete("/api/posts/{id}", 1L))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1012));
+                .andExpect(status().isNotFound());
+    }
+
+    private ResultActions performCreate() throws Exception {
+        PostCreateRequest request = createPostCreateRequest();
+        return mockMvc.perform(
+                multipart("/api/posts")
+                        .param("title", request.getTitle())
+                        .param("content", request.getContent())
+                        .param("price", String.valueOf(request.getPrice()))
+                        .param("categoryId", String.valueOf(request.getCategoryId()))
+                        .with(requestProcessor -> {
+                            requestProcessor.setMethod("POST");
+                            return requestProcessor;
+                        })
+                        .contentType(MediaType.MULTIPART_FORM_DATA));
     }
 
 }

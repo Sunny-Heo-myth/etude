@@ -3,6 +3,7 @@ package com.chatboard.etude.controller.message;
 import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.dto.message.MessageCreateRequest;
 import com.chatboard.etude.exception.MessageNotFoundException;
+import com.chatboard.etude.handler.ResponseHandler;
 import com.chatboard.etude.service.message.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,14 +31,21 @@ public class MessageControllerAdviceTest {
     MessageController messageController;
     @Mock
     MessageService messageService;
+    @Mock
+    ResponseHandler responseHandler;
 
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     void beforeEach() {
+
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setBasenames("i18n/exception");
+
         mockMvc = MockMvcBuilders.standaloneSetup(messageController)
-                .setControllerAdvice(new ExceptionAdvice())
+                .setControllerAdvice(new ExceptionAdvice(responseHandler))
                 .build();
     }
 
@@ -49,8 +58,7 @@ public class MessageControllerAdviceTest {
         // when, then
         mockMvc.perform(
                 get("/api/messages/{id}", id))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1016));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -64,8 +72,7 @@ public class MessageControllerAdviceTest {
                 post("/api/messages")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1016));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -77,8 +84,7 @@ public class MessageControllerAdviceTest {
         // when, then
         mockMvc.perform(
                 delete("/api/messages/sender/{id}", id))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1016));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -90,8 +96,7 @@ public class MessageControllerAdviceTest {
         // when, then
         mockMvc.perform(
                 delete("/api/messages/receiver/{id}", id))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1016));
+                .andExpect(status().isNotFound());
     }
 
 }

@@ -26,19 +26,19 @@ public class PostUpdateRequest {
             notes = "Enter post title.",
             required = true,
             example = "my title")
-    @NotBlank(message = "Enter post title.")
+    @NotBlank(message = "{postUpdateRequest.title.notBlank}")
     private String title;
 
     @ApiModelProperty(value = "post content",
             notes = "Enter post content.",
             required = true,
             example = "my content")
-    @NotBlank(message = "Enter post content.")
+    @NotBlank(message = "{postUpdateRequest.content.notBlank}")
     private String content;
 
     @ApiModelProperty(value = "price", notes = "Enter the price.", required = true, example = "50000")
     @NotNull(message = "Enter the price.")
-    @PositiveOrZero(message = "Enter non-negative value.")
+    @PositiveOrZero(message = "{postUpdateRequest.price.positiveOrZero}")
     private Long price;
 
     @ApiModelProperty(value = "added image", notes = "Attach added image.")

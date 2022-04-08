@@ -26,12 +26,12 @@ import java.util.Optional;
 public class CommentCreateRequest {
 
     @ApiModelProperty(value = "comment", notes = "Enter comment.", required = true, example = "my comment")
-    @NotBlank(message = "Enter comment.")
+    @NotBlank(message = "{commentCreateRequest.content.notBlank}")
     private String content;
 
     @ApiModelProperty(value = "post id", notes = "Enter post id.", example = "7")
-    @NotNull(message = "Enter post id.")
-    @Positive(message = "Enter positive post id.")
+    @NotNull(message = "{commentCreateRequest.postId.notNull}")
+    @Positive(message = "{commentCreateRequest.postId.positive}")
     private Long postId;
 
     @ApiModelProperty(hidden = true)

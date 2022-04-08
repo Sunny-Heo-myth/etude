@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +21,6 @@ public class MemberGuard extends Guard{
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        return id.equals(AuthenticationHelper.extractMemberId());
+        return id.equals(AuthHelper.extractMemberId());
     }
 }

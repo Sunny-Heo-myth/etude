@@ -3,6 +3,7 @@ package com.chatboard.etude.controller.category;
 import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.exception.CannotConvertNestedStructureException;
 import com.chatboard.etude.exception.CategoryNotFoundException;
+import com.chatboard.etude.handler.ResponseHandler;
 import com.chatboard.etude.service.category.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -27,13 +29,20 @@ public class CategoryControllerAdviceTest {
     CategoryController categoryController;
     @Mock
     CategoryService categoryService;
+    @Mock
+    ResponseHandler responseHandler;
 
     MockMvc mockMvc;
 
     @BeforeEach
     void beforeEach() {
+
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setBasenames("i18n/exception");
+
         mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
-                .setControllerAdvice(new ExceptionAdvice())
+                .setControllerAdvice(new ExceptionAdvice(responseHandler))
                 .build();
     }
 
@@ -44,8 +53,7 @@ public class CategoryControllerAdviceTest {
 
         // when, then
         mockMvc.perform(get("/api/categories"))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.code").value(-1011));
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -55,7 +63,6 @@ public class CategoryControllerAdviceTest {
 
         // when, then
         mockMvc.perform(delete("/api/categories/{id}", 1L))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value(-1010));
+                .andExpect(status().isNotFound());
     }
 }

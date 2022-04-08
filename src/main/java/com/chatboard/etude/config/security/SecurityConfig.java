@@ -1,10 +1,9 @@
 package com.chatboard.etude.config.security;
 
-import com.chatboard.etude.handler.CustomAccessDeniedHandler;
-import com.chatboard.etude.handler.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService userDetailsService;
@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity webSecurity) throws Exception {
         webSecurity.ignoring()
-                .mvcMatchers("/exception/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**");
+                .mvcMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**");
     }
 
     @Override
@@ -35,23 +35,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                // the order of url list DOES MATTER !!!!
+                // the order of these url list DOES MATTER !!!!
                     .authorizeRequests()
                         .antMatchers(HttpMethod.GET, "/image/**").permitAll()
                         .antMatchers(HttpMethod.POST, "/api/sign-in", "/api/sign-up", "/api/refresh-token").permitAll()
-                        .antMatchers(HttpMethod.DELETE, "/api/members/{id}/**").access("@memberGuard.check(#id)")  // .authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/api/members/{id}/**").authenticated()
                         .antMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
                         .antMatchers(HttpMethod.POST, "/api/posts").authenticated()
-                        .antMatchers(HttpMethod.PUT, "/api/posts/{id}").access("@postGuard.check(#id)")
-                        .antMatchers(HttpMethod.DELETE, "/api/posts/{id}").access("@postGuard.check(#id)")
+                        .antMatchers(HttpMethod.PUT, "/api/posts/{id}").authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/api/posts/{id}").authenticated()
                         .antMatchers(HttpMethod.POST, "/api/comments").authenticated()
-                        .antMatchers(HttpMethod.DELETE, "/api/comments/{id}").access("@commentGuard.check(#id)")
+                        .antMatchers(HttpMethod.DELETE, "/api/comments/{id}").authenticated()
                         .antMatchers(HttpMethod.GET, "/api/messages/sender", "/api/messages/receiver").authenticated()
-                        .antMatchers(HttpMethod.GET, "/api/messages/{id}").access("@messageGuard.check(#id)")
+                        .antMatchers(HttpMethod.GET, "/api/messages/{id}").authenticated()
                         .antMatchers(HttpMethod.POST, "/api/messages").authenticated()
-                        .antMatchers(HttpMethod.DELETE, "/api/messages/sender/{id}").access("@messageSenderGuard.check(#id)")
-                        .antMatchers(HttpMethod.DELETE, "/api/messages/receiver/{id}").access("@messageReceiverGuard.check(#id)")
+                        .antMatchers(HttpMethod.DELETE, "/api/messages/sender/{id}").authenticated()
+                        .antMatchers(HttpMethod.DELETE, "/api/messages/receiver/{id}").authenticated()
                         .antMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .anyRequest().hasAnyRole("ADMIN")
 

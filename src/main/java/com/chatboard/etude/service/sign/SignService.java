@@ -71,6 +71,7 @@ public class SignService {
     }
 
     private void validateSignUpInfo(SignUpRequest request) {
+
         if (memberRepository.existsByEmail(request.getEmail())) {
             throw new MemberEmailAlreadyExistsException(request.getEmail());
         }

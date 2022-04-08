@@ -1,4 +1,4 @@
-package com.chatboard.etude.handler;
+package com.chatboard.etude.config.security;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -8,11 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     // before controller handler
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        response.sendRedirect("/exception/access-denied");
+    public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        response.setStatus(SC_FORBIDDEN);
     }
 }
