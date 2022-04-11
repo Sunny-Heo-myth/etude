@@ -32,9 +32,6 @@ public class Comment extends EntityDate {
     @Lob
     private String content;
 
-    @Column(nullable = false)
-    private boolean deleted;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -46,12 +43,15 @@ public class Comment extends EntityDate {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parent_id", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Comment parent;
 
     @OneToMany(mappedBy = "parent") // mappedBy always depicts name of class field.
     private List<Comment> children = new ArrayList<>();
+
+    @Column(nullable = false)
+    private boolean deleted;
 
     public Comment(String content, Member member, Post post, Comment parent) {
         this.content = content;
@@ -61,35 +61,34 @@ public class Comment extends EntityDate {
         this.deleted = false;
     }
 
+
+    // if there is child comment it is not deletable.
+    public Optional<Comment> findDeletableComment() {
+        return hasChildren() ? Optional.empty() : Optional.of(findDeletableCommentByParent());
+    }
+
     // called when there is still child comment so that this comment can not be completely deleted.
     public void delete() {
         this.deleted = true;
     }
 
-    // Based on this comment, find deletable comment.
-    public Optional<Comment> findDeletableComment() {
-        return hasChildren() ? Optional.empty() : Optional.of(findDeletableCommentByParent());
-    }
-
-    // called recursively ascend to upper comment hierarchy until the parent is not deletable.
+    // called recursively ascend to upper comment hierarchy until a parent comment is not deletable.
+    // with default_batch_fetch_size to avoid 2*n + 1 queries.
     private Comment findDeletableCommentByParent() {
         if (isDeletableParent()) {
-            Comment deletableParent = getParent().findDeletableCommentByParent();
-            if (getParent().getChildren().size() == 1) {    //there is no other child other than myself.
+            Comment deletableParent = this.getParent().findDeletableCommentByParent();
+            // by checking child number late, I could exploit default_batch_size with "in" clause.
+            if (this.getParent().getChildren().size() == 1) {
                 return deletableParent;
             }
         }
         return this;
     }
-//    old
-//    private Comment findDeletableCommentByParent() { // 8
-//        return isDeletableParent() ? getParent().findDeletableCommentByParent() : this;
-//    }
 
     private boolean isDeletableParent() {
-        return getParent() != null && getParent().isDeleted();
-                // there is a parent with this comment.
-                // and this parent is in deleted state.
+        // There is a parent with this comment.
+        // and "{this.deleted == true}".
+        return this.getParent() != null && getParent().isDeleted();
     }
 
     private boolean hasChildren() {

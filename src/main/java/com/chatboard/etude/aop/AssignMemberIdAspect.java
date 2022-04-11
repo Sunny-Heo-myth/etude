@@ -1,6 +1,6 @@
 package com.chatboard.etude.aop;
 
-import com.chatboard.etude.config.security.guard.AuthHelper;
+import com.chatboard.etude.config.security.guard.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -18,16 +18,20 @@ import java.util.Optional;
 @Slf4j
 public class AssignMemberIdAspect {
 
-    private final AuthHelper authHelper;
+    private final AuthUtils authUtils;
 
-    @Before("@annotation(com.chatboard.etude.aop.AssignMemberId)")
-    public void assignMemberId(JoinPoint joinPoint) {
+    @Before("@annotation(com.chatboard.etude.aop.AssignMemberId)")  // pointcut
+    public void assignMemberId(JoinPoint joinPoint) {   // advice
+        // getArgument type of this joinPoint (ex : PostCreateRequest)
         Arrays.stream(joinPoint.getArgs())
+                // if there is method called "setMemberId"
                 .forEach(arg -> getMethod(arg.getClass(),"setMemberId")
-                        .ifPresent(setMemberId -> invokeMethod(arg, setMemberId, AuthHelper.extractMemberId())));
+                        // invokeMethod with argument extracted from SecurityContextHolder
+                        .ifPresent(setMemberId -> invokeMethod(arg, setMemberId, AuthUtils.extractMemberId())));
 
     }
 
+    // get methods from the target class
     private Optional<Method> getMethod(Class<?> targetClass, String methodName) {
         try {
             return Optional.of(targetClass.getMethod(methodName, Long.class));
@@ -37,6 +41,7 @@ public class AssignMemberIdAspect {
         }
     }
 
+    // invoke Object's method with argument.
     private void invokeMethod(Object obj, Method method, Object... args) {
         try {
             method.invoke(obj, args);

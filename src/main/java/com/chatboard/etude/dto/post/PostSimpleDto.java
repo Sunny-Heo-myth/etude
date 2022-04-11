@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostSimpleDto {
+
     private Long id;
     private String title;
     private String nickname;

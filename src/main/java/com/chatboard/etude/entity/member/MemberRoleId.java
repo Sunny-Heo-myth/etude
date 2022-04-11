@@ -14,6 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class MemberRoleId implements Serializable {
 
+    // order of creating composite key is alphabetical order
     @ManyToOne
     @JoinColumn(name = "member_member_id")
     private Member member;

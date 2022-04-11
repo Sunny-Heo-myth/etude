@@ -19,10 +19,12 @@ public class Response {
     }
 
     public static <T> Response success(T data) {
+        // Success is a subClass of Result.
         return new Response(true, 0, new Success<>(data));
     }
 
     public static Response failure(int code, String message) {
+        // Failure is a subClass of Result.
         return new Response(false, code, new Failure(message));
     }
 }

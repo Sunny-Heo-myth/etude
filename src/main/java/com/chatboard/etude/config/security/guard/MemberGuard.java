@@ -21,6 +21,6 @@ public class MemberGuard extends Guard{
 
     @Override
     protected boolean isResourceOwner(Long id) {
-        return id.equals(AuthHelper.extractMemberId());
+        return id.equals(AuthUtils.extractMemberId());
     }
 }

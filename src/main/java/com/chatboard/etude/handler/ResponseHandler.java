@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+// with ExceptionType enum & MessageSource
+// turn into exception code & exception message for Response object.
 public class ResponseHandler {
 
     private final MessageSource messageSource;

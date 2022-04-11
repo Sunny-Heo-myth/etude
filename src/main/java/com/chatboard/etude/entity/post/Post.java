@@ -60,17 +60,20 @@ public class Post extends EntityDate {
         addImages(images);
     }
 
-    // Image update utilities.
+    // Image utilities.
 
     public ImageUpdatedResult update(PostUpdateRequest request) {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.price = request.getPrice();
-        ImageUpdatedResult result = findImageUpdatedResult(
-                request.getAddedImages(), request.getDeletedImages());
+
+        ImageUpdatedResult result =
+                findImageUpdatedResult(request.getAddedImages(), request.getDeletedImages());
 
         addImages(result.getAddedImages());
+
         deleteImages(result.getDeletedImages());
+
         return result;
     }
 
@@ -93,6 +96,14 @@ public class Post extends EntityDate {
         return new ImageUpdatedResult(addImageFiles, addedImages, deletedImages);
     }
 
+    // MultiPartFile to Image
+    private List<Image> convertImageFilesToImages(List<MultipartFile> imageFiles) {
+        return imageFiles.stream()
+                .map(imageFile -> new Image(imageFile.getOriginalFilename()))
+                .collect(Collectors.toList());
+    }
+
+    // Ids to Images
     private List<Image> convertImageIdsToImages(List<Long> imageIds) {
         return imageIds.stream()
                 .map(this::convertImageIdToImage)
@@ -101,21 +112,17 @@ public class Post extends EntityDate {
                 .collect(Collectors.toList());
     }
 
+    // Long to Image
     private Optional<Image> convertImageIdToImage(Long id) {
         return this.images.stream()
                 .filter(image -> image.getId().equals(id))
                 .findAny();
     }
 
-    private List<Image> convertImageFilesToImages(List<MultipartFile> imageFiles) {
-        return imageFiles.stream()
-                .map(imageFile -> new Image(imageFile.getOriginalFilename()))
-                .collect(Collectors.toList());
-    }
-
     @Getter
     @AllArgsConstructor
     public static class ImageUpdatedResult {
+
         private List<MultipartFile> addedImageFiles;
         private List<Image> addedImages;
         private List<Image> deletedImages;

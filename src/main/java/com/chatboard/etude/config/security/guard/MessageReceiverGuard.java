@@ -28,7 +28,7 @@ public class MessageReceiverGuard extends Guard{
         return messageRepository.findById(id)
                 .map(Message::getReceiver)
                 .map(Member::getId)
-                .filter(receiverId -> receiverId.equals(AuthHelper.extractMemberId()))
+                .filter(receiverId -> receiverId.equals(AuthUtils.extractMemberId()))
                 .isPresent();
     }
 }

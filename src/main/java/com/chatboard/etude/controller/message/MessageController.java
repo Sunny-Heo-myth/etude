@@ -23,7 +23,10 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    @ApiOperation(value = "Read messages from the sender", notes = "Read messages from the sender.")
+    @ApiOperation(
+            value = "Read messages from the sender",
+            notes = "Read messages from the sender."
+    )
     @GetMapping("/api/messages/sender")
     @ResponseStatus(HttpStatus.OK)
     @AssignMemberId
@@ -31,7 +34,10 @@ public class MessageController {
         return Response.success(messageService.readAllBySender(condition));
     }
 
-    @ApiOperation(value = "Read messages for the receiver", notes = "Read messages for the receiver.")
+    @ApiOperation(
+            value = "Read messages for the receiver",
+            notes = "Read messages for the receiver."
+    )
     @GetMapping("/api/messages/receiver")
     @ResponseStatus(HttpStatus.OK)
     @AssignMemberId
@@ -39,14 +45,20 @@ public class MessageController {
         return Response.success(messageService.readAllByReceiver(condition));
     }
 
-    @ApiOperation(value = "read messages", notes = "Read messages.")
+    @ApiOperation(
+            value = "read messages",
+            notes = "Read messages."
+    )
     @GetMapping("/api/messages/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response read(@ApiParam(value = "message id", required = true) @PathVariable Long id) {
         return Response.success(messageService.read(id));
     }
 
-    @ApiOperation(value = "create message", notes = "Create message.")
+    @ApiOperation(
+            value = "create message",
+            notes = "Create message."
+    )
     @PostMapping("/api/messages")
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
@@ -55,7 +67,10 @@ public class MessageController {
         return Response.success();
     }
 
-    @ApiOperation(value = "delete messages by sender", notes = "Delete messages by sender.")
+    @ApiOperation(
+            value = "delete messages by sender",
+            notes = "Delete messages by sender."
+    )
     @DeleteMapping("/api/messages/sender/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteBySender(@ApiParam(value = "message id", required = true) @PathVariable Long id) {

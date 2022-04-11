@@ -12,9 +12,10 @@ import java.io.IOException;
 
 @Service
 @Slf4j
+// Save uploaded files in local.
 public class LocalFileService implements FileService{
 
-    @Value("${upload.image.location}")
+    @Value("${upload.image.location}")  // /Users/sunny/IdeaProjects/etude/fileStorage
     private String location;
 
     @PostConstruct
@@ -28,6 +29,7 @@ public class LocalFileService implements FileService{
     @Override
     public void upload(MultipartFile file, String filename) {
         try {
+            // Filename will always be unique.
             file.transferTo(new File(location + filename));
         }
         catch (IOException e) {

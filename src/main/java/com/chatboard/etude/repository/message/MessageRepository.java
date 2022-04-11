@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query("select m " +
-            "from Message m left join fetch m.sender left join m.receiver " +
+            "from Message m left join fetch m.sender left join fetch m.receiver " +
             "where m.id = :id")
     Optional<Message> findWithSenderAndReceiverById(Long id);
 
@@ -23,9 +23,11 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     Slice<MessageSimpleDto> findAllBySenderIdOrderByMessageIdDesc(Long senderId, Long lastMessageId, Pageable pageable);
 
     @Query("select new com.chatboard.etude.dto.message.MessageSimpleDto(m.id, m.content, m.sender.nickname, m.createdAt) "
-    + "from Message m left join m.receiver "
+    + "from Message m left join m.sender "
     + "where m.receiver.id = :receiverId and m.id < :lastMessageId and m.deletedByReceiver = false "
     + "order by m.id desc")
     Slice<MessageSimpleDto> findAllByReceiverIdOrderByMessageIdDesc(Long receiverId, Long lastMessageId, Pageable pageable);
 
+    // Paging operation with Scroll event does not need to know the total page number, so it does not count.
+    // Slice select +1 element of the designated number of the element which let us know the existence of the next page.
 }

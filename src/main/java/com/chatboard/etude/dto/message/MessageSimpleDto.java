@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageSimpleDto {
+
     private Long id;
     private String content;
     private String nickname;

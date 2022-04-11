@@ -40,7 +40,8 @@ public class InitDB {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
-    @EventListener(ApplicationReadyEvent.class) //
+    // after ApplicationReadyEvent call initDB()
+    @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void initDB() {
         

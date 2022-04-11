@@ -22,8 +22,11 @@ import java.util.function.Consumer;
 @Transactional(readOnly = true)
 @Service
 public class MessageService {
+
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
+
+
 
     public MessageListDto readAllBySender(MessageReadCondition condition) {
         return MessageListDto.toDto(messageRepository.findAllBySenderIdOrderByMessageIdDesc(
@@ -72,8 +75,10 @@ public class MessageService {
     }
 
     private void delete(Long id, Consumer<Message> delete) {
+
         Message message = messageRepository.findById(id)
                 .orElseThrow(MessageNotFoundException::new);
+
         delete.accept(message);
 
         if (message.isDeletable()) {

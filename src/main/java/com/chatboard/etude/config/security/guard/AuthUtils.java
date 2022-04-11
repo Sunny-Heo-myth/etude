@@ -4,7 +4,6 @@ import com.chatboard.etude.config.security.CustomAuthenticationToken;
 import com.chatboard.etude.config.security.CustomUserDetails;
 import com.chatboard.etude.entity.member.RoleType;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Component
 @NoArgsConstructor
-public class AuthHelper {
+public class AuthUtils {
 
     public static boolean isAuthenticated() {
         return getAuthentication() instanceof

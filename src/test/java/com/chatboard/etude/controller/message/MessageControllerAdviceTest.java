@@ -42,7 +42,7 @@ public class MessageControllerAdviceTest {
 
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-        messageSource.setBasenames("i18n/exception");
+        messageSource.setBasenames("messageSource/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(messageController)
                 .setControllerAdvice(new ExceptionAdvice(responseHandler))

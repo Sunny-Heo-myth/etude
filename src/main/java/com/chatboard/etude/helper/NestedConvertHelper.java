@@ -1,6 +1,9 @@
 package com.chatboard.etude.helper;
 
 import com.chatboard.etude.exception.CannotConvertNestedStructureException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class NestedConvertHelper <K, E, D> {
 
     private final List<E> entities;
@@ -21,15 +25,7 @@ public class NestedConvertHelper <K, E, D> {
                                                             Function<E, E> getParent,
                                                             Function<E, K> getKey,
                                                             Function<D, List<D>> getChildren) {
-        return new NestedConvertHelper<>(entities, toDto, getParent, getKey, getChildren);
-    }
-
-    private NestedConvertHelper(List<E> entities, Function<E, D> toDto, Function<E, E> getParent, Function<E, K> getKey, Function<D, List<D>> getChildren) {
-        this.entities = entities;
-        this.toDto = toDto;
-        this.getParent = getParent;
-        this.getKey = getKey;
-        this.getChildren = getChildren;
+        return new NestedConvertHelper(entities, toDto, getParent, getKey, getChildren);
     }
 
     public List<D> convert() {

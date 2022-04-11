@@ -6,10 +6,9 @@ import com.chatboard.etude.exception.type.ExceptionType;
 import com.chatboard.etude.handler.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,12 +18,28 @@ import java.util.Objects;
 
 import static com.chatboard.etude.exception.type.ExceptionType.*;
 
-@RestControllerAdvice
+@RestControllerAdvice   // including @ResponseBody
 @RequiredArgsConstructor
 @Slf4j
 public class ExceptionAdvice {
 
     private final ResponseHandler responseHandler;
+
+    // AccessDeniedException will automatically be thrown when Guard catches.
+
+    // unregistered error will be caught in this method
+    @ExceptionHandler(CannotConvertNestedStructureException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response cannotConvertNestedStructureException(CannotConvertNestedStructureException e) {
+        log.error("e = {}", e.getMessage());
+        return getFailureResponse(CANNOT_CONVERT_NESTED_STRUCTURE_EXCEPTION);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Response accessDeniedException() {
+        return getFailureResponse(ACCESS_DENIED_EXCEPTION);
+    }
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -72,13 +87,6 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response categoryNotFoundException() {
         return getFailureResponse(CATEGORY_NOT_FOUND_EXCEPTION);
-    }
-
-    @ExceptionHandler(CannotConvertNestedStructureException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Response cannotConvertNestedStructureException(CannotConvertNestedStructureException e) {
-        log.error("e = {}", e.getMessage());
-        return getFailureResponse(CANNOT_CONVERT_NESTED_STRUCTURE_EXCEPTION);
     }
 
     @ExceptionHandler(PostNotFoundException.class)

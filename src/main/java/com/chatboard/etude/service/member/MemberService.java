@@ -26,6 +26,7 @@ public class MemberService {
     public void delete(Long id) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(MemberNotFoundException::new);
+        // deleteById issue two "select sql" & "delete eql".
         memberRepository.delete(member);
     }
 

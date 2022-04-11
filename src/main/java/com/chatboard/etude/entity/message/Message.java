@@ -14,19 +14,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Message extends EntityDate {
 
-    @Id
+    @Id // Message id always saved as created order.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     @Lob
     private String content;
-
-    @Column(nullable = false)
-    private boolean deletedBySender;
-
-    @Column(nullable = false)
-    private boolean deletedByReceiver;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
@@ -37,6 +31,14 @@ public class Message extends EntityDate {
     @JoinColumn(name = "receiver_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member receiver;
+
+    @Column(nullable = false)
+    private boolean deletedBySender;
+
+    @Column(nullable = false)
+    private boolean deletedByReceiver;
+
+
 
     public Message(String content, Member sender, Member receiver) {
         this.content = content;

@@ -16,8 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends GenericFilterBean {
-    // Only when access token is valid, save user info in context.
-    // verifying refresh token & read user info function deleted.
 
     private final CustomUserDetailsService userDetailsService;
 
@@ -35,8 +33,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 .getHeader("Authorization"));
     }
 
+    // set CustomUserDetail as authenticated in Security context
+    // with CustomAuthenticationToken
     private void setAuthentication(CustomUserDetails userDetails) {
-        // set CustomUserDetail in Security context
+
         SecurityContextHolder.getContext()
                 .setAuthentication(
                         new CustomAuthenticationToken(userDetails, userDetails.getAuthorities()));

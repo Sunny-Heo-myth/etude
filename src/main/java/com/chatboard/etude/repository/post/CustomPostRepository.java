@@ -5,5 +5,6 @@ import com.chatboard.etude.dto.post.PostSimpleDto;
 import org.springframework.data.domain.Page;
 
 public interface CustomPostRepository {
+
     Page<PostSimpleDto> findAllByCondition(PostReadCondition condition);
 }

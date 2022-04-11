@@ -23,22 +23,11 @@ public class JwtHandler {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + maxAgeSeconds * 1000L))
                 .addClaims(privateClaims)
-//                .addClaims(Map.of(Claims.ISSUED_AT, now, Claims.EXPIRATION, new Date(now.getTime() + maxAgeSeconds * 1000L)))
                 .signWith(SignatureAlgorithm.HS256, key.getBytes())
                 .compact();
     }
-//    public String createToken(String encodedKey, String subject, long maxAgeSeconds) {
-//        Date now = new Date();
-//        return type + Jwts.builder()    // start to build jwt
-//                .setSubject(subject)    // save content
-//                .setIssuedAt(now)   // set issued date
-//                .setExpiration(new Date(now.getTime() + maxAgeSeconds * 1000L))
-//                // Sign this token with key using SHA-256
-//                .signWith(SignatureAlgorithm.HS256, encodedKey)
-//                .compact(); // complete build token
-//    }
 
-    // parse and get innated claims in JWT
+    // parse token with key and get encoded claims in this JWT
     public Optional<Claims> parse(String key, String token) {
         try {
             return Optional.of(Jwts.parser()

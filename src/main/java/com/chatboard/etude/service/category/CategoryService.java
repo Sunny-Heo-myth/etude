@@ -25,9 +25,15 @@ public class CategoryService {
 
     @Transactional
     public void create(CategoryCreateRequest request) {
+
+        // Optional for when it is a root category :
         Category parent = Optional.ofNullable(request.getParentId())
                 .map(parentId -> categoryRepository.findById(parentId)
+
+                        // The parent id exists but could not find in DB.
                         .orElseThrow(CategoryNotFoundException::new))
+
+                // This category is a root category.
                 .orElse(null);
         categoryRepository.save(new Category(request.getName(), parent));
     }

@@ -19,10 +19,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     // 1. find all comments with a single query
     // 2. turn it into hierarchical structure by java
     @Query("select c " +
-            "from Comment c " +
-            "join fetch c.member " +
-            "left join fetch c.parent " +
+            "from Comment c join fetch c.member left join fetch c.parent " +
             "where c.post.id = :postId " +
-            "order by c.parent.id asc nulls first, c.id asc ")
+            "order by c.parent.id asc nulls first, c.id asc")
     List<Comment> findAllWithMemberAndParentByPostIdOrderByParentIdAscNullsFirstCommentIdAsc(Long postId);
 }

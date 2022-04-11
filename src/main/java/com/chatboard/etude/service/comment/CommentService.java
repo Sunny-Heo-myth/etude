@@ -55,7 +55,10 @@ public class CommentService {
                         .orElseThrow(CommentNotFoundException::new))
                 .orElse(null);
 
-        Comment comment = commentRepository.save(new Comment(request.getContent(), member, post, parent));
+        Comment comment = commentRepository.save(
+                new Comment(request.getContent(), member, post, parent));
+
+        // event called
         comment.publishCreatedEvent(publisher);
     }
 

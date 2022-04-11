@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class CommentCreatedListener {
+
     private final AlarmService emailAlarmService;
     private final AlarmService lineAlarmService;
     private final AlarmService smsAlarmService;
@@ -30,21 +32,26 @@ public class CommentCreatedListener {
         alarmServices.add(smsAlarmService);
     }
 
-    @TransactionalEventListener
-    // Not @EventListener
-    // Event handling logic is independent with comment logic.
-    // After transaction committed, listener will do.
-    @Async
-    // listener logic will be executed in different thread, independent of responding.
+
+
+    // After transaction committed, new listener transaction will run.
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Async  // listener logic will be executed in different thread, independent of responding for the core-concern.
     public void handleAlarm(CommentCreatedEvent event) {
+
         log.info("CommentCreatedListener.handleAlarm");
         String message = generateAlarmMessage(event);
+
         if (isAbleToSendToPostWriter(event)) {
             alarmTo(event.getPostWriter(), message);
         }
         if (isAbleToSendToParentWriter(event)) {
             alarmTo(event.getParentWriter(), message);
         }
+    }
+
+    private String generateAlarmMessage(CommentCreatedEvent event) {
+        return event.getPublisher().getNickname() + " : " + event.getContent();
     }
 
     private void alarmTo(MemberDto memberDto, String message) {
@@ -77,7 +84,4 @@ public class CommentCreatedListener {
         return event.getParentWriter().getId() != null;
     }
 
-    private String generateAlarmMessage(CommentCreatedEvent event) {
-        return event.getPublisher().getNickname() + " : " + event.getContent();
-    }
 }

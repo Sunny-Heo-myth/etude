@@ -4,10 +4,11 @@ import com.chatboard.etude.entity.member.RoleType;
 
 import java.util.List;
 
+// authentication and authorization is not our main service
+// both auth-strategies are not business logic and will not be the part of service logics.
 public abstract class Guard {
-
-    // authentication and authorization is not our main service
-    // both auth-strategies are not business logic and will not be the part of service logics.
+    // Authentication check must come first since accessing db is much slower.
+    // Guard does not need to check authenticated anymore.
     public final boolean check(Long id) {
         return hasRole(getRoleTypes()) || isResourceOwner(id);
     }
@@ -17,6 +18,6 @@ public abstract class Guard {
     abstract protected boolean isResourceOwner(Long id);
 
     private boolean hasRole(List<RoleType> roleTypes) {
-        return AuthHelper.extractMemberRoles().containsAll(roleTypes);
+        return AuthUtils.extractMemberRoles().containsAll(roleTypes);
     }
 }

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 public class PostDto {
+
     private Long id;
     private String title;
     private String content;
@@ -25,6 +26,8 @@ public class PostDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime modifiedAt;
+
+
 
     public static PostDto toDto(Post post) {
         return new PostDto(

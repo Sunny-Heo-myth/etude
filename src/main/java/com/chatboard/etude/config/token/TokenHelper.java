@@ -13,6 +13,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+// helper is not main "service" which this application serves.
+// JwtHandler <-> TokenHelper <-> SignService
+//                            <-> UserDetailService
 public class TokenHelper {
 
     private final JwtHandler jwtHandler;
@@ -38,6 +41,7 @@ public class TokenHelper {
         return jwtHandler.parse(key, token).map(this::convert);
     }
 
+    // convert jwtClaim into Private(Custom)Claim for Etude
     private PrivateClaims convert(Claims claims) {
         return new PrivateClaims(
                 claims.get(MEMBER_ID, String.class),

@@ -13,12 +13,25 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-// join MemberRole and Role
-// Member.roles graph check Member's roles & Member.roles.role subgraph check MemberRole's role
+
+// Member left outer join with MemberRole and even Role.
 @NamedEntityGraph(
         name = "Member.roles",
-        attributeNodes = @NamedAttributeNode(value = "roles", subgraph = "Member.roles.role"),
-        subgraphs = @NamedSubgraph(name = "Member.roles.role", attributeNodes = @NamedAttributeNode("role"))
+
+        attributeNodes = {
+                @NamedAttributeNode(
+                value = "roles",
+                subgraph = "Member.roles.role"
+        )},
+
+        subgraphs = {
+                @NamedSubgraph(
+                name = "Member.roles.role",
+                attributeNodes = {
+                        @NamedAttributeNode(
+                        value = "role"
+                )}
+        )}
 )
 public class Member extends EntityDate {
 
@@ -38,6 +51,7 @@ public class Member extends EntityDate {
     @Column(nullable = false, unique = true, length = 20)
     private String nickname;
 
+    // Member to MemberRoles
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MemberRole> roles;
 

@@ -95,10 +95,14 @@ public class PostService {
 
     private void uploadImages(List<Image> images, List<MultipartFile> files) {
         IntStream.range(0, images.size())
-                .forEach(num -> fileService.upload(files.get(num), images.get(num).getUniqueName()));
+                .forEach(num ->
+                        // Save image files in the designated location with an unique name.
+                        fileService.upload(files.get(num), images.get(num).getUniqueName())
+                );
     }
 
     private void deleteImages(List<Image> images) {
+        // Delete image files in the designated location with an unique name.
         images.forEach(image -> fileService.delete(image.getUniqueName()));
     }
 }

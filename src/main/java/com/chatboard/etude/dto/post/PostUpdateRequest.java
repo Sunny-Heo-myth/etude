@@ -41,9 +41,11 @@ public class PostUpdateRequest {
     @PositiveOrZero(message = "{postUpdateRequest.price.positiveOrZero}")
     private Long price;
 
+    // Send whole file of image when add image to post.
     @ApiModelProperty(value = "added image", notes = "Attach added image.")
     private List<MultipartFile> addedImages = new ArrayList<>();
 
+    // Send only id of image when delete image from post.
     @ApiModelProperty(value = "deleted image id.", notes = "Enter the id of deleted image.")
     private List<Long> deletedImages = new ArrayList<>();
 }

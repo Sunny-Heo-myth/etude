@@ -27,7 +27,7 @@ import static com.chatboard.etude.factory.entity.PostFactory.createPost;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(QuerydslConfig.class)
+@Import(QuerydslConfig.class)   // @Import manually register bean for test environment.
 public class CustomPostRepositoryImplTest {
 
     @Autowired PostRepository postRepository;

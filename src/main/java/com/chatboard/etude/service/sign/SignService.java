@@ -39,6 +39,8 @@ public class SignService {
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
+        // Person who wants to do normal sign up must sign up with RoleType.ROLE_NORMAL.
+        // and RoleTypes must be saved as in db already.
         List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.ROLE_NORMAL)
                 .orElseThrow(RoleNotFoundException::new));
 
@@ -50,11 +52,17 @@ public class SignService {
     @Transactional(readOnly = true)
     public SignInResponse signIn(SignInRequest request) {
 
+        // find in DB FIRST before authenticate :
+        // after member deletion,
+        // even if token is valid, member can not be found.
         Member member = memberRepository.findWithRolesByEmail(request.getEmail())
                 .orElseThrow(LoginFailureException::new);
 
         validatePassword(request, member);
 
+        // privateClaims fields are
+        // 1. id
+        // 2. roleType Strings
         TokenHelper.PrivateClaims privateClaims = createPrivateClaims(member);
         String accessToken = accessTokenHelper.createToken(privateClaims);
         String refreshToken = refreshTokenHelper.createToken(privateClaims);
@@ -70,6 +78,7 @@ public class SignService {
         return new RefreshTokenResponse(accessToken);
     }
 
+    // checking uniqueness of email and nickname
     private void validateSignUpInfo(SignUpRequest request) {
 
         if (memberRepository.existsByEmail(request.getEmail())) {
@@ -80,6 +89,7 @@ public class SignService {
         }
     }
 
+    // check request raw password and encoded db password
     private void validatePassword(SignInRequest request, Member member) {
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new LoginFailureException();

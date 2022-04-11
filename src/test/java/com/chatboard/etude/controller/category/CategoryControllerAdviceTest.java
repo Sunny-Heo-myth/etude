@@ -39,7 +39,7 @@ public class CategoryControllerAdviceTest {
 
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-        messageSource.setBasenames("i18n/exception");
+        messageSource.setBasenames("messageSource/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
                 .setControllerAdvice(new ExceptionAdvice(responseHandler))
@@ -65,4 +65,5 @@ public class CategoryControllerAdviceTest {
         mockMvc.perform(delete("/api/categories/{id}", 1L))
                 .andExpect(status().isNotFound());
     }
+
 }
