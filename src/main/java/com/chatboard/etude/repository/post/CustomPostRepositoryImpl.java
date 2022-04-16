@@ -45,6 +45,7 @@ public class CustomPostRepositoryImpl
         return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
     }
 
+    // todo NonNull?
     private List<PostSimpleDto> fetchAll(Predicate predicate, Pageable pageable) {
         return getQuerydsl().applyPagination(   // build query with paging applied.
                 pageable,

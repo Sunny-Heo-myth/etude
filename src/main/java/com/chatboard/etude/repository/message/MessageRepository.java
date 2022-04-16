@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
+// MessageId has an incremental order.
+// Paging operation with Scroll event does not need to know the total page number, so it does not count.
+// Slice always select +1 element of the designated number of the element which let us know the existence of the next page.
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query("select m " +
@@ -28,6 +31,4 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     + "order by m.id desc")
     Slice<MessageSimpleDto> findAllByReceiverIdOrderByMessageIdDesc(Long receiverId, Long lastMessageId, Pageable pageable);
 
-    // Paging operation with Scroll event does not need to know the total page number, so it does not count.
-    // Slice select +1 element of the designated number of the element which let us know the existence of the next page.
 }

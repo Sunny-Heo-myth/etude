@@ -52,13 +52,13 @@ public class InitDB {
         initCategory();
         initPost();
         initComment();
-        log.info("initialize database.");
+        log.info("database initialized.");
     }
 
     private void initPost() {
         Member member = memberRepository.findAll().get(0);
         Category category = categoryRepository.findAll().get(0);
-        IntStream.range(0, 100000)
+        IntStream.range(0, 20)
                 .forEach(i -> postRepository.save(
                         new Post("title" + i, "content" + i, (long) i, member, category, List.of())
                 ));

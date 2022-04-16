@@ -36,7 +36,8 @@ public class CommentCreatedListener {
 
     // After transaction committed, new listener transaction will run.
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Async  // listener logic will be executed in different thread, independent of responding for the core-concern.
+    // listener logic will be executed in different thread, independent of responding for the core-concern.
+    @Async
     public void handleAlarm(CommentCreatedEvent event) {
 
         log.info("CommentCreatedListener.handleAlarm");

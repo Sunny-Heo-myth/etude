@@ -15,7 +15,6 @@ public class MessageSimpleDto {
     private Long id;
     private String content;
     private String nickname;
-
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd'T'HH:mm:ss",

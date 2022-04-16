@@ -17,6 +17,7 @@ public class CategoryDto {
     private String name;
     private List<CategoryDto> children;
 
+    // todo raw type
     public static List<CategoryDto> toDtoList(List<Category> categories) {
         NestedConvertHelper helper = NestedConvertHelper.newInstance(
                 categories,

@@ -22,7 +22,6 @@ public class CommentDto {
     private Long id;
     private String content;
     private MemberDto memberDto;
-
     @JsonFormat(
             shape = JsonFormat.Shape.STRING,
             pattern = "yyyy-MM-dd'T'HH:mm:ss",
@@ -30,6 +29,7 @@ public class CommentDto {
     private LocalDateTime createdAt;
     private List<CommentDto> children;
 
+    // todo raw type
     public static List<CommentDto> toDtoList(List<Comment> comments) {
         NestedConvertHelper helper = NestedConvertHelper.newInstance(
                 comments,
@@ -46,4 +46,5 @@ public class CommentDto {
         );
         return helper.convert();
     }
+
 }
