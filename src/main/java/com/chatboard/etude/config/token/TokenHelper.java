@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 // helper is not main "service" which this application serves.
@@ -22,7 +21,7 @@ public class TokenHelper {
     private final String key;
     private final long maxAgeSeconds;
 
-    private static final String SEP =",";
+    private static final String SEPARATION =",";
     private static final String ROLE_TYPES = "ROLE_TYPES";
     private static final String MEMBER_ID = "MEMBER_ID";
 
@@ -31,8 +30,8 @@ public class TokenHelper {
         return jwtHandler.createToken(
                 key,
                 Map.of(MEMBER_ID, privateClaims.getMemberId(),
-                        // multiple roles will be saved in a single string.
-                        ROLE_TYPES, String.join(SEP, privateClaims.getRoleTypes())
+                        // multiple roles will be saved as a single string.
+                        ROLE_TYPES, String.join(SEPARATION, privateClaims.getRoleTypes())
                 ),
                 maxAgeSeconds);
     }
@@ -45,10 +44,11 @@ public class TokenHelper {
     private PrivateClaims convert(Claims claims) {
         return new PrivateClaims(
                 claims.get(MEMBER_ID, String.class),
-                Arrays.asList(claims.get(ROLE_TYPES, String.class).split(SEP))
+                Arrays.asList(claims.get(ROLE_TYPES, String.class).split(SEPARATION))
         );
     }
 
+    // claims which converted as payload of JWT
     @Getter
     @AllArgsConstructor
     public static class PrivateClaims {

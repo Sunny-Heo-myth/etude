@@ -25,9 +25,9 @@ public class ExceptionAdvice {
 
     private final ResponseHandler responseHandler;
 
-    // AccessDeniedException will automatically be thrown when Guard catches.
+    // AccessDeniedException(SC.FORBIDDEN) will be filtered before dispatcherServlet.
+    // AuthenticationEntryPointException(SC.UNAUTHORIZED) will be filtered before dispatcherServlet.
 
-    // unregistered error will be caught in this method
     @ExceptionHandler(CannotConvertNestedStructureException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response cannotConvertNestedStructureException(CannotConvertNestedStructureException e) {

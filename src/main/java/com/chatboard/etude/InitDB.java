@@ -43,7 +43,7 @@ public class InitDB {
     // after ApplicationReadyEvent call initDB()
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
-    public void initDB() {
+    public void init() {
         
 
         initRole();
@@ -53,6 +53,7 @@ public class InitDB {
         initPost();
         initComment();
         log.info("database initialized.");
+
     }
 
     private void initPost() {

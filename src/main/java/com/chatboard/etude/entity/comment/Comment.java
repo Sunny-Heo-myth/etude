@@ -98,12 +98,12 @@ public class Comment extends EntityDate {
     public void publishCreatedEvent(ApplicationEventPublisher publisher) {
         publisher.publishEvent(
                 new CommentCreatedEvent(
-                        MemberDto.toDto(getMember()),
-                        MemberDto.toDto(getPost().getMember()),
-                        Optional.ofNullable(getParent())
+                        MemberDto.toDto(this.getMember()),
+                        MemberDto.toDto(this.getPost().getMember()),
+                        Optional.ofNullable(this.getParent())
                                 .map(Comment::getMember)
                                 .map(MemberDto::toDto)
-                                .orElseGet(MemberDto::empty),   // empty dto value
+                                .orElseGet(MemberDto::empty),   // empty memberDto value
                         getContent()
                 )
         );

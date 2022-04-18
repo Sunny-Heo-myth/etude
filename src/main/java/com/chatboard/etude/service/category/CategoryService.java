@@ -29,19 +29,20 @@ public class CategoryService {
         // Optional for when it is a root category :
         Category parent = Optional.ofNullable(request.getParentId())
                 .map(parentId -> categoryRepository.findById(parentId)
-
-                        // The parent id exists but could not find in DB.
+                        // The parent category id exists but could not find in DB.
                         .orElseThrow(CategoryNotFoundException::new))
-
                 // This category is a root category.
                 .orElse(null);
+
         categoryRepository.save(new Category(request.getName(), parent));
     }
 
     @Transactional
     public void delete(Long id) {
+
         Category category = categoryRepository.findById(id)
                 .orElseThrow(CategoryNotFoundException::new);
+
         categoryRepository.delete(category);
     }
 

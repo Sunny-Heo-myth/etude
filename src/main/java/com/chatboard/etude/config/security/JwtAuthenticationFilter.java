@@ -23,11 +23,13 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         extractToken(request)
-                .map(userDetailsService::loadUserByUsername)
+                .map(userDetailsService::loadUserByUsername)    // return CustomUserDetail for authentication
                         .ifPresent(this::setAuthentication);
+
         chain.doFilter(request, response);
     }
 
+    // extract Authorization header
     private Optional<String> extractToken(ServletRequest request) {
         return Optional.ofNullable(((HttpServletRequest) request)   // casting first bracket.
                 .getHeader("Authorization"));
@@ -38,8 +40,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private void setAuthentication(CustomUserDetails userDetails) {
 
         SecurityContextHolder.getContext()
-                .setAuthentication(
-                        new CustomAuthenticationToken(userDetails, userDetails.getAuthorities()));
+                // set authentication in spring security context holder.
+                // CustomAuthenticationToken inherits AbstractAuthenticationToken implements Authentication
+                .setAuthentication(new CustomAuthenticationToken(userDetails, userDetails.getAuthorities()));
     }
 
 }

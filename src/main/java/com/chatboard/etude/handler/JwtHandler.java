@@ -8,14 +8,16 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-// create parse token
+// JWT specific handler
+// for create, parse token
 public class JwtHandler {
 
+    // choose specific authorization type
     private final String type = "Bearer ";
 
-    // createToken with
-    // encoded key (as Base64, test method : Base64.getEncoder().encodeToString)
-    // content (subject)
+    // create token with
+    // encoded key (as Base64, test method : Base64.getEncoder().encodeToString) and
+    // content (subject) and
     // duration
     public String createToken(String key, Map<String, Object> privateClaims, long maxAgeSeconds) {
         Date now = new Date();
@@ -27,12 +29,14 @@ public class JwtHandler {
                 .compact();
     }
 
-    // parse token with key and get encoded claims in this JWT
+    // parse token with
+    // key and
+    // token
     public Optional<Claims> parse(String key, String token) {
         try {
             return Optional.of(Jwts.parser()
                     .setSigningKey(key.getBytes())
-                    .parseClaimsJws(untype(token))
+                    .parseClaimsJws(unType(token))
                     .getBody());
         }
         catch (JwtException e) {
@@ -40,7 +44,7 @@ public class JwtHandler {
         }
     }
 
-    private String untype(String token) {
+    private String unType(String token) {
         return token.substring(type.length());
     }
 }

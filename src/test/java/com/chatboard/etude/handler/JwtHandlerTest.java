@@ -64,7 +64,7 @@ public class JwtHandlerTest {
         assertThat(claims).isEmpty();
     }
 
-    public String createToken(String encodedKey, Map<String, Object> claims, long maxAgeSeconds) {
+    private String createToken(String encodedKey, Map<String, Object> claims, long maxAgeSeconds) {
         return jwtHandler.createToken(
                 encodedKey,
                 claims,

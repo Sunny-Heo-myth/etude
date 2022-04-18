@@ -1,14 +1,14 @@
 spring:
 
   datasource:
-    url: jdbc:mysql://ec2-3-82-102-70.compute-1.amazonaws.com/ChattingMachineDB
-    username: SunnyHeo
-    password: mypassword
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  #    url: jdbc:h2:mem:test
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
+#    url: jdbc:mysql://ec2-3-82-102-70.compute-1.amazonaws.com/ChattingMachineDB
+#    username: SunnyHeo
+#    password: mypassword
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
 
 
   profiles:
@@ -22,6 +22,10 @@ spring:
 
   messages:
     basename: messageSource/exception, messageSource/validation
+
+  mvc:
+    servlet:
+      load-on-startup: 1
 
   jpa:
     properties:

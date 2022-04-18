@@ -32,6 +32,8 @@ public class SignService {
     private final TokenHelper accessTokenHelper;
     private final TokenHelper refreshTokenHelper;
 
+
+
     @Transactional
     public void signUp(SignUpRequest request) {
 
@@ -63,9 +65,12 @@ public class SignService {
         // privateClaims fields are
         // 1. id
         // 2. roleType Strings
+        // which goes into JWT itself.
         TokenHelper.PrivateClaims privateClaims = createPrivateClaims(member);
+
         String accessToken = accessTokenHelper.createToken(privateClaims);
         String refreshToken = refreshTokenHelper.createToken(privateClaims);
+
         return new SignInResponse(accessToken, refreshToken);
     }
 
@@ -78,7 +83,9 @@ public class SignService {
         return new RefreshTokenResponse(accessToken);
     }
 
-    // checking uniqueness of email and nickname
+
+
+    // checking uniqueness of email and nickname when sign-up
     private void validateSignUpInfo(SignUpRequest request) {
 
         if (memberRepository.existsByEmail(request.getEmail())) {
@@ -89,7 +96,7 @@ public class SignService {
         }
     }
 
-    // check request raw password and encoded db password
+    // check request raw password and encoded db password when sign-in
     private void validatePassword(SignInRequest request, Member member) {
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new LoginFailureException();

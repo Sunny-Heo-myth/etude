@@ -14,9 +14,9 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+// filters before spring context
 @EnableWebSecurity
 @RequiredArgsConstructor
-// Activate security configuration in method.
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -31,16 +31,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
+        // no session (RESTful)
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+        // todo httpBasic
         httpSecurity.httpBasic().disable();
-
+        // todo formLogin
         httpSecurity.formLogin().disable();
-
+        // todo csrf
         httpSecurity.csrf().disable();
 
-        // UsernamePasswordAuthenticationFilter is always a last filter.
-        httpSecurity.addFilterBefore(new JwtAuthenticationFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class);
+
+        httpSecurity.addFilterBefore(
+                // etude's JWT filter
+                new JwtAuthenticationFilter(userDetailsService),
+                // UsernamePasswordAuthenticationFilter is always a last filter.
+                UsernamePasswordAuthenticationFilter.class
+        );
 
         // the order of these url list DOES MATTER !!!! (specific first)
         // check authenticated
@@ -65,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // forbidden
         httpSecurity.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
-        // isUnauthorized
+        // unauthorized
         httpSecurity.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
 
 

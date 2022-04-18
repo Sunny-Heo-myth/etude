@@ -32,6 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElse(null);
     }
 
+    // payload to userDetail
     private CustomUserDetails convert(TokenHelper.PrivateClaims privateClaims) {
         return new CustomUserDetails(
                 privateClaims.getMemberId(),
