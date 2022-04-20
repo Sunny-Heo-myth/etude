@@ -45,7 +45,7 @@ public class PostControllerAdviceTest {
 
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-        messageSource.setBasenames("messageSource/exception");
+        messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(postController)
                 .setControllerAdvice(new ExceptionAdvice(responseHandler))

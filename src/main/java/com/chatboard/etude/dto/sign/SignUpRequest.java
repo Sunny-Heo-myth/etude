@@ -26,8 +26,8 @@ public class SignUpRequest {
             notes = "Please enter your email.",
             required = true,
             example = "member@email.com")
-    @Email(message = "Please enter the email format.")
-    @NotBlank(message = "Please enter your email.")
+    @Email(message = "{signUpRequest.email.email}")
+    @NotBlank(message = "{signUpRequest.email.notBlank}")
     private String email;
 
     @ApiModelProperty(
@@ -35,9 +35,9 @@ public class SignUpRequest {
             notes = "Password must be at least 8 digits and include at least 1 of alphabet, number, special character each.",
             required = true,
             example = "123456a!")
-    @NotBlank(message = "Please enter your password.")
+    @NotBlank(message = "{signUpRequest.password.notBlank}")
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-            message = "Password must be at least 8 digits and include at least 1 of alphabet, number, special character each.")
+            message = "{signUpRequest.password.pattern}")
     private String password;
 
     @ApiModelProperty(
@@ -45,10 +45,10 @@ public class SignUpRequest {
             notes = "Password must be at least 8 digits and include at least 1 of alphabet, number, special character each.",
             required = true,
             example = "sunny")
-    @NotBlank(message = "Please enter username.")
-    @Size(min = 2, message = "Username must be longer than 2 characters.")
+    @NotBlank(message = "{signUpRequest.username.notBlank}")
+    @Size(min = 2, message = "{signUpRequest.username.size}")
     @Pattern(regexp = "^[A-Za-z가-힣]+$",
-            message = "Please use only Korean and English alphabet as a username.")
+            message = "{signUpRequest.username.pattern}")
     private String username;
 
     @ApiModelProperty(
@@ -56,10 +56,10 @@ public class SignUpRequest {
             notes = "Please use only Korean and English alphabet as a nickname.",
             required = true,
             example = "hsymyth")
-    @NotBlank(message = "Please enter your nickname.")
-    @Size(min = 2, message = "nickname must be longer than 2 characters.")
+    @NotBlank(message = "{signUpRequest.nickname.notBlank}")
+    @Size(min = 2, message = "{signUpRequest.nickname.size}")
     @Pattern(regexp = "^[A-Za-z가-힣]+$",
-            message = "Please use only Korean and English alphabet as a nickname.")
+            message = "{signUpRequest.nickname.pattern}")
     private String nickname;
 
 }

@@ -6,6 +6,7 @@ import com.chatboard.etude.exception.type.ExceptionType;
 import com.chatboard.etude.handler.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
@@ -27,6 +28,13 @@ public class ExceptionAdvice {
 
     // AccessDeniedException(SC.FORBIDDEN) will be filtered before dispatcherServlet.
     // AuthenticationEntryPointException(SC.UNAUTHORIZED) will be filtered before dispatcherServlet.
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response exception(Exception e) {
+        log.error("e = {}", e.getMessage());
+        return getFailureResponse(EXCEPTION);
+    }
 
     @ExceptionHandler(CannotConvertNestedStructureException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

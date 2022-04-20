@@ -19,8 +19,8 @@ public class SignInRequest {
             notes = "Please enter your email.",
             required = true,
             example = "member@email.com")
-    @Email(message = "Please enter the email format.")
-    @NotBlank(message = "Please enter your email.")
+    @Email(message = "{signInRequest.email.email}")
+    @NotBlank(message = "{signInRequest.email.notBlank}")
     private String email;
 
     @ApiModelProperty(
@@ -28,6 +28,6 @@ public class SignInRequest {
             notes = "Password must be at least 8 digits and include at least 1 of alphabet, number, special character each.",
             required = true,
             example = "123456a!")
-    @NotBlank(message = "Please enter your password.")
+    @NotBlank(message = "{signInRequest.password.notBlank}")
     private String password;
 }

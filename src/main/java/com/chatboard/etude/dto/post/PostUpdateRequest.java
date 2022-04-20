@@ -37,7 +37,7 @@ public class PostUpdateRequest {
     private String content;
 
     @ApiModelProperty(value = "price", notes = "Enter the price.", required = true, example = "50000")
-    @NotNull(message = "Enter the price.")
+    @NotNull(message = "{postUpdateRequest.price.notNull}")
     @PositiveOrZero(message = "{postUpdateRequest.price.positiveOrZero}")
     private Long price;
 

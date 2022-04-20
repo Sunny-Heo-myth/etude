@@ -46,7 +46,7 @@ public class CommentControllerAdviceTest {
 
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-        messageSource.setBasenames("messageSource/exception");
+        messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(commentController)
                 .setControllerAdvice(new ExceptionAdvice(responseHandler))

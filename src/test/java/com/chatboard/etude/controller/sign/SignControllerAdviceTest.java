@@ -33,12 +33,10 @@ public class SignControllerAdviceTest {
 
     @InjectMocks
     SignController signController;
-
     @Mock
     SignService signService;
     @Mock
     ResponseHandler responseHandler;
-
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -47,7 +45,7 @@ public class SignControllerAdviceTest {
 
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
-        messageSource.setBasenames("messageSource/exception");
+        messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(signController)
                 .setControllerAdvice(new ExceptionAdvice(responseHandler))

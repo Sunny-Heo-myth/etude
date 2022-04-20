@@ -3,12 +3,14 @@ package com.chatboard.etude.handler;
 import com.chatboard.etude.dto.response.Response;
 import com.chatboard.etude.exception.type.ExceptionType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 // from ExceptionType & MessageSource
 // into exception code & exception message for Response object.
 public class ResponseHandler {
@@ -16,7 +18,7 @@ public class ResponseHandler {
     private final MessageSource messageSource;
 
     public Response getFailureResponse(ExceptionType exceptionType) {
-
+        log.info("code = {}, msg = {}", getCode(exceptionType.getCode()), getMessage(exceptionType.getMessage()));
         return Response.failure(
                 getCode(exceptionType.getCode()),
                 getMessage(exceptionType.getMessage())

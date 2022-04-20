@@ -16,7 +16,7 @@ public class ResponseHandlerTest {
     @BeforeEach
     void beforeEach() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("messageSource/exception");
+        messageSource.setBasenames("i18n/exception");
         responseHandler = new ResponseHandler(messageSource);
     }
 

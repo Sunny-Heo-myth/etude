@@ -19,7 +19,6 @@ import java.time.Duration;
 public class WebConfig implements WebMvcConfigurer {
 
     private final MessageSource messageSource;
-
     @Value("${upload.image.location}")
     private String location;
 
@@ -29,8 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/image/**")
                 // access with a designated file system location.
                 .addResourceLocations("file:" + location)
-                .setCacheControl(CacheControl.maxAge(Duration.ofHours(1L))
-                        .cachePublic());
+                .setCacheControl(CacheControl.maxAge(Duration.ofHours(1L)).cachePublic());
     }
 
     @Override

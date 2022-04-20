@@ -58,4 +58,8 @@ tasks.jar {
     }
 }
 
+tasks.bootJar {
+    mainClass = 'com.chatboard.etude.EtudeApplication'
+}
+
 
