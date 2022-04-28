@@ -23,14 +23,13 @@ bin/
 *.iml
 *.ipr
 *.yml
-application.yml
-application-local.yml
-application-secret.yml
-application-test.yml
+
 out/
 **/src/main/**/out/
-**/src/test/**/out/
-/src/main/resources/*
+src/main/resources/application.yml
+src/main/resources/application-local.yml
+src/main/resources/application-secret.yml
+src/main/resources/application-test.yml
 
 
 ### NetBeans ###
