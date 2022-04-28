@@ -1,7 +1,6 @@
 package com.chatboard.etude.controller.sign;
 
 import com.chatboard.etude.dto.sign.SignInRequest;
-import com.chatboard.etude.dto.sign.SignInResponse;
 import com.chatboard.etude.dto.sign.SignUpRequest;
 import com.chatboard.etude.service.sign.SignService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,10 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class SignControllerTest {
+public class SignRestControllerTest {
 
     @InjectMocks
-    SignController signController;
+    SignRestController signRestController;
 
     @Mock
     SignService signService;
@@ -39,7 +38,7 @@ public class SignControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(signController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(signRestController).build();
     }
 
     @Test

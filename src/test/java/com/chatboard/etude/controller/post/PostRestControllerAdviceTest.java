@@ -30,9 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class PostControllerAdviceTest {
+public class PostRestControllerAdviceTest {
     @InjectMocks
-    PostController postController;
+    PostRestController postRestController;
     @Mock
     PostService postService;
     @Mock
@@ -47,7 +47,7 @@ public class PostControllerAdviceTest {
 
         messageSource.setBasenames("i18n/exception");
 
-        mockMvc = MockMvcBuilders.standaloneSetup(postController)
+        mockMvc = MockMvcBuilders.standaloneSetup(postRestController)
                 .setControllerAdvice(new ExceptionAdvice(responseHandler))
                 .build();
     }

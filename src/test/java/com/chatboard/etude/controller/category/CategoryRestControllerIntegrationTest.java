@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "test")
 @Transactional
-public class CategoryControllerIntegrationTest {
+public class CategoryRestControllerIntegrationTest {
 
     @Autowired
     WebApplicationContext context;

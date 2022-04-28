@@ -30,10 +30,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class PostControllerTest {
+public class PostRestControllerTest {
 
     @InjectMocks
-    PostController postController;
+    PostRestController postRestController;
     @Mock
     PostService postService;
 
@@ -41,7 +41,7 @@ public class PostControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(postController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(postRestController).build();
     }
 
     @Test

@@ -14,6 +14,7 @@ public class Response {
     private int code;
     private Result result;
 
+    // Thoroughly defining constructor pattern.
     public static Response success() {
         return new Response(true, 0, null);
     }

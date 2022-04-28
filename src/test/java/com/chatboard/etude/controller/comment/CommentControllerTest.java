@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class CommentControllerTest {
     @InjectMocks
-    CommentController commentController;
+    CommentRestController commentRestController;
     @Mock
     CommentService commentService;
     MockMvc mockMvc;
@@ -31,7 +31,7 @@ public class CommentControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(commentController)
+        mockMvc = MockMvcBuilders.standaloneSetup(commentRestController)
                 .build();
     }
 

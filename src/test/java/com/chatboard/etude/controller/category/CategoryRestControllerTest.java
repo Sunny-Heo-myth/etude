@@ -19,10 +19,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryControllerTest {
+public class CategoryRestControllerTest {
 
     @InjectMocks
-    CategoryController categoryController;
+    CategoryRestController categoryController;
     @Mock
     CategoryService categoryService;
 

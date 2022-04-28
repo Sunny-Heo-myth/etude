@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "test")
 @Transactional
-public class MemberControllerIntegrationTest {
+public class MemberRestControllerIntegrationTest {
 
     @Autowired
     private WebApplicationContext context;

@@ -21,10 +21,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageControllerTest {
+public class MessageRestControllerTest {
 
     @InjectMocks
-    MessageController messageController;
+    MessageRestController messageRestController;
     @Mock
     MessageService messageService;
 
@@ -36,7 +36,7 @@ public class MessageControllerTest {
 
     @BeforeEach
     void beforeEach() {
-        mockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(messageRestController).build();
     }
 
     @Test

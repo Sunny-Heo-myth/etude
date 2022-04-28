@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CommentControllerAdviceTest {
 
     @InjectMocks
-    CommentController commentController;
+    CommentRestController commentRestController;
     @Mock
     CommentService commentService;
     @Mock
@@ -48,7 +48,7 @@ public class CommentControllerAdviceTest {
 
         messageSource.setBasenames("i18n/exception");
 
-        mockMvc = MockMvcBuilders.standaloneSetup(commentController)
+        mockMvc = MockMvcBuilders.standaloneSetup(commentRestController)
                 .setControllerAdvice(new ExceptionAdvice(responseHandler))
                 .build();
     }

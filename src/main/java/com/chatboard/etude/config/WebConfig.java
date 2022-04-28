@@ -24,7 +24,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
         registry.addResourceHandler("/image/**")
                 // access with a designated file system location.
                 .addResourceLocations("file:" + location)

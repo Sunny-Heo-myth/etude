@@ -1,10 +1,9 @@
-package com.chatboard.etude.controller.category;
+package com.chatboard.etude.controller.member;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
-import com.chatboard.etude.exception.CannotConvertNestedStructureException;
-import com.chatboard.etude.exception.CategoryNotFoundException;
+import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.handler.ResponseHandler;
-import com.chatboard.etude.service.category.CategoryService;
+import com.chatboard.etude.service.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,11 +23,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-public class CategoryControllerAdviceTest {
+public class MemberRestControllerAdviceTest {
+
     @InjectMocks
-    CategoryController categoryController;
+    MemberRestController memberRestController;
     @Mock
-    CategoryService categoryService;
+    MemberService memberService;
     @Mock
     ResponseHandler responseHandler;
 
@@ -41,29 +41,30 @@ public class CategoryControllerAdviceTest {
 
         messageSource.setBasenames("i18n/exception");
 
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
+        mockMvc = MockMvcBuilders.standaloneSetup(memberRestController)
                 .setControllerAdvice(new ExceptionAdvice(responseHandler))
                 .build();
     }
 
     @Test
-    void readAllTest() throws Exception {
+    void readMemberNotFoundExceptionTest() throws Exception {
         // given
-        given(categoryService.readAll()).willThrow(CannotConvertNestedStructureException.class);
+        given(memberService.read(anyLong())).willThrow(MemberNotFoundException.class);
 
         // when, then
-        mockMvc.perform(get("/api/categories"))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    void deleteTest() throws Exception {
-        // given
-        doThrow(CategoryNotFoundException.class).when(categoryService).delete(anyLong());
-
-        // when, then
-        mockMvc.perform(delete("/api/categories/{id}", 1L))
+        mockMvc.perform(
+                get("/api/members/{id}", 1L))
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void deleteMemberNotFoundExceptionTest() throws Exception {
+        // given
+        doThrow(MemberNotFoundException.class).when(memberService).delete(anyLong());
+
+        // when, then
+        mockMvc.perform(
+                delete("/api/members/{id}", 1L))
+                .andExpect(status().isNotFound());
+    }
 }
