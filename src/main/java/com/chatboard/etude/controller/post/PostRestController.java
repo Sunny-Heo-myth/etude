@@ -29,14 +29,14 @@ public class PostRestController {
     @ResponseStatus(HttpStatus.OK)
     public Response read(
             @ApiParam(value = "post id", required = true) @PathVariable Long id) {
-        return Response.success(postService.read(id));
+        return Response.success(postService.readPost(id));
     }
 
     @ApiOperation(value = "post list read", notes = "Read post list.")
     @GetMapping("/api/posts")
     @ResponseStatus(HttpStatus.OK)
     public Response readAll(@Valid PostReadCondition condition) {
-        return Response.success(postService.readAll(condition));
+        return Response.success(postService.readAllPost(condition));
     }
 
     @ApiOperation(value = "post create", notes = "Create post.")
@@ -45,7 +45,7 @@ public class PostRestController {
     @AssignMemberId
     public Response create(
             @Valid @ModelAttribute PostCreateRequest request) {
-        return Response.success(postService.create(request));
+        return Response.success(postService.createPost(request));
     }
 
     @ApiOperation(value = "delete post", notes = "Delete post.")
@@ -53,7 +53,7 @@ public class PostRestController {
     @ResponseStatus(HttpStatus.OK)
     public Response delete(
             @ApiParam(value = "post id", required = true) @PathVariable Long id) {
-        postService.delete(id);
+        postService.deletePost(id);
         return Response.success();
     }
 
@@ -63,7 +63,7 @@ public class PostRestController {
     public Response update(
             @ApiParam(value = "post id", required = true) @PathVariable Long id,
             @Valid @ModelAttribute PostUpdateRequest request) {
-        return Response.success(postService.update(id, request));
+        return Response.success(postService.updatePost(id, request));
     }
 
 }

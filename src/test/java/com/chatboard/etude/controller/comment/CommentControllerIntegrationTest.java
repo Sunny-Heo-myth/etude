@@ -38,7 +38,6 @@ import static com.chatboard.etude.factory.entity.PostFactory.createPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -118,7 +117,7 @@ public class CommentControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
 
-        List<CommentDto> result = commentService.readAll(createCommentReadCondition(post.getId()));
+        List<CommentDto> result = commentService.readAllComments(createCommentReadCondition(post.getId()));
         assertThat(result.size()).isEqualTo(1);
     }
 

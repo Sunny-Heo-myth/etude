@@ -16,19 +16,19 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberDto read(Long id) {
+    public MemberDto readMember(Long id) {
         return MemberDto.toDto(memberRepository.findById(id)
                 .orElseThrow(MemberNotFoundException::new));
     }
 
     @Transactional
     @PreAuthorize("@memberGuard.check(#id)")
-    public void delete(Long id) {
+    public void deleteMember(Long id) {
 
         Member member = memberRepository.findById(id)
                 .orElseThrow(MemberNotFoundException::new);
 
-        // deleteById issue two "select sql" & "delete eql".
+        // deleteById issue two different "select sql" & "delete sql".
         memberRepository.delete(member);
     }
 

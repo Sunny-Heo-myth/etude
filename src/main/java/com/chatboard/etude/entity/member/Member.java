@@ -17,13 +17,11 @@ import java.util.stream.Collectors;
 // Member left outer join with MemberRole and even Role.
 @NamedEntityGraph(
         name = "Member.roles",
-
         attributeNodes = {
                 @NamedAttributeNode(
                 value = "roles",
                 subgraph = "Member.roles.role"
         )},
-
         subgraphs = {
                 @NamedSubgraph(
                 name = "Member.roles.role",

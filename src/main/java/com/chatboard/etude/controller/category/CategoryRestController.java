@@ -2,7 +2,6 @@ package com.chatboard.etude.controller.category;
 
 import com.chatboard.etude.dto.category.CategoryCreateRequest;
 import com.chatboard.etude.dto.response.Response;
-import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.service.category.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,18 +21,18 @@ public class CategoryRestController {
 
     @ApiOperation(value = "read all category",
             notes = "This request reads all categories.")
-    @GetMapping("api/categories")
+    @GetMapping("/api/categories")
     @ResponseStatus(HttpStatus.OK)
     public Response readAll() {
-        return Response.success(categoryService.readAll());
+        return Response.success(categoryService.readAllCategory());
     }
 
     @ApiOperation(value = "create categories",
             notes = "This request create a category.")
-    @PostMapping("api/categories")
+    @PostMapping("/api/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public Response create(@Valid @RequestBody CategoryCreateRequest request) {
-        categoryService.create(request);
+        categoryService.createCategory(request);
         return Response.success();
     }
 
@@ -41,9 +40,9 @@ public class CategoryRestController {
             notes = "This request deletes category.")
     @DeleteMapping("/api/categories/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response delete(@ApiParam(value = "category id", required = true)
-                           @PathVariable Long id) {
-        categoryService.delete(id);
+    public Response delete(
+            @ApiParam(value = "category id", required = true) @PathVariable Long id) {
+        categoryService.deleteCategory(id);
         return Response.success();
     }
 }

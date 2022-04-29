@@ -60,7 +60,7 @@ public class CommentCreatedListenerTest {
         // given
         MemberDto publisher = MemberDto.toDto(createMemberWithId(1L));
         MemberDto postWriter = MemberDto.toDto(createMemberWithId(1L));
-        MemberDto parentWriter = MemberDto.empty();
+        MemberDto parentWriter = MemberDto.emptyMemberDto();
         String content = "content";
 
         // when

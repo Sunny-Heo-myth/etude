@@ -49,7 +49,7 @@ public class MemberRestControllerAdviceTest {
     @Test
     void readMemberNotFoundExceptionTest() throws Exception {
         // given
-        given(memberService.read(anyLong())).willThrow(MemberNotFoundException.class);
+        given(memberService.readMember(anyLong())).willThrow(MemberNotFoundException.class);
 
         // when, then
         mockMvc.perform(
@@ -60,7 +60,7 @@ public class MemberRestControllerAdviceTest {
     @Test
     void deleteMemberNotFoundExceptionTest() throws Exception {
         // given
-        doThrow(MemberNotFoundException.class).when(memberService).delete(anyLong());
+        doThrow(MemberNotFoundException.class).when(memberService).deleteMember(anyLong());
 
         // when, then
         mockMvc.perform(

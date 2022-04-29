@@ -1,7 +1,6 @@
 package com.chatboard.etude.service.comment;
 
 import com.chatboard.etude.dto.comment.CommentDto;
-import com.chatboard.etude.entity.comment.Comment;
 import com.chatboard.etude.event.comment.CommentCreatedEvent;
 import com.chatboard.etude.exception.CommentNotFoundException;
 import com.chatboard.etude.exception.MemberNotFoundException;
@@ -9,7 +8,6 @@ import com.chatboard.etude.exception.PostNotFoundException;
 import com.chatboard.etude.repository.comment.CommentRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
-import com.chatboard.etude.service.comment.CommentService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -56,7 +54,7 @@ public class CommentServiceTest {
                 );
 
         // when
-        List<CommentDto> result = commentService.readAll(createCommentReadCondition());
+        List<CommentDto> result = commentService.readAllComments(createCommentReadCondition());
 
         // then
         assertThat(result.size()).isEqualTo(2);
@@ -71,7 +69,7 @@ public class CommentServiceTest {
                 );
 
         // when
-        List<CommentDto> result = commentService.readAll(createCommentReadCondition());
+        List<CommentDto> result = commentService.readAllComments(createCommentReadCondition());
 
         // then
         assertThat(result.size()).isEqualTo(2);
@@ -89,7 +87,7 @@ public class CommentServiceTest {
         given(commentRepository.save(any())).willReturn(createComment(null));
 
         // when
-        commentService.create(createCommentCreateRequest());
+        commentService.createComment(createCommentCreateRequest());
 
         // then
         verify(commentRepository).save(any());
@@ -105,7 +103,7 @@ public class CommentServiceTest {
         given(memberRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> commentService.create(createCommentCreateRequest()))
+        assertThatThrownBy(() -> commentService.createComment(createCommentCreateRequest()))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 
@@ -116,7 +114,7 @@ public class CommentServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> commentService.create(createCommentCreateRequest()))
+        assertThatThrownBy(() -> commentService.createComment(createCommentCreateRequest()))
                 .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -128,7 +126,7 @@ public class CommentServiceTest {
         given(commentRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> commentService.create(createCommentCreateRequestWithParentId(1L)))
+        assertThatThrownBy(() -> commentService.createComment(createCommentCreateRequestWithParentId(1L)))
                 .isInstanceOf(CommentNotFoundException.class);
     }
 }

@@ -36,7 +36,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -267,7 +266,7 @@ public class PostRestControllerIntegrationTest {
                         .header("Authorization", signInResponse.getAccessToken()))
                 .andExpect(status().isOk());
 
-        assertThatThrownBy(() -> postService.read(post.getId()))
+        assertThatThrownBy(() -> postService.readPost(post.getId()))
                 .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -284,7 +283,7 @@ public class PostRestControllerIntegrationTest {
                         .header("Authorization", adminSignInResponse.getAccessToken()))
                 .andExpect(status().isOk());
 
-        assertThatThrownBy(() -> postService.read(post.getId()))
+        assertThatThrownBy(() -> postService.readPost(post.getId()))
                 .isInstanceOf(PostNotFoundException.class);
     }
 

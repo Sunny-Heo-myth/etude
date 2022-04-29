@@ -32,19 +32,19 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final FileService fileService;
 
-    public PostDto read(Long id) {
+    public PostDto readPost(Long id) {
         return PostDto.toDto(postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new));
     }
 
-    public PostListDto readAll(PostReadCondition condition) {
+    public PostListDto readAllPost(PostReadCondition condition) {
         return PostListDto.toDto(
                 postRepository.findAllByCondition(condition)
         );
     }
 
     @Transactional
-    public PostCreateResponse create(PostCreateRequest request) {
+    public PostCreateResponse createPost(PostCreateRequest request) {
 
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
@@ -61,39 +61,39 @@ public class PostService {
                         member, category, images)
         );
 
-        uploadImages(post.getImages(), request.getImages());
+        uploadPostImage(post.getImages(), request.getImages());
         return new PostCreateResponse(post.getId());
     }
 
     @Transactional
     @PreAuthorize("@postGuard.check(#id)")
-    public void delete(Long id) {
+    public void deletePost(Long id) {
 
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
 
-        deleteImages(post.getImages());
+        deletePostImage(post.getImages());
 
         postRepository.delete(post);
     }
 
     @Transactional
     @PreAuthorize("@postGuard.check(#id)")
-    public PostUpdateResponse update(Long id, PostUpdateRequest request) {
+    public PostUpdateResponse updatePost(Long id, PostUpdateRequest request) {
 
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
 
         Post.ImageUpdatedResult result = post.update(request);
 
-        uploadImages(result.getAddedImages(), result.getAddedImageFiles());
+        uploadPostImage(result.getAddedImages(), result.getAddedImageFiles());
 
-        deleteImages(result.getDeletedImages());
+        deletePostImage(result.getDeletedImages());
 
         return new PostUpdateResponse(id);
     }
 
-    private void uploadImages(List<Image> images, List<MultipartFile> files) {
+    private void uploadPostImage(List<Image> images, List<MultipartFile> files) {
         IntStream.range(0, images.size())
                 .forEach(num ->
                         // Save image files in the designated location with an unique name.
@@ -101,7 +101,7 @@ public class PostService {
                 );
     }
 
-    private void deleteImages(List<Image> images) {
+    private void deletePostImage(List<Image> images) {
         // Delete image files in the designated location with an unique name.
         images.forEach(image -> fileService.delete(image.getUniqueName()));
     }

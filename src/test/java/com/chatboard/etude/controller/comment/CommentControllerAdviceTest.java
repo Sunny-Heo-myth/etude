@@ -56,7 +56,7 @@ public class CommentControllerAdviceTest {
     @Test
     void createExceptionByMemberNotFoundTest() throws Exception {
         // given
-        doThrow(MemberNotFoundException.class).when(commentService).create(any());
+        doThrow(MemberNotFoundException.class).when(commentService).createComment(any());
         CommentCreateRequest request = createCommentCreateRequestWithMemberId(null);
 
         // when, then
@@ -70,7 +70,7 @@ public class CommentControllerAdviceTest {
     @Test
     void createExceptionByPostNotFoundTest() throws Exception {
         // given
-        doThrow(PostNotFoundException.class).when(commentService).create(any());
+        doThrow(PostNotFoundException.class).when(commentService).createComment(any());
         CommentCreateRequest request = createCommentCreateRequestWithMemberId(null);
 
         // when, then
@@ -84,7 +84,7 @@ public class CommentControllerAdviceTest {
     @Test
     void createExceptionByCommentNotFoundTest() throws Exception {
         // given
-        doThrow(CommentNotFoundException.class).when(commentService).create(any());
+        doThrow(CommentNotFoundException.class).when(commentService).createComment(any());
         CommentCreateRequest request = createCommentCreateRequestWithMemberId(null);
 
         // when, then
@@ -98,7 +98,7 @@ public class CommentControllerAdviceTest {
     @Test
     void deleteExceptionByCommentNotFoundTest() throws Exception {
         // given
-        doThrow(CommentNotFoundException.class).when(commentService).delete(anyLong());
+        doThrow(CommentNotFoundException.class).when(commentService).deleteComment(anyLong());
         Long id = 1L;
 
         // when, then

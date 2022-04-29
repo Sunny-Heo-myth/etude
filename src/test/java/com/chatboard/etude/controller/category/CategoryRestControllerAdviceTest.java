@@ -49,7 +49,7 @@ public class CategoryRestControllerAdviceTest {
     @Test
     void readAllTest() throws Exception {
         // given
-        given(categoryService.readAll()).willThrow(CannotConvertNestedStructureException.class);
+        given(categoryService.readAllCategory()).willThrow(CannotConvertNestedStructureException.class);
 
         // when, then
         mockMvc.perform(get("/api/categories"))
@@ -59,7 +59,7 @@ public class CategoryRestControllerAdviceTest {
     @Test
     void deleteTest() throws Exception {
         // given
-        doThrow(CategoryNotFoundException.class).when(categoryService).delete(anyLong());
+        doThrow(CategoryNotFoundException.class).when(categoryService).deleteCategory(anyLong());
 
         // when, then
         mockMvc.perform(delete("/api/categories/{id}", 1L))

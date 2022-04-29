@@ -33,7 +33,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final ApplicationEventPublisher publisher;
 
-    public List<CommentDto> readAll(CommentReadCondition condition) {
+    public List<CommentDto> readAllComments(CommentReadCondition condition) {
         return CommentDto.toDtoList(
                 commentRepository.findAllWithMemberAndParentByPostIdOrderByParentIdAscNullsFirstCommentIdAsc(
                         condition.getPostId()
@@ -42,7 +42,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void create(CommentCreateRequest request) {
+    public void createComment(CommentCreateRequest request) {
 
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
@@ -64,7 +64,7 @@ public class CommentService {
 
     @Transactional
     @PreAuthorize("@commentGuard.check(#id)")
-    public void delete(Long id) {
+    public void deleteComment(Long id) {
 
         Comment comment = commentRepository.findWithParentById(id)
                 .orElseThrow(CommentNotFoundException::new);

@@ -55,7 +55,7 @@ public class MessageServiceTest {
                 .willReturn(new SliceImpl<>(List.of(), Pageable.ofSize(2), false));
 
         // when
-        MessageListDto result = messageService.readAllBySender(condition);
+        MessageListDto result = messageService.readAllMessageBySender(condition);
 
         // then
         assertThat(result.getNumberOfElements()).isZero();
@@ -72,7 +72,7 @@ public class MessageServiceTest {
                 .willReturn(new SliceImpl<>(List.of(), Pageable.ofSize(2), false));
 
         // when
-        MessageListDto result = messageService.readAllByReceiver(condition);
+        MessageListDto result = messageService.readAllMessageByReceiver(condition);
 
         // then
         assertThat(result.getNumberOfElements()).isZero();
@@ -88,7 +88,7 @@ public class MessageServiceTest {
         given(messageRepository.findWithSenderAndReceiverById(id)).willReturn(Optional.of(message));
 
         // when
-        MessageDto result = messageService.read(id);
+        MessageDto result = messageService.readAMessage(id);
 
         // then
         assertThat(result.getContent()).isEqualTo(message.getContent());
@@ -101,7 +101,7 @@ public class MessageServiceTest {
         given(messageRepository.findWithSenderAndReceiverById(id)).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> messageService.read(id))
+        assertThatThrownBy(() -> messageService.readAMessage(id))
                 .isInstanceOf(MessageNotFoundException.class);
     }
 
@@ -113,7 +113,7 @@ public class MessageServiceTest {
         given(memberRepository.findById(request.getReceiverId())).willReturn(Optional.of(createMember()));
 
         // when
-        messageService.create(request);
+        messageService.createMessage(request);
 
         // then
         verify(messageRepository).save(any());
@@ -126,7 +126,7 @@ public class MessageServiceTest {
         given(memberRepository.findById(request.getMemberId())).willReturn(Optional.empty());
 
         // when
-        assertThatThrownBy(() -> messageService.create(request))
+        assertThatThrownBy(() -> messageService.createMessage(request))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 
@@ -138,7 +138,7 @@ public class MessageServiceTest {
         given(memberRepository.findById(request.getMemberId())).willReturn(Optional.empty());
 
         // when
-        assertThatThrownBy(() -> messageService.create(request))
+        assertThatThrownBy(() -> messageService.createMessage(request))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 
@@ -150,7 +150,7 @@ public class MessageServiceTest {
         given(messageRepository.findById(id)).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteBySender(id);
+        messageService.deleteMessageBySender(id);
 
         // then
         assertThat(message.isDeletedBySender()).isTrue();
@@ -166,7 +166,7 @@ public class MessageServiceTest {
         given(messageRepository.findById(id)).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteBySender(id);
+        messageService.deleteMessageBySender(id);
 
         // then
         assertThat(message.isDeletedBySender()).isTrue();
@@ -180,7 +180,7 @@ public class MessageServiceTest {
         given(messageRepository.findById(id)).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> messageService.deleteBySender(id))
+        assertThatThrownBy(() -> messageService.deleteMessageBySender(id))
                 .isInstanceOf(MessageNotFoundException.class);
     }
 
@@ -192,7 +192,7 @@ public class MessageServiceTest {
         given(messageRepository.findById(id)).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteByReceiver(id);
+        messageService.deleteMessageByReceiver(id);
 
         // then
         assertThat(message.isDeletedByReceiver()).isTrue();
@@ -208,7 +208,7 @@ public class MessageServiceTest {
         given(messageRepository.findById(id)).willReturn(Optional.of(message));
 
         // when
-        messageService.deleteByReceiver(id);
+        messageService.deleteMessageByReceiver(id);
 
         // then
         assertThat(message.isDeletedByReceiver()).isTrue();
@@ -222,7 +222,7 @@ public class MessageServiceTest {
         given(messageRepository.findById(id)).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> messageService.deleteByReceiver(id))
+        assertThatThrownBy(() -> messageService.deleteMessageByReceiver(id))
                 .isInstanceOf(MessageNotFoundException.class);
     }
 }

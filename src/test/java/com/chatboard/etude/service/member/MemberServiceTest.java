@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.chatboard.etude.factory.entity.MemberFactory.createMember;
@@ -37,7 +36,7 @@ public class MemberServiceTest {
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
 
         // when
-        MemberDto memberDto = memberService.read(1L);
+        MemberDto memberDto = memberService.readMember(1L);
 
         // then
         assertThat(memberDto.getEmail()).isEqualTo(member.getEmail());
@@ -49,7 +48,7 @@ public class MemberServiceTest {
         given(memberRepository.findById(any())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> memberService.read(1L))
+        assertThatThrownBy(() -> memberService.readMember(1L))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 
@@ -59,7 +58,7 @@ public class MemberServiceTest {
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(createMember()));
 
         // when
-        memberService.delete(1L);
+        memberService.deleteMember(1L);
 
         // then
         verify(memberRepository).delete(any());
@@ -71,7 +70,7 @@ public class MemberServiceTest {
         given(memberRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> memberService.delete(1L))
+        assertThatThrownBy(() -> memberService.deleteMember(1L))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 }

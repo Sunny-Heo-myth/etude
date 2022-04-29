@@ -53,7 +53,7 @@ public class MessageRestControllerAdviceTest {
     void readTest() throws Exception {
         // given
         Long id = 1L;
-        given(messageService.read(id)).willThrow(MessageNotFoundException.class);
+        given(messageService.readAMessage(id)).willThrow(MessageNotFoundException.class);
 
         // when, then
         mockMvc.perform(
@@ -65,7 +65,7 @@ public class MessageRestControllerAdviceTest {
     void createTest() throws Exception {
         // given
         MessageCreateRequest request = createMessageCreateRequest("content", null, 2L);
-        doThrow(MessageNotFoundException.class).when(messageService).create(request);
+        doThrow(MessageNotFoundException.class).when(messageService).createMessage(request);
 
         // when, then
         mockMvc.perform(
@@ -79,7 +79,7 @@ public class MessageRestControllerAdviceTest {
     void deleteBySenderTest() throws Exception {
         // given
         Long id = 1L;
-        doThrow(MessageNotFoundException.class).when(messageService).deleteBySender(id);
+        doThrow(MessageNotFoundException.class).when(messageService).deleteMessageBySender(id);
 
         // when, then
         mockMvc.perform(
@@ -91,7 +91,7 @@ public class MessageRestControllerAdviceTest {
     void deleteByReceiverTest() throws Exception {
         // given
         Long id = 1L;
-        doThrow(MessageNotFoundException.class).when(messageService).deleteByReceiver(id);
+        doThrow(MessageNotFoundException.class).when(messageService).deleteMessageByReceiver(id);
 
         // when, then
         mockMvc.perform(

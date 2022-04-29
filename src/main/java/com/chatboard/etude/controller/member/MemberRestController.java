@@ -21,17 +21,17 @@ public class MemberRestController {
     @ApiOperation(value = "member information read", notes = "Read member information.")
     @GetMapping("/api/members/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response read(@ApiParam(value = "user id", required = true)
-                             @PathVariable Long id) {
-        return Response.success(memberService.read(id));
+    public Response read(
+            @ApiParam(value = "user id", required = true) @PathVariable Long id) {
+        return Response.success(memberService.readMember(id));
     }
 
     @ApiOperation(value = "member information deletion", notes = "Delete member information.")
     @DeleteMapping("/api/members/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response delete(@ApiParam(value = "user id", required = true)
-                               @PathVariable Long id) {
-        memberService.delete(id);
+    public Response delete(
+            @ApiParam(value = "user id", required = true) @PathVariable Long id) {
+        memberService.deleteMember(id);
         return Response.success();
     }
 }

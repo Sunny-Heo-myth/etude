@@ -52,7 +52,7 @@ public class MessageRestControllerTest {
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk());
 
-        verify(messageService).readAllBySender(any(MessageReadCondition.class));
+        verify(messageService).readAllMessageBySender(any(MessageReadCondition.class));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class MessageRestControllerTest {
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk());
 
-        verify(messageService).readAllByReceiver(any(MessageReadCondition.class));
+        verify(messageService).readAllMessageByReceiver(any(MessageReadCondition.class));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class MessageRestControllerTest {
                 get("/api/messages/{id}", id))
                 .andExpect(status().isOk());
 
-        verify(messageService).read(id);
+        verify(messageService).readAMessage(id);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class MessageRestControllerTest {
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
-        verify(messageService).create(req);
+        verify(messageService).createMessage(req);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class MessageRestControllerTest {
                 delete("/api/messages/sender/{id}", id))
                 .andExpect(status().isOk());
 
-        verify(messageService).deleteBySender(id);
+        verify(messageService).deleteMessageBySender(id);
     }
 
     @Test
@@ -122,7 +122,7 @@ public class MessageRestControllerTest {
                 delete("/api/messages/receiver/{id}", id))
                 .andExpect(status().isOk());
 
-        verify(messageService).deleteByReceiver(id);
+        verify(messageService).deleteMessageByReceiver(id);
     }
 
 }

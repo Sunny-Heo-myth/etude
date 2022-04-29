@@ -41,7 +41,7 @@ public class MemberRestControllerTest {
                 get("/api/members/{id}", id))
                 .andExpect(status().isOk());
 
-        verify(memberService).read(id);
+        verify(memberService).readMember(id);
     }
 
     @Test
@@ -54,6 +54,6 @@ public class MemberRestControllerTest {
                 delete("/api/members/{id}", id))
                 .andExpect(status().isOk());
 
-        verify(memberService).delete(id);
+        verify(memberService).deleteMember(id);
     }
 }

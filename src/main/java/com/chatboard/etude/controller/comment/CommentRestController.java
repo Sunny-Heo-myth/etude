@@ -4,7 +4,6 @@ import com.chatboard.etude.aop.AssignMemberId;
 import com.chatboard.etude.dto.comment.CommentCreateRequest;
 import com.chatboard.etude.dto.comment.CommentReadCondition;
 import com.chatboard.etude.dto.response.Response;
-import com.chatboard.etude.entity.comment.Comment;
 import com.chatboard.etude.service.comment.CommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +25,7 @@ public class CommentRestController {
     @GetMapping("/api/comments")
     @ResponseStatus(HttpStatus.OK)
     public Response readAll(@Valid CommentReadCondition condition) {
-        return Response.success(commentService.readAll(condition));
+        return Response.success(commentService.readAllComments(condition));
     }
 
     @ApiOperation(value = "create comment", notes = "Create comment.")
@@ -34,15 +33,16 @@ public class CommentRestController {
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
     public Response create(@Valid @RequestBody CommentCreateRequest request) {
-        commentService.create(request);
+        commentService.createComment(request);
         return Response.success();
     }
 
     @ApiOperation(value = "delete comment", notes = "Delete comment.")
     @DeleteMapping("/api/comments/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response delete(@ApiParam(value = "comment id", required = true) @PathVariable Long id) {
-        commentService.delete(id);
+    public Response delete(
+            @ApiParam(value = "comment id", required = true) @PathVariable Long id) {
+        commentService.deleteComment(id);
         return Response.success();
     }
 }

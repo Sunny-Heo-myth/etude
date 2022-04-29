@@ -59,7 +59,7 @@ public class CommentControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
 
-        verify(commentService).create(request);
+        verify(commentService).createComment(request);
     }
 
     @Test
@@ -72,6 +72,6 @@ public class CommentControllerTest {
                 delete("/api/comments/{id}", id))
                 .andExpect(status().isOk());
 
-        verify(commentService).delete(id);
+        verify(commentService).deleteComment(id);
     }
 }

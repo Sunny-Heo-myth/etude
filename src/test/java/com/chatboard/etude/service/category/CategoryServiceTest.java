@@ -41,7 +41,7 @@ public class CategoryServiceTest {
                 );
 
         // when
-        List<CategoryDto> result = categoryService.readAll();
+        List<CategoryDto> result = categoryService.readAllCategory();
 
         // then
         assertThat(result.size()).isEqualTo(2);
@@ -55,7 +55,7 @@ public class CategoryServiceTest {
         CategoryCreateRequest request = createCategoryCreateRequest();
 
         // when
-        categoryService.create(request);
+        categoryService.createCategory(request);
 
         // then
         verify(categoryRepository).save(any());
@@ -67,7 +67,7 @@ public class CategoryServiceTest {
         given(categoryRepository.findById(anyLong())).willReturn(Optional.of(createCategory()));
 
         // when
-        categoryService.delete(1L);
+        categoryService.deleteCategory(1L);
 
         // then
         verify(categoryRepository).delete(any());
@@ -79,7 +79,7 @@ public class CategoryServiceTest {
         given(categoryRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> categoryService.delete(1L))
+        assertThatThrownBy(() -> categoryService.deleteCategory(1L))
                 .isInstanceOf(CategoryNotFoundException.class);
     }
 }

@@ -5,7 +5,6 @@ import com.chatboard.etude.dto.post.PostCreateRequest;
 import com.chatboard.etude.dto.post.PostDto;
 import com.chatboard.etude.dto.post.PostListDto;
 import com.chatboard.etude.dto.post.PostUpdateRequest;
-import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Image;
 import com.chatboard.etude.entity.post.Post;
 import com.chatboard.etude.exception.CategoryNotFoundException;
@@ -73,7 +72,7 @@ public class PostServiceTest {
         ));
 
         // when
-        postService.create(request);
+        postService.createPost(request);
 
         // then
         verify(postRepository).save(any());
@@ -86,7 +85,7 @@ public class PostServiceTest {
         given(memberRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> postService.create(createPostCreateRequest()))
+        assertThatThrownBy(() -> postService.createPost(createPostCreateRequest()))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 
@@ -98,7 +97,7 @@ public class PostServiceTest {
 
 
         // when, then
-        assertThatThrownBy(() -> postService.create(createPostCreateRequest()))
+        assertThatThrownBy(() -> postService.createPost(createPostCreateRequest()))
                 .isInstanceOf(CategoryNotFoundException.class);
     }
 
@@ -115,7 +114,7 @@ public class PostServiceTest {
         given(categoryRepository.findById(anyLong())).willReturn(Optional.of(createCategory()));
 
         // when, then
-        assertThatThrownBy(() -> postService.create(request))
+        assertThatThrownBy(() -> postService.createPost(request))
                 .isInstanceOf(UnsupportedImageFormatException.class);
     }
 
@@ -126,7 +125,7 @@ public class PostServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
 
         // when
-        PostDto postDto = postService.read(1L);
+        PostDto postDto = postService.readPost(1L);
 
         // then
         assertThat(postDto.getTitle()).isEqualTo(post.getTitle());
@@ -139,7 +138,7 @@ public class PostServiceTest {
         given(postRepository.findAllByCondition(any())).willReturn(Page.empty());
 
         // when
-        PostListDto postListDto = postService.readAll(createPostReadCondition(1, 1));
+        PostListDto postListDto = postService.readAllPost(createPostReadCondition(1, 1));
 
         // then
         assertThat(postListDto.getPostSimpleDtos().size()).isZero();
@@ -150,7 +149,7 @@ public class PostServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> postService.read(1L))
+        assertThatThrownBy(() -> postService.readPost(1L))
                 .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -161,7 +160,7 @@ public class PostServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
 
         // when
-        postService.delete(1L);
+        postService.deletePost(1L);
 
         // then
         verify(fileService, times(post.getImages().size())).delete(anyString());
@@ -175,7 +174,7 @@ public class PostServiceTest {
                 .willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> postService.delete(1L))
+        assertThatThrownBy(() -> postService.deletePost(1L))
                 .isInstanceOf(PostNotFoundException.class);
     }
 
@@ -190,7 +189,7 @@ public class PostServiceTest {
         PostUpdateRequest postUpdateRequest = createPostUpdateRequest("title", "content", 1000L, List.of(image3File), List.of(image1.getId()));
 
         // when
-        postService.update(1L, postUpdateRequest);
+        postService.updatePost(1L, postUpdateRequest);
 
         // then
         List<Image> images = post.getImages();
@@ -210,7 +209,7 @@ public class PostServiceTest {
         given(postRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when, then
-        assertThatThrownBy(() -> postService.update(1L, createPostUpdateRequest("title", "content", 1234L, List.of(), List.of())))
+        assertThatThrownBy(() -> postService.updatePost(1L, createPostUpdateRequest("title", "content", 1234L, List.of(), List.of())))
                 .isInstanceOf(PostNotFoundException.class);
     }
 

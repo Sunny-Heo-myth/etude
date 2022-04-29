@@ -21,7 +21,7 @@ public class MemberDto {
                 member.getNickname());
     }
 
-    public static MemberDto empty() {
+    public static MemberDto emptyMemberDto() {
         return new MemberDto(null, "", "" ,"");
     }
 }

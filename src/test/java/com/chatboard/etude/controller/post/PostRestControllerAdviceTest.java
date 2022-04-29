@@ -55,7 +55,7 @@ public class PostRestControllerAdviceTest {
     @Test
     void createExceptionByMemberNotFoundException() throws Exception {
         // given
-        given(postService.create(any())).willThrow(MemberNotFoundException.class);
+        given(postService.createPost(any())).willThrow(MemberNotFoundException.class);
 
         // when, then
         performCreate()
@@ -66,7 +66,7 @@ public class PostRestControllerAdviceTest {
     @Test
     void createExceptionByCategoryNotFoundException() throws Exception {
         // given
-        given(postService.create(any())).willThrow(CategoryNotFoundException.class);
+        given(postService.createPost(any())).willThrow(CategoryNotFoundException.class);
 
         // when, then
         performCreate()
@@ -77,7 +77,7 @@ public class PostRestControllerAdviceTest {
     @Test
     void createExceptionByUnsupportedImageNotFoundException() throws Exception {
         // given
-        given(postService.create(any())).willThrow(UnsupportedImageFormatException.class);
+        given(postService.createPost(any())).willThrow(UnsupportedImageFormatException.class);
 
         // when, then
         performCreate()
@@ -88,7 +88,7 @@ public class PostRestControllerAdviceTest {
     @Test
     void readExceptionByPostNotFoundTest() throws Exception {
         // given
-        given(postService.read(anyLong())).willThrow(PostNotFoundException.class);
+        given(postService.readPost(anyLong())).willThrow(PostNotFoundException.class);
 
         // when, then
         mockMvc.perform(
@@ -99,7 +99,7 @@ public class PostRestControllerAdviceTest {
     @Test
     void updateExceptionByPostNotFoundTest() throws Exception {
         // given
-        given(postService.update(anyLong(), any())).willThrow(PostNotFoundException.class);
+        given(postService.updatePost(anyLong(), any())).willThrow(PostNotFoundException.class);
 
         // when, then
         mockMvc.perform(
@@ -118,7 +118,7 @@ public class PostRestControllerAdviceTest {
     @Test
     void deleteExceptionByPostNotFoundTest() throws Exception {
         // given
-        doThrow(PostNotFoundException.class).when(postService).delete(anyLong());
+        doThrow(PostNotFoundException.class).when(postService).deletePost(anyLong());
 
         // when, then
         mockMvc.perform(

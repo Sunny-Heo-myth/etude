@@ -40,7 +40,7 @@ public class CategoryRestControllerTest {
         mockMvc.perform(get("/api/categories"))
                 .andExpect(status().isOk());
 
-        verify(categoryService).readAll();
+        verify(categoryService).readAllCategory();
     }
 
     @Test
@@ -55,7 +55,7 @@ public class CategoryRestControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
 
-        verify(categoryService).create(request);
+        verify(categoryService).createCategory(request);
     }
 
     @Test
@@ -67,6 +67,6 @@ public class CategoryRestControllerTest {
         mockMvc.perform(
                 delete("/api/categories/{id}", id))
                 .andExpect(status().isOk());
-        verify(categoryService).delete(id);
+        verify(categoryService).deleteCategory(id);
     }
 }

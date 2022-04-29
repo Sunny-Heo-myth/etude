@@ -28,20 +28,20 @@ public class MessageService {
 
 
 
-    public MessageListDto readAllBySender(MessageReadCondition condition) {
+    public MessageListDto readAllMessageBySender(MessageReadCondition condition) {
         return MessageListDto.toDto(messageRepository.findAllBySenderIdOrderByMessageIdDesc(
                 condition.getMemberId(), condition.getLastMessageId(), Pageable.ofSize(condition.getSize())
         ));
     }
 
-    public MessageListDto readAllByReceiver(MessageReadCondition condition) {
+    public MessageListDto readAllMessageByReceiver(MessageReadCondition condition) {
         return MessageListDto.toDto(messageRepository.findAllByReceiverIdOrderByMessageIdDesc(
                 condition.getMemberId(), condition.getLastMessageId(), Pageable.ofSize(condition.getSize())
         ));
     }
 
     @PreAuthorize("@messageGuard.check(#id)")
-    public MessageDto read(Long id) {
+    public MessageDto readAMessage(Long id) {
         return MessageDto.toDto(
                 messageRepository.findWithSenderAndReceiverById(id)
                         .orElseThrow(MessageNotFoundException::new)
@@ -49,7 +49,7 @@ public class MessageService {
     }
 
     @Transactional
-    public void create(MessageCreateRequest request) {
+    public void createMessage(MessageCreateRequest request) {
 
         Member sender = memberRepository.findById(request.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
@@ -64,17 +64,17 @@ public class MessageService {
 
     @Transactional
     @PreAuthorize("@messageSenderGuard.check(#id)")
-    public void deleteBySender(Long id) {
-        delete(id, Message::deleteBySender);
+    public void deleteMessageBySender(Long id) {
+        deleteMessage(id, Message::deleteBySender);
     }
 
     @Transactional
     @PreAuthorize("@messageReceiverGuard.check(#id)")
-    public void deleteByReceiver(Long id) {
-        delete(id, Message::deleteByReceiver);
+    public void deleteMessageByReceiver(Long id) {
+        deleteMessage(id, Message::deleteByReceiver);
     }
 
-    private void delete(Long id, Consumer<Message> delete) {
+    private void deleteMessage(Long id, Consumer<Message> delete) {
 
         Message message = messageRepository.findById(id)
                 .orElseThrow(MessageNotFoundException::new);

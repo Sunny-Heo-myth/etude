@@ -18,13 +18,13 @@ import java.util.Optional;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public List<CategoryDto> readAll() {
+    public List<CategoryDto> readAllCategory() {
         List<Category> categories = categoryRepository.findAllOrderByParentIdAscNullsFirstCateGoryIdAsc();
         return CategoryDto.toDtoList(categories);
     }
 
     @Transactional
-    public void create(CategoryCreateRequest request) {
+    public void createCategory(CategoryCreateRequest request) {
 
         // Optional for when it is a root category :
         Category parent = Optional.ofNullable(request.getParentId())
@@ -38,7 +38,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void deleteCategory(Long id) {
 
         Category category = categoryRepository.findById(id)
                 .orElseThrow(CategoryNotFoundException::new);

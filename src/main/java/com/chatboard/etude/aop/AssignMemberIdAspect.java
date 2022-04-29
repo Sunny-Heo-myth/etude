@@ -25,16 +25,16 @@ public class AssignMemberIdAspect {
         // getArgument type of this joinPoint (ex : PostCreateRequest)
         Arrays.stream(joinPoint.getArgs())
                 // if there is method called "setMemberId"
-                .forEach(arg -> getMethod(arg.getClass(),"setMemberId")
+                .forEach(arg -> getMethod(arg.getClass())
                         // invokeMethod with argument extracted from SecurityContextHolder
                         .ifPresent(setMemberId -> invokeMethod(arg, setMemberId, AuthUtils.extractMemberId())));
 
     }
 
     // get methods from the target class
-    private Optional<Method> getMethod(Class<?> targetClass, String methodName) {
+    private Optional<Method> getMethod(Class<?> targetClass) {
         try {
-            return Optional.of(targetClass.getMethod(methodName, Long.class));
+            return Optional.of(targetClass.getMethod("setMemberId", Long.class));
         }
         catch (NoSuchMethodException e) {
             return Optional.empty();

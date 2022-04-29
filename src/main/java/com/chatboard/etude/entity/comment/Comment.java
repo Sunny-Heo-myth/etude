@@ -103,7 +103,7 @@ public class Comment extends EntityDate {
                         Optional.ofNullable(this.getParent())
                                 .map(Comment::getMember)
                                 .map(MemberDto::toDto)
-                                .orElseGet(MemberDto::empty),   // empty memberDto value
+                                .orElseGet(MemberDto::emptyMemberDto),   // empty memberDto value
                         getContent()
                 )
         );

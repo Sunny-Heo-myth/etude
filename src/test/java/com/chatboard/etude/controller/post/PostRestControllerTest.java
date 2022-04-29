@@ -53,7 +53,7 @@ public class PostRestControllerTest {
         mockMvc.perform(
                 get("/api/posts/{id}", id))
                 .andExpect(status().isOk());
-        verify(postService).read(id);
+        verify(postService).readPost(id);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PostRestControllerTest {
                                 String.valueOf(condition.getMemberId().get(1))))
                 .andExpect(status().isOk());
 
-        verify(postService).readAll(condition);
+        verify(postService).readAllPost(condition);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class PostRestControllerTest {
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
 
-        verify(postService).create(postCreateRequestArgumentCaptor.capture());  // capturing arguments
+        verify(postService).createPost(postCreateRequestArgumentCaptor.capture());  // capturing arguments
 
         PostCreateRequest capturedRequest = postCreateRequestArgumentCaptor.getValue();
         assertThat(capturedRequest.getImages().size()).isEqualTo(2);
@@ -139,7 +139,7 @@ public class PostRestControllerTest {
                         })
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk());
-        verify(postService).update(anyLong(), postUpdateRequestArgumentCaptor.capture());
+        verify(postService).updatePost(anyLong(), postUpdateRequestArgumentCaptor.capture());
 
         PostUpdateRequest capturedRequest = postUpdateRequestArgumentCaptor.getValue();
         List<MultipartFile> capturedAddedImages = capturedRequest.getAddedImages();
@@ -159,6 +159,6 @@ public class PostRestControllerTest {
         mockMvc.perform(
                 delete("/api/posts/{id}", id))
                 .andExpect(status().isOk());
-        verify(postService).delete(id);
+        verify(postService).deletePost(id);
     }
 }
