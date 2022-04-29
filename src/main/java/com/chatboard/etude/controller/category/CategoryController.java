@@ -17,7 +17,7 @@ public class CategoryController {
     @GetMapping("/categories")
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView readAll() {
-        ModelAndView modelAndView = new ModelAndView("/api/categories");
+        ModelAndView modelAndView = new ModelAndView("/categories");
         modelAndView.addObject(categoryService.readAllCategory());
         return modelAndView;
     }

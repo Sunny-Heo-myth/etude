@@ -27,7 +27,7 @@ public class ResponseHandlerTest {
 
         // then
         assertThat(failureResponse.getCode()).isEqualTo(-1000);
-        assertThat(((Failure) failureResponse.getResult()).getMessage()).isEqualTo("exception");
+        assertThat(((Failure) failureResponse.getResponseResult()).getMessage()).isEqualTo("exception");
     }
 
     @Test
@@ -37,6 +37,6 @@ public class ResponseHandlerTest {
 
         // then
         assertThat(failureResponse.getCode()).isEqualTo(-1003);
-        assertThat(((Failure) failureResponse.getResult()).getMessage()).isEqualTo("my args");
+        assertThat(((Failure) failureResponse.getResponseResult()).getMessage()).isEqualTo("my args");
     }
 }

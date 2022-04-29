@@ -12,7 +12,7 @@ public class Response {
 
     private boolean success;
     private int code;
-    private Result result;
+    private ResponseResult responseResult;
 
     // Thoroughly defining constructor pattern.
     public static Response success() {

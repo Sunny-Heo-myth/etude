@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class Success<T> implements Result{
+public class Success<T> implements ResponseResult {
     private T data;
 }

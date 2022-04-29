@@ -40,12 +40,12 @@ public class SignController {
         return modelAndView;
     }
 
-//    @PostMapping("/refresh-token")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ModelAndView refreshToken(
-//            @ApiIgnore @RequestHeader(value = "Authorization") String refreshToken) {
-//        ModelAndView modelAndView = new ModelAndView("view");
-//        modelAndView.addObject()
-//        return success(signService.refreshToken(refreshToken));
-//    }
+    @PostMapping("/refresh-token")
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView refreshToken(
+            @ApiIgnore @RequestHeader(value = "Authorization") String refreshToken) {
+        ModelAndView modelAndView = new ModelAndView("view");
+        modelAndView.addObject(signService.refreshToken(refreshToken));
+        return modelAndView;
+    }
 }
