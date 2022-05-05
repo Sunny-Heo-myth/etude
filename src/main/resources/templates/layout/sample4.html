@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Thymeleaf</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<div th:insert="~{fragments/header::header1}">
+
+</div>
+
+<h1 th:text="${string}">thymeleaf test page</h1>
+
+<div th:insert="~{fragments/footer::footer1}">
+
+</div>
+</body>
+</html>

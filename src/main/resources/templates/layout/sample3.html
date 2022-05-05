@@ -1,0 +1,24 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>Thymeleaf - each</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<h1 th:text="${vo}">thymeleaf test page</h1>
+</body>
+
+<table border="1">
+    <tr>
+        <td>id</td>
+        <td>name</td>
+        <td>password</td>
+    </tr>
+
+    <tr th:each="member : ${list}">
+        <td th:text="${member.memberId}"></td>
+        <td th:text="${member.memberName}"></td>
+        <td th:text="${#dates.format(member.registerDate, 'yyyy-MM-dd')}"></td>
+    </tr>
+</table>
+</html>
