@@ -18,17 +18,11 @@ import java.util.stream.Collectors;
 @NamedEntityGraph(
         name = "Member.roles",
         attributeNodes = {
-                @NamedAttributeNode(
-                value = "roles",
-                subgraph = "Member.roles.role"
-        )},
+                @NamedAttributeNode(value = "roles", subgraph = "Member.roles.role")
+        },
         subgraphs = {
-                @NamedSubgraph(
-                name = "Member.roles.role",
-                attributeNodes = {
-                        @NamedAttributeNode(
-                        value = "role"
-                )}
+                @NamedSubgraph(name = "Member.roles.role",
+                        attributeNodes = {@NamedAttributeNode(value = "role")}
         )}
 )
 public class Member extends EntityDate {

@@ -1,9 +1,9 @@
 package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.aop.AssignMemberId;
-import com.chatboard.etude.dto.post.PostCreateRequest;
-import com.chatboard.etude.dto.post.PostReadCondition;
-import com.chatboard.etude.dto.post.PostUpdateRequest;
+import com.chatboard.etude.dto.post.PostCreateRequestDto;
+import com.chatboard.etude.dto.post.PostReadConditionDto;
+import com.chatboard.etude.dto.post.PostUpdateRequestDto;
 import com.chatboard.etude.dto.response.Response;
 import com.chatboard.etude.service.post.PostService;
 import io.swagger.annotations.Api;
@@ -35,7 +35,7 @@ public class PostRestController {
     @ApiOperation(value = "post list read", notes = "Read post list.")
     @GetMapping("/api/posts")
     @ResponseStatus(HttpStatus.OK)
-    public Response readAll(@Valid PostReadCondition condition) {
+    public Response readAll(@Valid PostReadConditionDto condition) {
         return Response.success(postService.readAllPost(condition));
     }
 
@@ -44,7 +44,7 @@ public class PostRestController {
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
     public Response create(
-            @Valid @ModelAttribute PostCreateRequest request) {
+            @Valid @ModelAttribute PostCreateRequestDto request) {
         return Response.success(postService.createPost(request));
     }
 
@@ -62,7 +62,7 @@ public class PostRestController {
     @ResponseStatus(HttpStatus.OK)
     public Response update(
             @ApiParam(value = "post id", required = true) @PathVariable Long id,
-            @Valid @ModelAttribute PostUpdateRequest request) {
+            @Valid @ModelAttribute PostUpdateRequestDto request) {
         return Response.success(postService.updatePost(id, request));
     }
 

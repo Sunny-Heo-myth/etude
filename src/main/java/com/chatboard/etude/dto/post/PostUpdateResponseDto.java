@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PostCreateResponse {
+public class PostUpdateResponseDto {
     private Long id;
 }

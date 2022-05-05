@@ -59,7 +59,7 @@ public class InitDB {
     private void initPost() {
         Member member = memberRepository.findAll().get(0);
         Category category = categoryRepository.findAll().get(0);
-        IntStream.range(0, 20)
+        IntStream.range(0, 200)
                 .forEach(i -> postRepository.save(
                         new Post("title" + i, "content" + i, (long) i, member, category, List.of())
                 ));

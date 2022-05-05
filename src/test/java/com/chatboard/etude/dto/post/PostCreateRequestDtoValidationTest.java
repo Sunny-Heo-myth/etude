@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-public class PostCreateRequestValidationTest {
+public class PostCreateRequestDtoValidationTest {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test

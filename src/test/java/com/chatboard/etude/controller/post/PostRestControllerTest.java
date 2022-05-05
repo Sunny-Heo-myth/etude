@@ -1,8 +1,8 @@
 package com.chatboard.etude.controller.post;
 
-import com.chatboard.etude.dto.post.PostCreateRequest;
-import com.chatboard.etude.dto.post.PostReadCondition;
-import com.chatboard.etude.dto.post.PostUpdateRequest;
+import com.chatboard.etude.dto.post.PostCreateRequestDto;
+import com.chatboard.etude.dto.post.PostReadConditionDto;
+import com.chatboard.etude.dto.post.PostUpdateRequestDto;
 import com.chatboard.etude.service.post.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ public class PostRestControllerTest {
     @Test
     void readAllTest() throws Exception {
         // given
-        PostReadCondition condition = createPostReadCondition(0, 1, List.of(1L, 2L), List.of(1L, 2L));
+        PostReadConditionDto condition = createPostReadCondition(0, 1, List.of(1L, 2L), List.of(1L, 2L));
 
         // when, then
         mockMvc.perform(
@@ -80,14 +80,14 @@ public class PostRestControllerTest {
     @Test
     void createTest() throws Exception {
         // given : capturing PostCreateRequest received as @ModelAttribute
-        ArgumentCaptor<PostCreateRequest> postCreateRequestArgumentCaptor =
-                ArgumentCaptor.forClass(PostCreateRequest.class);
+        ArgumentCaptor<PostCreateRequestDto> postCreateRequestArgumentCaptor =
+                ArgumentCaptor.forClass(PostCreateRequestDto.class);
 
         List<MultipartFile> imageFiles = List.of(
                 new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()),
                 new MockMultipartFile("test2", "test2.PNG", MediaType.IMAGE_PNG_VALUE, "test2".getBytes())
         );
-        PostCreateRequest request = createPostCreateRequestWithImages(imageFiles);
+        PostCreateRequestDto request = createPostCreateRequestWithImages(imageFiles);
 
         // when, then
         mockMvc.perform(
@@ -107,14 +107,14 @@ public class PostRestControllerTest {
 
         verify(postService).createPost(postCreateRequestArgumentCaptor.capture());  // capturing arguments
 
-        PostCreateRequest capturedRequest = postCreateRequestArgumentCaptor.getValue();
+        PostCreateRequestDto capturedRequest = postCreateRequestArgumentCaptor.getValue();
         assertThat(capturedRequest.getImages().size()).isEqualTo(2);
     }
 
     @Test
     void updateTest() throws Exception {
         // given
-        ArgumentCaptor<PostUpdateRequest> postUpdateRequestArgumentCaptor = ArgumentCaptor.forClass(PostUpdateRequest.class);
+        ArgumentCaptor<PostUpdateRequestDto> postUpdateRequestArgumentCaptor = ArgumentCaptor.forClass(PostUpdateRequestDto.class);
 
         List<MultipartFile> addedImages = List.of(
                 new MockMultipartFile("test1", "test1.PNG", MediaType.IMAGE_PNG_VALUE, "test1".getBytes()),
@@ -122,7 +122,7 @@ public class PostRestControllerTest {
         );
         List<Long> deletedImages = List.of(1L, 2L);
 
-        PostUpdateRequest request = createPostUpdateRequest("title", "content", 1234L, addedImages, deletedImages);
+        PostUpdateRequestDto request = createPostUpdateRequest("title", "content", 1234L, addedImages, deletedImages);
 
         // when, then
         mockMvc.perform(
@@ -141,7 +141,7 @@ public class PostRestControllerTest {
                 .andExpect(status().isOk());
         verify(postService).updatePost(anyLong(), postUpdateRequestArgumentCaptor.capture());
 
-        PostUpdateRequest capturedRequest = postUpdateRequestArgumentCaptor.getValue();
+        PostUpdateRequestDto capturedRequest = postUpdateRequestArgumentCaptor.getValue();
         List<MultipartFile> capturedAddedImages = capturedRequest.getAddedImages();
         assertThat(capturedAddedImages.size()).isEqualTo(2);
 

@@ -1,7 +1,7 @@
 package com.chatboard.etude.repository.post;
 
 import com.chatboard.etude.config.QuerydslConfig;
-import com.chatboard.etude.dto.post.PostReadCondition;
+import com.chatboard.etude.dto.post.PostReadConditionDto;
 import com.chatboard.etude.dto.post.PostSimpleDto;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
@@ -64,8 +64,8 @@ public class CustomPostRepositoryImplTest {
         int sizePerPage = 2;
         int expectedTotalElements = 3;
 
-        PostReadCondition page0Condition = createPostReadCondition(0, sizePerPage, categoryIds, memberIds);
-        PostReadCondition page1Condition = createPostReadCondition(1, sizePerPage, categoryIds, memberIds);
+        PostReadConditionDto page0Condition = createPostReadCondition(0, sizePerPage, categoryIds, memberIds);
+        PostReadConditionDto page1Condition = createPostReadCondition(1, sizePerPage, categoryIds, memberIds);
 
         // when
         Page<PostSimpleDto> page0 = postRepository.findAllByCondition(page0Condition);

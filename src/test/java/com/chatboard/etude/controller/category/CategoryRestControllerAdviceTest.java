@@ -3,7 +3,7 @@ package com.chatboard.etude.controller.category;
 import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.exception.CannotConvertNestedStructureException;
 import com.chatboard.etude.exception.CategoryNotFoundException;
-import com.chatboard.etude.handler.ResponseHandler;
+import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.category.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class CategoryRestControllerAdviceTest {
     @Mock
     CategoryService categoryService;
     @Mock
-    ResponseHandler responseHandler;
+    FailureResponseHandler failureResponseHandler;
 
     MockMvc mockMvc;
 
@@ -42,7 +42,7 @@ public class CategoryRestControllerAdviceTest {
         messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
-                .setControllerAdvice(new ExceptionAdvice(responseHandler))
+                .setControllerAdvice(new ExceptionAdvice(failureResponseHandler))
                 .build();
     }
 

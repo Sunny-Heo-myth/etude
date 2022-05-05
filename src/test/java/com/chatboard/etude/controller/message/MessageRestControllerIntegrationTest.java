@@ -80,7 +80,7 @@ public class MessageRestControllerIntegrationTest {
                         .param("size", String.valueOf(size))
                         .header("Authorization", signInResponse.getAccessToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.data.numberOfElements").value(2));
+                .andExpect(jsonPath("$.responseResult.data.numberOfElements").value(2));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class MessageRestControllerIntegrationTest {
                                 .param("size", String.valueOf(size))
                                 .header("Authorization", signInResponse.getAccessToken()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.data.numberOfElements").value(2));
+                .andExpect(jsonPath("$.responseResult.data.numberOfElements").value(2));
     }
 
     @Test

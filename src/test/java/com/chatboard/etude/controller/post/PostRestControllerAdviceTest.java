@@ -1,12 +1,12 @@
 package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
-import com.chatboard.etude.dto.post.PostCreateRequest;
+import com.chatboard.etude.dto.post.PostCreateRequestDto;
 import com.chatboard.etude.exception.CategoryNotFoundException;
 import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.exception.PostNotFoundException;
 import com.chatboard.etude.exception.UnsupportedImageFormatException;
-import com.chatboard.etude.handler.ResponseHandler;
+import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.post.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ public class PostRestControllerAdviceTest {
     @Mock
     PostService postService;
     @Mock
-    ResponseHandler responseHandler;
+    FailureResponseHandler failureResponseHandler;
 
     MockMvc mockMvc;
 
@@ -48,7 +48,7 @@ public class PostRestControllerAdviceTest {
         messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(postRestController)
-                .setControllerAdvice(new ExceptionAdvice(responseHandler))
+                .setControllerAdvice(new ExceptionAdvice(failureResponseHandler))
                 .build();
     }
 
@@ -127,7 +127,7 @@ public class PostRestControllerAdviceTest {
     }
 
     private ResultActions performCreate() throws Exception {
-        PostCreateRequest request = createPostCreateRequest();
+        PostCreateRequestDto request = createPostCreateRequest();
         return mockMvc.perform(
                 multipart("/api/posts")
                         .param("title", request.getTitle())

@@ -31,7 +31,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     // extract Authorization header
     private Optional<String> extractToken(ServletRequest request) {
-        return Optional.ofNullable(((HttpServletRequest) request)   // casting first bracket.
+        return Optional.ofNullable(
+                ((HttpServletRequest) request)
                 .getHeader("Authorization"));
     }
 

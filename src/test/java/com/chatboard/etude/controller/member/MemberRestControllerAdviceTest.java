@@ -2,7 +2,7 @@ package com.chatboard.etude.controller.member;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.handler.ResponseHandler;
+import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class MemberRestControllerAdviceTest {
     @Mock
     MemberService memberService;
     @Mock
-    ResponseHandler responseHandler;
+    FailureResponseHandler failureResponseHandler;
 
     MockMvc mockMvc;
 
@@ -42,7 +42,7 @@ public class MemberRestControllerAdviceTest {
         messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(memberRestController)
-                .setControllerAdvice(new ExceptionAdvice(responseHandler))
+                .setControllerAdvice(new ExceptionAdvice(failureResponseHandler))
                 .build();
     }
 

@@ -3,10 +3,9 @@ package com.chatboard.etude.advice;
 import com.chatboard.etude.dto.response.Response;
 import com.chatboard.etude.exception.*;
 import com.chatboard.etude.exception.type.ExceptionType;
-import com.chatboard.etude.handler.ResponseHandler;
+import com.chatboard.etude.handler.FailureResponseHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Objects;
-
 import static com.chatboard.etude.exception.type.ExceptionType.*;
 
 @RestControllerAdvice   // including @ResponseBody
@@ -24,7 +21,7 @@ import static com.chatboard.etude.exception.type.ExceptionType.*;
 @Slf4j
 public class ExceptionAdvice {
 
-    private final ResponseHandler responseHandler;
+    private final FailureResponseHandler failureResponseHandler;
 
     // AccessDeniedException(SC.FORBIDDEN) will be filtered before dispatcherServlet.
     // AuthenticationEntryPointException(SC.UNAUTHORIZED) will be filtered before dispatcherServlet.
@@ -135,11 +132,11 @@ public class ExceptionAdvice {
     }
 
     private Response getFailureResponse(ExceptionType exceptionType) {
-        return responseHandler.getFailureResponse(exceptionType);
+        return failureResponseHandler.getFailureResponse(exceptionType);
     }
 
     private Response getFailureResponse(ExceptionType exceptionType, Object... args) {
-        return responseHandler.getFailureResponse(exceptionType, args);
+        return failureResponseHandler.getFailureResponse(exceptionType, args);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.chatboard.etude.controller.post;
 
-import com.chatboard.etude.dto.post.PostCreateRequest;
-import com.chatboard.etude.dto.post.PostReadCondition;
+import com.chatboard.etude.dto.post.PostCreateRequestDto;
+import com.chatboard.etude.dto.post.PostReadConditionDto;
 import com.chatboard.etude.dto.sign.SignInResponse;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
@@ -81,7 +81,7 @@ public class PostRestControllerIntegrationTest {
     @Test
     void readAllTest() throws Exception {
         // given
-        PostReadCondition condition = createPostReadCondition(0, 1);
+        PostReadConditionDto condition = createPostReadCondition(0, 1);
 
         // when, then
         mockMvc.perform(
@@ -102,7 +102,7 @@ public class PostRestControllerIntegrationTest {
         // given
         SignInResponse signInResponse = signService.signIn(
                 createSignInRequest(member1.getEmail(), testInitDB.getPassword()));
-        PostCreateRequest request = createPostCreateRequest(
+        PostCreateRequestDto request = createPostCreateRequest(
                 "title", "content", 1000L, member1.getId(), category.getId(), List.of());
 
         // when, then
@@ -124,7 +124,7 @@ public class PostRestControllerIntegrationTest {
     @Test
     void createUnauthorizedByNoneTokenTest() throws  Exception {
         // given
-        PostCreateRequest request = createPostCreateRequest(
+        PostCreateRequestDto request = createPostCreateRequest(
                 "title", "content", 1000L, member1.getId(), category.getId(), List.of());
 
         // when, then

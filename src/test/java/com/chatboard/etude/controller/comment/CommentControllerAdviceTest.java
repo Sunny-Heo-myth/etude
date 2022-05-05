@@ -5,7 +5,7 @@ import com.chatboard.etude.dto.comment.CommentCreateRequest;
 import com.chatboard.etude.exception.CommentNotFoundException;
 import com.chatboard.etude.exception.MemberNotFoundException;
 import com.chatboard.etude.exception.PostNotFoundException;
-import com.chatboard.etude.handler.ResponseHandler;
+import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.comment.CommentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ public class CommentControllerAdviceTest {
     @Mock
     CommentService commentService;
     @Mock
-    ResponseHandler responseHandler;
+    FailureResponseHandler failureResponseHandler;
 
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
@@ -49,7 +49,7 @@ public class CommentControllerAdviceTest {
         messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(commentRestController)
-                .setControllerAdvice(new ExceptionAdvice(responseHandler))
+                .setControllerAdvice(new ExceptionAdvice(failureResponseHandler))
                 .build();
     }
 

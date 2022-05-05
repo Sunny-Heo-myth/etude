@@ -1,6 +1,6 @@
 package com.chatboard.etude.entity.post;
 
-import com.chatboard.etude.dto.post.PostUpdateRequest;
+import com.chatboard.etude.dto.post.PostUpdateRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -29,15 +29,15 @@ public class PostTest {
         MockMultipartFile newImageFile = new MockMultipartFile(
                 "file1", "file1.png", MediaType.IMAGE_PNG_VALUE, "file1InputStream".getBytes());
 
-        PostUpdateRequest postUpdateRequest = createPostUpdateRequest(
+        PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequest(
                 "update title", "update content", 1234L, List.of(newImageFile), List.of(oldImage1.getId()));
 
-        Post.ImageUpdatedResult imageUpdatedResult = post.update(postUpdateRequest);
+        Post.ImageUpdatedResult imageUpdatedResult = post.update(postUpdateRequestDto);
 
         // then
-        assertThat(post.getTitle()).isEqualTo(postUpdateRequest.getTitle());
-        assertThat(post.getContent()).isEqualTo(postUpdateRequest.getContent());
-        assertThat(post.getPrice()).isEqualTo(postUpdateRequest.getPrice());
+        assertThat(post.getTitle()).isEqualTo(postUpdateRequestDto.getTitle());
+        assertThat(post.getContent()).isEqualTo(postUpdateRequestDto.getContent());
+        assertThat(post.getPrice()).isEqualTo(postUpdateRequestDto.getPrice());
 
         List<Image> resultImages = post.getImages();
         List<String> resultOriginNames = resultImages.stream()

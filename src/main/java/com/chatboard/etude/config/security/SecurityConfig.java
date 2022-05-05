@@ -1,7 +1,6 @@
 package com.chatboard.etude.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -25,7 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity webSecurity) {
         webSecurity.ignoring()
-                .mvcMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**");
+                .mvcMatchers(
+                        "/swagger-ui/**",
+                        "/swagger-resources/**",
+                        "/v3/api-docs/**");
     }
 
     @Override
@@ -67,6 +69,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.DELETE, "/api/messages/sender/{id}").authenticated()
                     .antMatchers(HttpMethod.DELETE, "/api/messages/receiver/{id}").authenticated()
                     .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+
+
+                    .antMatchers(HttpMethod.POST, "/sign-in", "/sign-up", "/refresh-token").permitAll()
+                    .antMatchers(HttpMethod.DELETE, "/members/{id}/**").authenticated()
+                    .antMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.POST, "/posts").authenticated()
+                    .antMatchers(HttpMethod.PUT, "/posts/{id}").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/posts/{id}").authenticated()
+                    .antMatchers(HttpMethod.POST, "/comments").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/comments/{id}").authenticated()
+                    .antMatchers(HttpMethod.GET, "/messages/sender", "/messages/receiver").authenticated()
+                    .antMatchers(HttpMethod.GET, "/messages/{id}").authenticated()
+                    .antMatchers(HttpMethod.POST, "/messages").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/messages/sender/{id}").authenticated()
+                    .antMatchers(HttpMethod.DELETE, "/messages/receiver/{id}").authenticated()
+                    .antMatchers(HttpMethod.GET, "/**").permitAll()
+
                     .anyRequest().hasAnyRole("ADMIN");
 
         // forbidden

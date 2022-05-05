@@ -1,10 +1,10 @@
 package com.chatboard.etude.service.post;
 
 
-import com.chatboard.etude.dto.post.PostCreateRequest;
+import com.chatboard.etude.dto.post.PostCreateRequestDto;
 import com.chatboard.etude.dto.post.PostDto;
 import com.chatboard.etude.dto.post.PostListDto;
-import com.chatboard.etude.dto.post.PostUpdateRequest;
+import com.chatboard.etude.dto.post.PostUpdateRequestDto;
 import com.chatboard.etude.entity.post.Image;
 import com.chatboard.etude.entity.post.Post;
 import com.chatboard.etude.exception.CategoryNotFoundException;
@@ -62,7 +62,7 @@ public class PostServiceTest {
     @Test
     void createTest() {
         // given
-        PostCreateRequest request = createPostCreateRequest();
+        PostCreateRequestDto request = createPostCreateRequest();
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(createMember()));
         given(categoryRepository.findById(anyLong())).willReturn(Optional.of(createCategory()));
         given(postRepository.save(any())).willReturn(createPostWithImages(
@@ -104,7 +104,7 @@ public class PostServiceTest {
     @Test
     void createExceptionByUnsupportedImageFormatExceptionTest() {
         // given
-        PostCreateRequest request = createPostCreateRequestWithImages(
+        PostCreateRequestDto request = createPostCreateRequestWithImages(
                 List.of(new MockMultipartFile("test",
                         "test.txt",
                         MediaType.TEXT_PLAIN_VALUE,
@@ -186,10 +186,10 @@ public class PostServiceTest {
         Post post = createPostWithImages(List.of(image1, image2));
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
         MockMultipartFile image3File = new MockMultipartFile("image3", "image3.png", MediaType.IMAGE_PNG_VALUE, "image3".getBytes());
-        PostUpdateRequest postUpdateRequest = createPostUpdateRequest("title", "content", 1000L, List.of(image3File), List.of(image1.getId()));
+        PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequest("title", "content", 1000L, List.of(image3File), List.of(image1.getId()));
 
         // when
-        postService.updatePost(1L, postUpdateRequest);
+        postService.updatePost(1L, postUpdateRequestDto);
 
         // then
         List<Image> images = post.getImages();

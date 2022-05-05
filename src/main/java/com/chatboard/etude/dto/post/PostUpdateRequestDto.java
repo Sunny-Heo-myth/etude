@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostUpdateRequest {
+public class PostUpdateRequestDto {
 
     @ApiModelProperty(value = "post title",
             notes = "Enter post title.",

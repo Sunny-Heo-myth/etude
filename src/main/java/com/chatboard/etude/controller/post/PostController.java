@@ -1,11 +1,11 @@
 package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.aop.AssignMemberId;
-import com.chatboard.etude.dto.post.PostCreateRequest;
-import com.chatboard.etude.dto.post.PostReadCondition;
-import com.chatboard.etude.dto.post.PostUpdateRequest;
-import com.chatboard.etude.dto.response.Response;
+import com.chatboard.etude.dto.post.PostCreateRequestDto;
+import com.chatboard.etude.dto.post.PostReadConditionDto;
+import com.chatboard.etude.dto.post.PostUpdateRequestDto;
 import com.chatboard.etude.service.post.PostService;
+import com.chatboard.etude.vo.PageMakerVO;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,23 +24,25 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView readPost(
             @ApiParam(value = "post id", required = true) @PathVariable Long id) {
-        ModelAndView modelAndView = new ModelAndView("view");
-        modelAndView.addObject(postService.readPost(id));
+        ModelAndView modelAndView = new ModelAndView("/post/postExample");
+        modelAndView.addObject("post", postService.readPost(id));
         return modelAndView;
     }
 
     @GetMapping("/posts")
     @ResponseStatus(HttpStatus.OK)
-    public ModelAndView readAllPost(@Valid PostReadCondition condition) {
-        ModelAndView modelAndView = new ModelAndView("view");
-        modelAndView.addObject(postService.readAllPost(condition));
+    public ModelAndView readAllPost(@Valid PostReadConditionDto condition) {
+        ModelAndView modelAndView = new ModelAndView("/boards/list");
+        PageMakerVO pageMakerVO = postService.readAllPostWithPage(condition);
+        modelAndView.addObject("postList", pageMakerVO);
+        modelAndView.addObject("postSimpleDtos", pageMakerVO.getResult().getContent());
         return modelAndView;
     }
 
     @PostMapping("/posts")
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
-    public ModelAndView createPost(@Valid @ModelAttribute PostCreateRequest request) {
+    public ModelAndView createPost(@Valid @ModelAttribute PostCreateRequestDto request) {
         ModelAndView modelAndView = new ModelAndView("view");
         modelAndView.addObject(postService.createPost(request));
         return modelAndView;
@@ -50,7 +52,7 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView updatePost(
             @ApiParam(value = "post id", required = true) @PathVariable Long id,
-            @Valid @ModelAttribute PostUpdateRequest request) {
+            @Valid @ModelAttribute PostUpdateRequestDto request) {
         ModelAndView modelAndView = new ModelAndView("view");
         modelAndView.addObject(postService.updatePost(id, request));
         return modelAndView;

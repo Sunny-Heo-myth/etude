@@ -28,6 +28,9 @@ public class WebConfig implements WebMvcConfigurer {
                 // access with a designated file system location.
                 .addResourceLocations("file:" + location)
                 .setCacheControl(CacheControl.maxAge(Duration.ofHours(1L)).cachePublic());
+
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("file:/Users/sunny/IdeaProjects/etude/src/main/resources/static/");
     }
 
     @Override

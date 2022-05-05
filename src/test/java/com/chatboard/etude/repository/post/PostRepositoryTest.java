@@ -1,7 +1,7 @@
 package com.chatboard.etude.repository.post;
 
 import com.chatboard.etude.config.QuerydslConfig;
-import com.chatboard.etude.dto.post.PostUpdateRequest;
+import com.chatboard.etude.dto.post.PostUpdateRequestDto;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Image;
@@ -158,19 +158,19 @@ public class PostRepositoryTest {
         // when
         MockMultipartFile file = new MockMultipartFile(
                 "image3", "image3.png", MediaType.IMAGE_PNG_VALUE, "image3File".getBytes());
-        PostUpdateRequest postUpdateRequest = createPostUpdateRequest(
+        PostUpdateRequestDto postUpdateRequestDto = createPostUpdateRequest(
                 "update title", "update content", 1234L, List.of(file), List.of(image1.getId()));
         Post foundPost = postRepository.findById(post.getId())
                 .orElseThrow(PostNotFoundException::new);
-        foundPost.update(postUpdateRequest);
+        foundPost.update(postUpdateRequestDto);
         clear();
 
         // then
         Post result = postRepository.findById(post.getId())
                 .orElseThrow(PostNotFoundException::new);
-        assertThat(result.getTitle()).isEqualTo(postUpdateRequest.getTitle());
-        assertThat(result.getContent()).isEqualTo(postUpdateRequest.getContent());
-        assertThat(result.getPrice()).isEqualTo(postUpdateRequest.getPrice());
+        assertThat(result.getTitle()).isEqualTo(postUpdateRequestDto.getTitle());
+        assertThat(result.getContent()).isEqualTo(postUpdateRequestDto.getContent());
+        assertThat(result.getPrice()).isEqualTo(postUpdateRequestDto.getPrice());
 
         List<Image> images = result.getImages();
         List<String> originNames = images.stream()

@@ -1,6 +1,6 @@
 package com.chatboard.etude.entity.post;
 
-import com.chatboard.etude.dto.post.PostUpdateRequest;
+import com.chatboard.etude.dto.post.PostUpdateRequestDto;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.common.EntityDate;
 import com.chatboard.etude.entity.member.Member;
@@ -62,7 +62,7 @@ public class Post extends EntityDate {
 
     // Image utilities.
 
-    public ImageUpdatedResult update(PostUpdateRequest request) {
+    public ImageUpdatedResult update(PostUpdateRequestDto request) {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.price = request.getPrice();

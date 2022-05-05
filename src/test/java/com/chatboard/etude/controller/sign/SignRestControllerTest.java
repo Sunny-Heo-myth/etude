@@ -69,8 +69,8 @@ public class SignRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.data.accessToken").value("access"))
-                .andExpect(jsonPath("$.result.data.refreshToken").value("refresh"));
+                .andExpect(jsonPath("$.responseResult.data.accessToken").value("access"))
+                .andExpect(jsonPath("$.responseResult.data.refreshToken").value("refresh"));
 
         verify(signService).signIn(request);
     }
@@ -99,6 +99,6 @@ public class SignRestControllerTest {
                 post("/api/refresh-token")
                         .header("Authorization", "refreshToken"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.data.accessToken").value("accessToken"));
+                .andExpect(jsonPath("$.responseResult.data.accessToken").value("accessToken"));
     }
 }

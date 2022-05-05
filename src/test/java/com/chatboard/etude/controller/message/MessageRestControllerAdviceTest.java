@@ -3,7 +3,7 @@ package com.chatboard.etude.controller.message;
 import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.dto.message.MessageCreateRequest;
 import com.chatboard.etude.exception.MessageNotFoundException;
-import com.chatboard.etude.handler.ResponseHandler;
+import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.message.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ public class MessageRestControllerAdviceTest {
     @Mock
     MessageService messageService;
     @Mock
-    ResponseHandler responseHandler;
+    FailureResponseHandler failureResponseHandler;
 
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
@@ -45,7 +45,7 @@ public class MessageRestControllerAdviceTest {
         messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(messageRestController)
-                .setControllerAdvice(new ExceptionAdvice(responseHandler))
+                .setControllerAdvice(new ExceptionAdvice(failureResponseHandler))
                 .build();
     }
 

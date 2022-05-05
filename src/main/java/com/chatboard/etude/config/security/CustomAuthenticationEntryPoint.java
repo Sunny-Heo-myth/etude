@@ -13,7 +13,7 @@ import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     // AuthenticationEntryPoint exception occurs before ExceptionAdvice.
-    // Does not throw etude's custom exception.
+    // Does not throw etude's custom exception anymore.
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,

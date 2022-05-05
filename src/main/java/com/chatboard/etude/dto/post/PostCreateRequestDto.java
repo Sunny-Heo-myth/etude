@@ -1,11 +1,5 @@
 package com.chatboard.etude.dto.post;
 
-import com.chatboard.etude.entity.post.Image;
-import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.exception.CategoryNotFoundException;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.repository.category.CategoryRepository;
-import com.chatboard.etude.repository.member.MemberRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -19,13 +13,12 @@ import javax.validation.constraints.Null;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApiModel(value = "post create request")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCreateRequest {
+public class PostCreateRequestDto {
 
     @ApiModelProperty(value = "post title",
             notes = "Enter post title.",

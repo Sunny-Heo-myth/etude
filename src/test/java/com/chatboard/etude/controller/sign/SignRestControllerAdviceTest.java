@@ -4,7 +4,7 @@ import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.dto.sign.SignInRequest;
 import com.chatboard.etude.dto.sign.SignUpRequest;
 import com.chatboard.etude.exception.*;
-import com.chatboard.etude.handler.ResponseHandler;
+import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.sign.SignService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ public class SignRestControllerAdviceTest {
     @Mock
     SignService signService;
     @Mock
-    ResponseHandler responseHandler;
+    FailureResponseHandler failureResponseHandler;
     MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -48,7 +48,7 @@ public class SignRestControllerAdviceTest {
         messageSource.setBasenames("i18n/exception");
 
         mockMvc = MockMvcBuilders.standaloneSetup(signRestController)
-                .setControllerAdvice(new ExceptionAdvice(responseHandler))
+                .setControllerAdvice(new ExceptionAdvice(failureResponseHandler))
                 .build();
     }
 

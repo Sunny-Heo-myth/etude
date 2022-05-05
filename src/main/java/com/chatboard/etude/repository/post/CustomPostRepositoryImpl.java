@@ -1,6 +1,6 @@
 package com.chatboard.etude.repository.post;
 
-import com.chatboard.etude.dto.post.PostReadCondition;
+import com.chatboard.etude.dto.post.PostReadConditionDto;
 import com.chatboard.etude.dto.post.PostSimpleDto;
 import com.chatboard.etude.entity.post.Post;
 import com.querydsl.core.BooleanBuilder;
@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static com.chatboard.etude.entity.post.QPost.post;
@@ -22,7 +23,6 @@ import static com.querydsl.core.types.Projections.constructor;
 
 @Transactional(readOnly = true)
 public class CustomPostRepositoryImpl
-    // Applying paging for query
         extends QuerydslRepositorySupport
         implements CustomPostRepository {
 
@@ -34,7 +34,7 @@ public class CustomPostRepositoryImpl
     }
 
     @Override
-    public Page<PostSimpleDto> findAllByCondition(PostReadCondition condition) {
+    public Page<PostSimpleDto> findAllByCondition(PostReadConditionDto condition) {
 
         // page info
         Pageable pageable = PageRequest.of(condition.getPage(), condition.getSize());
@@ -47,7 +47,7 @@ public class CustomPostRepositoryImpl
 
     // todo NonNull?
     private List<PostSimpleDto> fetchAll(Predicate predicate, Pageable pageable) {
-        return getQuerydsl().applyPagination(   // build query with paging applied.
+        return Objects.requireNonNull(getQuerydsl()).applyPagination(   // build query with paging applied.
                 pageable,
                 jpaQueryFactory
                         // Projections.constructor
@@ -74,7 +74,7 @@ public class CustomPostRepositoryImpl
     }
 
     // This method creates final Predicate.
-    private Predicate createPredicate(PostReadCondition condition) {
+    private Predicate createPredicate(PostReadConditionDto condition) {
         return new BooleanBuilder()
                 .and(orConditionsByEqCategoryIds(condition.getCategoryId()))
                 .and(orConditionsByEqMemberIds(condition.getMemberId()));

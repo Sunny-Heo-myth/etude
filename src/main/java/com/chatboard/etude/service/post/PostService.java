@@ -12,6 +12,7 @@ import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
 import com.chatboard.etude.service.file.FileService;
+import com.chatboard.etude.vo.PageMakerVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -37,14 +38,18 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new));
     }
 
-    public PostListDto readAllPost(PostReadCondition condition) {
+    public PostListDto readAllPost(PostReadConditionDto condition) {
         return PostListDto.toDto(
                 postRepository.findAllByCondition(condition)
         );
     }
 
+    public PageMakerVO readAllPostWithPage(PostReadConditionDto condition) {
+        return new PageMakerVO(postRepository.findAllByCondition(condition));
+    }
+
     @Transactional
-    public PostCreateResponse createPost(PostCreateRequest request) {
+    public PostCreateResponseDto createPost(PostCreateRequestDto request) {
 
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
@@ -62,7 +67,7 @@ public class PostService {
         );
 
         uploadPostImage(post.getImages(), request.getImages());
-        return new PostCreateResponse(post.getId());
+        return new PostCreateResponseDto(post.getId());
     }
 
     @Transactional
@@ -79,7 +84,7 @@ public class PostService {
 
     @Transactional
     @PreAuthorize("@postGuard.check(#id)")
-    public PostUpdateResponse updatePost(Long id, PostUpdateRequest request) {
+    public PostUpdateResponseDto updatePost(Long id, PostUpdateRequestDto request) {
 
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFoundException::new);
@@ -90,7 +95,7 @@ public class PostService {
 
         deletePostImage(result.getDeletedImages());
 
-        return new PostUpdateResponse(id);
+        return new PostUpdateResponseDto(id);
     }
 
     private void uploadPostImage(List<Image> images, List<MultipartFile> files) {

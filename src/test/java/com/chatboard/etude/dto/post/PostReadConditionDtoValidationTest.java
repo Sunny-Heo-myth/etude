@@ -12,16 +12,16 @@ import java.util.stream.Collectors;
 import static com.chatboard.etude.factory.dto.PostReadConditionFactory.createPostReadCondition;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PostReadConditionValidationTest {
+public class PostReadConditionDtoValidationTest {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     void validateTest() {
         // given
-        PostReadCondition postReadCondition = createPostReadCondition(1, 1);
+        PostReadConditionDto postReadConditionDto = createPostReadCondition(1, 1);
 
         // when
-        Set<ConstraintViolation<PostReadCondition>> violations = validator.validate(postReadCondition);
+        Set<ConstraintViolation<PostReadConditionDto>> violations = validator.validate(postReadConditionDto);
 
         // then
         assertThat(violations).isEmpty();
@@ -31,10 +31,10 @@ public class PostReadConditionValidationTest {
     void invalidateByNullPageTest() {
         // given
         Integer invalidValue = null;
-        PostReadCondition req = createPostReadCondition(invalidValue, 1);
+        PostReadConditionDto req = createPostReadCondition(invalidValue, 1);
 
         // when
-        Set<ConstraintViolation<PostReadCondition>> validate = validator.validate(req);
+        Set<ConstraintViolation<PostReadConditionDto>> validate = validator.validate(req);
 
         // then
         assertThat(validate).isNotEmpty();
@@ -48,10 +48,10 @@ public class PostReadConditionValidationTest {
     void invalidateByNegativePageTest() {
         // given
         Integer invalidValue = -1;
-        PostReadCondition req = createPostReadCondition(invalidValue, 1);
+        PostReadConditionDto req = createPostReadCondition(invalidValue, 1);
 
         // when
-        Set<ConstraintViolation<PostReadCondition>> validate = validator.validate(req);
+        Set<ConstraintViolation<PostReadConditionDto>> validate = validator.validate(req);
 
         // then
         assertThat(validate).isNotEmpty();
@@ -65,10 +65,10 @@ public class PostReadConditionValidationTest {
     void invalidateByNullSizeTest() {
         // given
         Integer invalidValue = null;
-        PostReadCondition req = createPostReadCondition(1, invalidValue);
+        PostReadConditionDto req = createPostReadCondition(1, invalidValue);
 
         // when
-        Set<ConstraintViolation<PostReadCondition>> validate = validator.validate(req);
+        Set<ConstraintViolation<PostReadConditionDto>> validate = validator.validate(req);
 
         // then
         assertThat(validate).isNotEmpty();
@@ -82,10 +82,10 @@ public class PostReadConditionValidationTest {
     void invalidateByNegativeOrZeroPageTest() {
         // given
         Integer invalidValue = 0;
-        PostReadCondition req = createPostReadCondition(1, invalidValue);
+        PostReadConditionDto req = createPostReadCondition(1, invalidValue);
 
         // when
-        Set<ConstraintViolation<PostReadCondition>> validate = validator.validate(req);
+        Set<ConstraintViolation<PostReadConditionDto>> validate = validator.validate(req);
 
         // then
         assertThat(validate).isNotEmpty();

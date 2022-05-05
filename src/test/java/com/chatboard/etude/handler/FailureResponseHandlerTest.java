@@ -9,21 +9,21 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResponseHandlerTest {
+public class FailureResponseHandlerTest {
 
-    ResponseHandler responseHandler;
+    FailureResponseHandler failureResponseHandler;
 
     @BeforeEach
     void beforeEach() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasenames("i18n/exception");
-        responseHandler = new ResponseHandler(messageSource);
+        failureResponseHandler = new FailureResponseHandler(messageSource);
     }
 
     @Test
     void getFailureResponseNoArgsTest() {
         // given, when
-        Response failureResponse = responseHandler.getFailureResponse(ExceptionType.EXCEPTION);
+        Response failureResponse = failureResponseHandler.getFailureResponse(ExceptionType.EXCEPTION);
 
         // then
         assertThat(failureResponse.getCode()).isEqualTo(-1000);
@@ -33,7 +33,7 @@ public class ResponseHandlerTest {
     @Test
     void getFailureResponseWithArgsTest() {
         // given, when
-        Response failureResponse = responseHandler.getFailureResponse(ExceptionType.BIND_EXCEPTION, "my args");
+        Response failureResponse = failureResponseHandler.getFailureResponse(ExceptionType.BIND_EXCEPTION, "my args");
 
         // then
         assertThat(failureResponse.getCode()).isEqualTo(-1003);

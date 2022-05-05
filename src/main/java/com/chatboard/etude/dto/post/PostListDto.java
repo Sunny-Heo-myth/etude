@@ -22,4 +22,5 @@ public class PostListDto {
                 page.hasNext(),
                 page.getContent());
     }
+
 }

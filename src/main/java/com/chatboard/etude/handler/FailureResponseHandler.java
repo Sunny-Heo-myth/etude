@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 // from ExceptionType & MessageSource
 // into exception code & exception message for Response object.
-public class ResponseHandler {
+public class FailureResponseHandler {
 
     private final MessageSource messageSource;
 

@@ -9,5 +9,4 @@ import lombok.Data;
 public class AlarmInfoDto {
     private MemberDto targetMemberDto;
     private String message;
-
 }

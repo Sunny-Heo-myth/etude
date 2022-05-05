@@ -29,13 +29,13 @@ public class SignController {
     @ResponseStatus(HttpStatus.CREATED)
     public ModelAndView signUp(@Valid @RequestBody SignUpRequest request) {
         signService.signUp(request);
-        return new ModelAndView("view");
+        return new ModelAndView("/common/index");
     }
 
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView signIn(@Valid @RequestBody SignInRequest request) {
-        ModelAndView modelAndView = new ModelAndView("view");
+        ModelAndView modelAndView = new ModelAndView("/common/index");
         modelAndView.addObject(signService.signIn(request));
         return modelAndView;
     }
