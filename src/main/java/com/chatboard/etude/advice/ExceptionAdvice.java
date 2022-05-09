@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Objects;
+
 import static com.chatboard.etude.exception.type.ExceptionType.*;
 
 @RestControllerAdvice   // including @ResponseBody
@@ -49,7 +51,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response bindException(BindException e) {
-        return getFailureResponse(BIND_EXCEPTION, e.getBindingResult().getFieldError().getDefaultMessage());
+        return getFailureResponse(BIND_EXCEPTION, Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
     }
 
     @ExceptionHandler(LoginFailureException.class)

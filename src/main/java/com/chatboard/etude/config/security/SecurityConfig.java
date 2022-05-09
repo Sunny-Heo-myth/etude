@@ -93,8 +93,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
         // unauthorized
         httpSecurity.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
-
-
     }
 
     @Bean

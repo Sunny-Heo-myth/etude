@@ -5,7 +5,7 @@ import com.chatboard.etude.dto.post.PostCreateRequestDto;
 import com.chatboard.etude.dto.post.PostReadConditionDto;
 import com.chatboard.etude.dto.post.PostUpdateRequestDto;
 import com.chatboard.etude.service.post.PostService;
-import com.chatboard.etude.vo.PageMakerVO;
+import com.chatboard.etude.dto.post.page.PageMakerDto;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,9 +33,9 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public ModelAndView readAllPost(@Valid PostReadConditionDto condition) {
         ModelAndView modelAndView = new ModelAndView("/boards/list");
-        PageMakerVO pageMakerVO = postService.readAllPostWithPage(condition);
-        modelAndView.addObject("postList", pageMakerVO);
-        modelAndView.addObject("postSimpleDtos", pageMakerVO.getResult().getContent());
+        PageMakerDto pageMakerDto = postService.readAllPostWithPage(condition);
+        modelAndView.addObject("postList", pageMakerDto);
+        modelAndView.addObject("postSimpleDtos", pageMakerDto.getResult().getContent());
         return modelAndView;
     }
 

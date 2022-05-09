@@ -47,7 +47,7 @@
                     </li>
                     <li class="page-item" th:classappend="${p.pageNumber == postList.currentPageNum - 1} ? active : ''"
                         th:each="p : ${postList.pageList}">
-                        <a th:href="${p.pageNumber} + 1">[[${p.pageNumber} + 1 ]]</a>
+                        <a th:href="${p.pageNumber}">[[${p.pageNumber} + 1 ]]</a>
                     </li>
                     <li class="page-item" th:if="${postList.nextPage}">
                         <a th:href="${postList.nextPage.pageNumber} + 1">NEXT [[${postList.nextPage.pageNumber} + 1]]</a>
@@ -56,9 +56,10 @@
             </div>
         </nav>
     <!-- end page display -->
-        <form id="f1" th:action="@{list}" method="get">
+
+        <form id="f1" th:action="@{posts}" method="get">
             <input type="hidden" name="page" th:value="${postList.currentPageNum}">
-            <input type="hidden" name=""size th:value="${postList.currentPage.pageSize}">
+            <input type="hidden" name="size" th:value="${postList.currentPage.pageSize}">
         </form>
     </div>
     <!-- end panel -->

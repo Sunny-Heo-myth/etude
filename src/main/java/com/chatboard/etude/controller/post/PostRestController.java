@@ -44,6 +44,8 @@ public class PostRestController {
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
     public Response create(
+            // BindException for validation violation
+            // MethodArgumentNotValidException(subset of BindException) for others
             @Valid @ModelAttribute PostCreateRequestDto request) {
         return Response.success(postService.createPost(request));
     }

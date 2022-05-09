@@ -43,7 +43,7 @@ public class PostCreateRequestDto {
     private Long price;
 
     @ApiModelProperty(hidden = true)
-    @Null   // does not pass value from client but use token instead.
+    @Null   // use token to get memberId from SecurityContextHolder instead by AssignMemberId
     private Long memberId;
 
     @ApiModelProperty(value = "category id",
@@ -56,6 +56,4 @@ public class PostCreateRequestDto {
 
     @ApiModelProperty(value = "image", notes = "Append image.")
     private List<MultipartFile> images = new ArrayList<>();
-
-
 }

@@ -36,7 +36,6 @@ public class PostRestControllerTest {
     PostRestController postRestController;
     @Mock
     PostService postService;
-
     MockMvc mockMvc;
 
     @BeforeEach
@@ -59,7 +58,7 @@ public class PostRestControllerTest {
     @Test
     void readAllTest() throws Exception {
         // given
-        PostReadConditionDto condition = createPostReadCondition(0, 1, List.of(1L, 2L), List.of(1L, 2L));
+        PostReadConditionDto condition = createPostReadCondition(0, 10, List.of(1L, 2L), List.of(1L, 2L));
 
         // when, then
         mockMvc.perform(

@@ -1,6 +1,5 @@
-package com.chatboard.etude.vo;
+package com.chatboard.etude.dto.post.page;
 
-import com.chatboard.etude.dto.post.PostSimpleDto;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.domain.Page;
@@ -11,17 +10,17 @@ import java.util.List;
 
 @Getter
 @ToString(exclude="pageList")
-public class PageMakerVO<T> {
+public class PageMakerDto<T> {
 
     private Page<T> result;
     private Pageable prevPage;
+    private Pageable currentPage;
     private Pageable nextPage;
     private int currentPageNum;
     private int totalPageNum;
-    private Pageable currentPage;
     private List<Pageable> pageList;
 
-    public PageMakerVO(Page<T> page) {
+    public PageMakerDto(Page<T> page) {
         this.result = page;
         this.currentPage = page.getPageable();
         this.currentPageNum = currentPage.getPageNumber() + 1;
@@ -31,10 +30,10 @@ public class PageMakerVO<T> {
     }
     private void calculatePages() {
         int tempEndNum = (int)(Math.ceil(this.currentPageNum / 10.0) * 10);
-        int startNum = tempEndNum - 9;
+        int tempStartNum = tempEndNum - 9;
         Pageable startPage = this.currentPage;
 
-        for (int i = startNum; i < this.currentPageNum; i++) {
+        for (int i = tempStartNum; i < this.currentPageNum; i++) {
             startPage = startPage.previousOrFirst();
         }
         this.prevPage = startPage.getPageNumber() <= 0 ? null : startPage.previousOrFirst();
@@ -44,7 +43,7 @@ public class PageMakerVO<T> {
             this.nextPage = null;
         }
 
-        for (int i = startNum; i <= tempEndNum; i++) {
+        for (int i = tempStartNum; i <= tempEndNum; i++) {
             pageList.add(startPage);
             startPage = startPage.next();
         }

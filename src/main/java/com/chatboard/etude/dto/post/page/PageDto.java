@@ -1,10 +1,10 @@
-package com.chatboard.etude.vo;
+package com.chatboard.etude.dto.post.page;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-public class PageVO {
+public class PageDto {
 
     private static final int DEFAULT_SIZE = 10;
     private static final int DEFAULT_MAX_SIZE = 50;
@@ -12,7 +12,7 @@ public class PageVO {
     private int page;
     private int size;
 
-    public PageVO() {
+    public PageDto() {
         this.page = 1;
         this.size = DEFAULT_SIZE;
     }

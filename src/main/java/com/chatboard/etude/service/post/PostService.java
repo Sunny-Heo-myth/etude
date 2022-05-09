@@ -12,7 +12,7 @@ import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
 import com.chatboard.etude.service.file.FileService;
-import com.chatboard.etude.vo.PageMakerVO;
+import com.chatboard.etude.dto.post.page.PageMakerDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -39,13 +39,11 @@ public class PostService {
     }
 
     public PostListDto readAllPost(PostReadConditionDto condition) {
-        return PostListDto.toDto(
-                postRepository.findAllByCondition(condition)
-        );
+        return PostListDto.toDto(postRepository.findAllByCondition(condition));
     }
 
-    public PageMakerVO readAllPostWithPage(PostReadConditionDto condition) {
-        return new PageMakerVO(postRepository.findAllByCondition(condition));
+    public PageMakerDto readAllPostWithPage(PostReadConditionDto condition) {
+        return new PageMakerDto(postRepository.findAllByCondition(condition));
     }
 
     @Transactional

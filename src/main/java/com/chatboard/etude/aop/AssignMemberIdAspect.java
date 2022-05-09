@@ -18,20 +18,18 @@ import java.util.Optional;
 @Slf4j
 public class AssignMemberIdAspect {
 
-    private final AuthUtils authUtils;
-
     @Before("@annotation(com.chatboard.etude.aop.AssignMemberId)")  // pointcut
-    public void assignMemberId(JoinPoint joinPoint) {   // advice
-        // getArgument type of this joinPoint (ex : PostCreateRequest)
+    public void assignMemberId(JoinPoint joinPoint) {   // advice (JoinPoint must be the first parameter.)
+        // get argument type of this joinPoint (ex : PostCreateRequest)
         Arrays.stream(joinPoint.getArgs())
-                // if there is method called "setMemberId"
+                // if there is method called "setMemberId" for each argument
                 .forEach(arg -> getMethod(arg.getClass())
                         // invokeMethod with argument extracted from SecurityContextHolder
                         .ifPresent(setMemberId -> invokeMethod(arg, setMemberId, AuthUtils.extractMemberId())));
 
     }
 
-    // get methods from the target class
+    // get methods from the target class with reflection
     private Optional<Method> getMethod(Class<?> targetClass) {
         try {
             return Optional.of(targetClass.getMethod("setMemberId", Long.class));

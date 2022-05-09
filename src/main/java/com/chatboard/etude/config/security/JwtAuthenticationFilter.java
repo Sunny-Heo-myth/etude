@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         extractToken(request)
-                .map(userDetailsService::loadUserByUsername)    // return CustomUserDetail for authentication
+                .map(userDetailsService::loadUserByUsername)
                         .ifPresent(this::setAuthentication);
 
         chain.doFilter(request, response);
