@@ -4,6 +4,8 @@ import com.chatboard.etude.dto.test.TestMemberVO;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +14,14 @@ import org.springframework.web.servlet.ModelAndView;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @RequestMapping("/test")
 @Controller
+@Slf4j
 public class TestController {
+
+    MessageSource messageSource;
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
@@ -83,6 +89,13 @@ public class TestController {
     public ModelAndView postTest(
             @RequestParam(value = "sthInUrl", defaultValue = "1") Integer pageNum) {
             return new ModelAndView();
+    }
+
+    @GetMapping("/localeTest")
+    @ResponseStatus(HttpStatus.OK)
+    public String locale(@RequestHeader(value = "Accept-Language", required = false)Locale locale) {
+        log.info(locale.toString());
+        return messageSource.getMessage("test.message", null, locale);
     }
 
 }

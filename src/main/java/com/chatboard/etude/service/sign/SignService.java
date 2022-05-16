@@ -42,7 +42,7 @@ public class SignService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         // Person who wants to do normal sign up must sign up with RoleType.ROLE_NORMAL.
-        // and RoleTypes must be saved as in db already.
+        // and RoleTypes must be saved as in db beforehand.
         List<Role> roles = List.of(roleRepository.findByRoleType(RoleType.ROLE_NORMAL)
                 .orElseThrow(RoleNotFoundException::new));
 

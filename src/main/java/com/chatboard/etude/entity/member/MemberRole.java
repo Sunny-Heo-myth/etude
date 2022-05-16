@@ -10,10 +10,10 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@IdClass(MemberRoleId.class) // composite key
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@IdClass(MemberRoleId.class)    // composite key
 public class MemberRole {
 
     @Id

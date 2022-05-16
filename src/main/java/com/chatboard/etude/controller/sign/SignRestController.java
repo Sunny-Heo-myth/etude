@@ -17,30 +17,44 @@ import static com.chatboard.etude.dto.response.Response.success;
 
 @Api(value = "Sign Controller", tags = "Sign")
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("/api")
 public class SignRestController {
 
     private final SignService signService;
 
-    @ApiOperation(value = "sign up", notes = "Sign up.")
-    @PostMapping("/api/sign-up")
+    public SignRestController(SignService signService) {
+        this.signService = signService;
+    }
+
+    @ApiOperation(
+            value = "sign up",
+            notes = "Sign up."
+    )
+    @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
     public Response signUp(@Valid @RequestBody SignUpRequest request) {
         signService.signUp(request);
         return success();
     }
 
-    @ApiOperation(value = "sign in", notes = "Sign in.")
-    @PostMapping("/api/sign-in")
+    @ApiOperation(
+            value = "sign in",
+            notes = "Sign in."
+    )
+    @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.OK)
     public Response signIn(@Valid @RequestBody SignInRequest request) {
         return success(signService.signIn(request));
     }
 
-    @ApiOperation(value = "refresh token", notes = "Refresh access token by refresh token.")
-    @PostMapping("api/refresh-token")
+    @ApiOperation(
+            value = "refresh token",
+            notes = "Refresh access token by refresh token."
+    )
+    @PostMapping("/refresh-token")
     @ResponseStatus(HttpStatus.OK)
     public Response refreshToken(@ApiIgnore @RequestHeader(value = "Authorization") String refreshToken) {
         return success(signService.refreshToken(refreshToken));
     }
+
 }

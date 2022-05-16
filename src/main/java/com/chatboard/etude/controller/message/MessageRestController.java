@@ -9,7 +9,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,17 +16,20 @@ import javax.validation.Valid;
 
 @Api(value = "Message Controller", tags = "Message")
 @RestController
-@RequiredArgsConstructor
-@Slf4j
+@RequestMapping("/api/messages")
 public class MessageRestController {
 
     private final MessageService messageService;
+
+    public MessageRestController(MessageService messageService) {
+        this.messageService = messageService;
+    }
 
     @ApiOperation(
             value = "Read messages from the sender",
             notes = "Read messages from the sender."
     )
-    @GetMapping("/api/messages/sender")
+    @GetMapping("/sender")
     @ResponseStatus(HttpStatus.OK)
     @AssignMemberId
     public Response readAllBySender(@Valid MessageReadCondition condition) {
@@ -38,7 +40,7 @@ public class MessageRestController {
             value = "Read messages for the receiver",
             notes = "Read messages for the receiver."
     )
-    @GetMapping("/api/messages/receiver")
+    @GetMapping("/receiver")
     @ResponseStatus(HttpStatus.OK)
     @AssignMemberId
     public Response readAllByReceiver(@Valid MessageReadCondition condition) {
@@ -49,17 +51,17 @@ public class MessageRestController {
             value = "read messages",
             notes = "Read messages."
     )
-    @GetMapping("/api/messages/{id}")
+    @GetMapping("/{messageId}")
     @ResponseStatus(HttpStatus.OK)
-    public Response read(@ApiParam(value = "message id", required = true) @PathVariable Long id) {
-        return Response.success(messageService.readAMessage(id));
+    public Response read(@ApiParam(value = "message id", required = true) @PathVariable Long messageId) {
+        return Response.success(messageService.readAMessage(messageId));
     }
 
     @ApiOperation(
             value = "create message",
             notes = "Create message."
     )
-    @PostMapping("/api/messages")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
     public Response create(@Valid @RequestBody MessageCreateRequest request) {
@@ -71,20 +73,23 @@ public class MessageRestController {
             value = "delete messages by sender",
             notes = "Delete messages by sender."
     )
-    @DeleteMapping("/api/messages/sender/{id}")
+    @DeleteMapping("/sender/{messageId}")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteBySender(
-            @ApiParam(value = "message id", required = true) @PathVariable Long id) {
-        messageService.deleteMessageBySender(id);
+            @ApiParam(value = "message id", required = true) @PathVariable Long messageId) {
+        messageService.deleteMessageBySender(messageId);
         return Response.success();
     }
 
-    @ApiOperation(value = "delete messages by receiver", notes = "Delete messages by receiver.")
-    @DeleteMapping("/api/messages/receiver/{id}")
+    @ApiOperation(
+            value = "delete messages by receiver",
+            notes = "Delete messages by receiver."
+    )
+    @DeleteMapping("/receiver/{messageId}")
     @ResponseStatus(HttpStatus.OK)
     public Response deleteByReceiver(
-            @ApiParam(value = "message id", required = true) @PathVariable Long id) {
-        messageService.deleteMessageByReceiver(id);
+            @ApiParam(value = "message id", required = true) @PathVariable Long messageId) {
+        messageService.deleteMessageByReceiver(messageId);
         return Response.success();
     }
 }

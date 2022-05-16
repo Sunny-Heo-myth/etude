@@ -17,7 +17,7 @@
     <script th:src="@{/static/html5-boilerplate_v8.0.0/js/vendor/modernizr-3.11.2.min.js}"></script>
     <script th:src="@{/static/html5-boilerplate_v8.0.0/js/plugins.js}"></script>
     <script th:src="@{/static/html5-boilerplate_v8.0.0/js/main.js}"></script>
-    <!--<link rel="manifest" th:href="@{/static/html5-boilerplate_v8.0.0/site.webmanifest}">-->
+    <link rel="manifest" th:href="@{/static/html5-boilerplate_v8.0.0/site.webmanifest}">
 
     <!-- BootStrap -->
     <!-- Latest compiled and minified CSS -->
@@ -28,9 +28,6 @@
 
 
 <body>
-<!-- content body -->
-<!--<div layout:fragment="content">-->
-<!--</div>-->
 
 <div class="page-header">
     <h1>
@@ -44,15 +41,8 @@
 
 <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 
-
 <!-- custom javascript -->
 <th:block layout:fragment="script"></th:block>
-
-
-
-
-
-
 
 
 <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
@@ -67,6 +57,7 @@
     ga('set', 'transport', 'beacon');
     ga('send', 'pageview')
 </script>
+
 <script async src="https://www.google-analytics.com/analytics.js"></script>
 
 </body>

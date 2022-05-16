@@ -78,7 +78,7 @@ public class PostRestControllerTest {
 
     @Test
     void createTest() throws Exception {
-        // given : capturing PostCreateRequest received as @ModelAttribute
+        // given : capturing PostCreateRequest received as @RequestBody
         ArgumentCaptor<PostCreateRequestDto> postCreateRequestArgumentCaptor =
                 ArgumentCaptor.forClass(PostCreateRequestDto.class);
 

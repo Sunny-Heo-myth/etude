@@ -16,20 +16,24 @@ import javax.validation.Valid;
 
 @Api(value = "Comment Controller", tags = "Comment")
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("/api/comments")
 public class CommentRestController {
 
     private final CommentService commentService;
 
+    public CommentRestController(CommentService commentService) {
+        this.commentService = commentService;
+    }
+
     @ApiOperation(value = "comment list lookup", notes = "Lookup comment list.")
-    @GetMapping("/api/comments")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Response readAll(@Valid CommentReadCondition condition) {
         return Response.success(commentService.readAllComments(condition));
     }
 
     @ApiOperation(value = "create comment", notes = "Create comment.")
-    @PostMapping("/api/comments")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
     public Response create(@Valid @RequestBody CommentCreateRequest request) {
@@ -38,11 +42,11 @@ public class CommentRestController {
     }
 
     @ApiOperation(value = "delete comment", notes = "Delete comment.")
-    @DeleteMapping("/api/comments/{id}")
+    @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
     public Response delete(
-            @ApiParam(value = "comment id", required = true) @PathVariable Long id) {
-        commentService.deleteComment(id);
+            @ApiParam(value = "comment id", required = true) @PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
         return Response.success();
     }
 }

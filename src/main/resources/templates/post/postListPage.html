@@ -1,0 +1,109 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.ultraq.net.nz/thymeleaf/layout "
+      layout:decorate="~{layout/layout1}" >
+
+<div layout:fragment="content">
+
+    <div class="panel-heading"><h3>Post list</h3></div>
+
+    <div class="panel-body">
+
+        <p>[[${pageMakerDto}]]</p>
+        <!-- content -->
+        <div th:with="result=${pageMakerDto.result}">
+
+            <!-- post list -->
+            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                <thead>
+                <tr>
+                    <th>post id</th>
+                    <th>title</th>
+                    <th>writer</th>
+                    <th>register date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="odd gradeX" th:each="post : ${postSimpleDtos}">
+                    <td>[[${post.id}]]</td>
+                    <td><a th:href="@{/posts/{id} (id=${post.id})}" class="boardLink">[[${post.title}]]</a></td>
+                    <td>[[${post.nickname}]]</td>
+                    <td class="center" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Search button -->
+            <div>
+                <select id="searchType">
+                    <option>--</option>
+                    <option value="title">Title</option>
+                    <option value="content">Content</option>
+                    <option value="categoryId">Writer</option>
+                    <option value="memberId">Writer</option>
+                </select>
+                <input type="text" id="searchKeyword">
+                <button id="searchButton">Search</button>
+            </div>
+
+        </div>
+
+        <!-- paging -->
+        <nav>
+            <div>
+                <ul class="pagination">
+
+                    <li class="page-item" th:if="${pageMakerDto.prevPage}">
+                        <a th:href="${pageMakerDto.prevPage.pageNumber}">
+                            PREV [[${pageMakerDto.prevPage.pageNumber} + 1]]
+                        </a>
+                    </li>
+                    <li class="page-item"
+                        th:classappend="${page.pageNumber == pageMakerDto.currentPageNum - 1} ? active: '' "
+                        th:each="page : ${pageMakerDto.pageList}">
+                        <a th:href="${page.pageNumber}">
+                            [[${page.pageNumber} + 1]]
+                        </a>
+                    </li>
+                    <li class="page-item" th:if="${pageMakerDto.nextPage}">
+                        <a th:href="${pageMakerDto.nextPage.pageNumber}">
+                            NEXT [[${pageMakerDto.nextPage.pageNumber} + 1]]
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+
+    <!-- end page display -->
+
+        <!--searchConditionDto fields -->
+        <form id="searchConditionDto" th:action="@{posts}" method="get">
+            <input type="hidden" id="page" name="page" th:value="${pageMakerDto.currentPageNum}">
+            <input type="hidden" id="size" name="size" th:value="${pageMakerDto.currentPage.pageSize}">
+            <input type="hidden" id="categoryId" name="categoryId" th:value="${pageMakerDto.categoryId}">
+            <input type="hidden" id="memberId" name="memberId" th:value="${pageMakerDto.memberId}">
+        </form>
+    </div>
+    <!-- end panel -->
+</div>
+<!-- end fragment -->
+
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var formObj = $("#searchConditionDto");
+            $(".pagination a").click(function (e) {
+                e.preventDefault();
+                $("#page").val($(this).attr('href'));
+                debugger
+                formObj.submit();
+            });
+        });
+    </script>
+
+</th:block>
+
+</html>

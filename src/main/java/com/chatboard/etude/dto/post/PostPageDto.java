@@ -1,4 +1,4 @@
-package com.chatboard.etude.dto.post.page;
+package com.chatboard.etude.dto.post;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -7,10 +7,11 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @ToString(exclude="pageList")
-public class PageMakerDto<T> {
+public class PostPageDto<T> {
 
     private Page<T> result;
     private Pageable prevPage;
@@ -19,15 +20,32 @@ public class PageMakerDto<T> {
     private int currentPageNum;
     private int totalPageNum;
     private List<Pageable> pageList;
+    private List<Long> categoryId;
+    private List<Long> memberId;
 
-    public PageMakerDto(Page<T> page) {
+    public PostPageDto(Page<T> page, List<Long> categoryId, List<Long> memberId) {
         this.result = page;
         this.currentPage = page.getPageable();
         this.currentPageNum = currentPage.getPageNumber() + 1;
         this.totalPageNum = page.getTotalPages();
         this.pageList = new ArrayList<>();
+        this.categoryId = categoryId;
+        this.memberId = memberId;
         calculatePages();
     }
+
+    public String getCategoryId() {
+        return this.categoryId.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+    }
+
+    public String getMemberId() {
+        return this.memberId.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+    }
+
     private void calculatePages() {
         int tempEndNum = (int)(Math.ceil(this.currentPageNum / 10.0) * 10);
         int tempStartNum = tempEndNum - 9;

@@ -18,7 +18,6 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    // Role to MemberRole unnecessary
     private RoleType roleType;
 
     public Role(RoleType roleType) {

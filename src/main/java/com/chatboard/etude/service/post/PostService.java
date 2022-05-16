@@ -12,7 +12,7 @@ import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
 import com.chatboard.etude.service.file.FileService;
-import com.chatboard.etude.dto.post.page.PageMakerDto;
+import com.chatboard.etude.dto.post.PostPageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -42,8 +42,11 @@ public class PostService {
         return PostListDto.toDto(postRepository.findAllByCondition(condition));
     }
 
-    public PageMakerDto readAllPostWithPage(PostReadConditionDto condition) {
-        return new PageMakerDto(postRepository.findAllByCondition(condition));
+    public PostPageDto readAllPostWithPage(PostReadConditionDto condition) {
+        return new PostPageDto(
+                postRepository.findAllByCondition(condition),
+                condition.getCategoryId(),
+                condition.getMemberId());
     }
 
     @Transactional
@@ -60,8 +63,13 @@ public class PostService {
                 .collect(Collectors.toList());
 
         Post post = postRepository.save(
-                new Post(request.getTitle(), request.getContent(), request.getPrice(),
-                        member, category, images)
+                new Post(request.getTitle(),
+                        request.getContent(),
+                        request.getPrice(),
+                        member,
+                        category,
+                        images
+                )
         );
 
         uploadPostImage(post.getImages(), request.getImages());

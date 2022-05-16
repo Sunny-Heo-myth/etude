@@ -13,7 +13,7 @@ public class QuerydslConfig {
 
     private final EntityManager entityManager;
 
-    @Bean   // Indicates that a method "produces" a bean to be managed by the Spring container.
+    @Bean
     public JPAQueryFactory jpaQueryFactory() {
         return new JPAQueryFactory(entityManager);
     }

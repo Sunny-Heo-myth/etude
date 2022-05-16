@@ -10,7 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,54 +17,70 @@ import javax.validation.Valid;
 
 @Api(value = "Post Controller", tags = "Post")
 @RestController
-@RequiredArgsConstructor
-@Slf4j
+@RequestMapping("/api/posts")
 public class PostRestController {
 
     private final PostService postService;
 
-    @ApiOperation(value = "read post", notes = "Read post.")
-    @GetMapping("/api/posts/{id}")
+    public PostRestController(PostService postService) {
+        this.postService = postService;
+    }
+
+    @ApiOperation(
+            value = "read post",
+            notes = "Read post."
+    )
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Response read(
             @ApiParam(value = "post id", required = true) @PathVariable Long id) {
         return Response.success(postService.readPost(id));
     }
 
-    @ApiOperation(value = "post list read", notes = "Read post list.")
-    @GetMapping("/api/posts")
+    @ApiOperation(
+            value = "post list read",
+            notes = "Read post list."
+    )
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Response readAll(@Valid PostReadConditionDto condition) {
         return Response.success(postService.readAllPost(condition));
     }
 
-    @ApiOperation(value = "post create", notes = "Create post.")
-    @PostMapping("/api/posts")
+    @ApiOperation(
+            value = "post create",
+            notes = "Create post."
+    )
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
     public Response create(
-            // BindException for validation violation
-            // MethodArgumentNotValidException(subset of BindException) for others
-            @Valid @ModelAttribute PostCreateRequestDto request) {
+            @Valid @RequestBody PostCreateRequestDto request) {
         return Response.success(postService.createPost(request));
     }
 
-    @ApiOperation(value = "delete post", notes = "Delete post.")
-    @DeleteMapping("/api/posts/{id}")
+    @ApiOperation(
+            value = "delete post",
+            notes = "Delete post."
+    )
+    @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response delete(
-            @ApiParam(value = "post id", required = true) @PathVariable Long id) {
-        postService.deletePost(id);
+            @ApiParam(value = "post id", required = true) @PathVariable Long postId) {
+        postService.deletePost(postId);
         return Response.success();
     }
 
-    @ApiOperation(value = "update post", notes = "Update post.")
-    @PutMapping("/api/posts/{id}")
+    @ApiOperation(
+            value = "update post",
+            notes = "Update post."
+    )
+    @PutMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response update(
-            @ApiParam(value = "post id", required = true) @PathVariable Long id,
-            @Valid @ModelAttribute PostUpdateRequestDto request) {
-        return Response.success(postService.updatePost(id, request));
+            @ApiParam(value = "post id", required = true) @PathVariable Long postId,
+            @Valid @RequestBody PostUpdateRequestDto request) {
+        return Response.success(postService.updatePost(postId, request));
     }
 
 }

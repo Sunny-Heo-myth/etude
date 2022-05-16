@@ -36,21 +36,19 @@ public class CustomPostRepositoryImpl
 
     @Override
     public Page<PostSimpleDto> findAllByCondition(PostReadConditionDto condition) {
-
-        // page info
-        Pageable pageable = PageRequest.of(condition.getPage(), condition.getSize());
-        // search condition
         Predicate predicate = createPredicate(condition);
-
-        //  return as page implement with find query and count query
-        return new PageImpl<>(fetchAll(predicate, pageable), pageable, fetchCount(predicate));
+        Pageable pageable = PageRequest.of(condition.getPage(), condition.getSize());
+        return new PageImpl<>(
+                fetchAll(predicate, pageable),
+                pageable,
+                fetchCount(predicate)
+        );
     }
 
     private List<PostSimpleDto> fetchAll(Predicate predicate, Pageable pageable) {
         return Objects.requireNonNull(getQuerydsl()).applyPagination(   // build query with paging applied.
                 pageable,
                 jpaQueryFactory
-                        // Projections.constructor
                         .select(constructor(
                                 PostSimpleDto.class,
                                 post.id,
@@ -65,27 +63,16 @@ public class CustomPostRepositoryImpl
         ).fetch();
     }
 
-    private Long fetchCount(Predicate predicate) {
-        return jpaQueryFactory
-                .select(post.count())
-                .from(post)
-                .where(predicate)
-                .fetchOne();
-    }
-
-    // This method creates final Predicate.
     private Predicate createPredicate(PostReadConditionDto condition) {
         return new BooleanBuilder()
                 .and(orConditionsByEqCategoryIds(condition.getCategoryId()))
                 .and(orConditionsByEqMemberIds(condition.getMemberId()));
     }
 
-    // List of categoryIds into query
     private Predicate orConditionsByEqCategoryIds(List<Long> categoryIds) {
         return orConditions(categoryIds, post.category.id::eq);
     }
 
-    // List of MemberIds into query
     private Predicate orConditionsByEqMemberIds(List<Long> memberIds) {
         return orConditions(memberIds, post.member.id::eq);
     }
@@ -96,5 +83,13 @@ public class CustomPostRepositoryImpl
                 .map(term)
                 .reduce(BooleanExpression::or)
                 .orElse(null);
+    }
+
+    private Long fetchCount(Predicate predicate) {
+        return jpaQueryFactory
+                .select(post.count())
+                .from(post)
+                .where(predicate)
+                .fetchOne();
     }
 }

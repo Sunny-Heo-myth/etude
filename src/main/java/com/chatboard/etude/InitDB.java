@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -56,15 +57,6 @@ public class InitDB {
 
     }
 
-    private void initPost() {
-        Member member = memberRepository.findAll().get(0);
-        Category category = categoryRepository.findAll().get(0);
-        IntStream.range(0, 200)
-                .forEach(i -> postRepository.save(
-                        new Post("title" + i, "content" + i, (long) i, member, category, List.of())
-                ));
-    }
-
     private void initRole() {
         roleRepository.saveAll(
                 Stream.of(RoleType.values())
@@ -79,54 +71,70 @@ public class InitDB {
                         passwordEncoder.encode("123456!a"),
                         "admin",
                         "nickAdmin",
-                        List.of(roleRepository.findByRoleType(RoleType.ROLE_NORMAL)
-                                .orElseThrow(RoleNotFoundException::new),
-                                roleRepository.findByRoleType(RoleType.ROLE_ADMIN)
-                                        .orElseThrow(RoleNotFoundException::new)))
-        );
-    }
-
-    private void initTestMember() {
-        memberRepository.saveAll(
-                List.of(
-                new Member("member1@member.com",
-                        passwordEncoder.encode("123456a!"),
-                        "member1",
-                        "member1nick",
-                        List.of(roleRepository.findByRoleType(RoleType.ROLE_NORMAL)
-                                .orElseThrow(RoleNotFoundException::new))),
-
-                new Member("member2@member.com",
-                        passwordEncoder.encode("123456a!"),
-                        "member2",
-                        "member2nick",
-                        List.of(roleRepository.findByRoleType(RoleType.ROLE_NORMAL)
-                                .orElseThrow(RoleNotFoundException::new)))
+                        roleRepository.findAll()
                 )
         );
     }
 
+    private void initTestMember() {
+        List<Member> memberList = new ArrayList<>();
+        IntStream.range(0, 10)
+                .forEach(i -> memberList.add(new Member(
+                        "member" + i + "@email.com",
+                        passwordEncoder.encode("123456!a"),
+                        "userName" + i,
+                        "memberNickname" + i,
+                        List.of(roleRepository.findByRoleType(RoleType.ROLE_NORMAL)
+                                .orElseThrow(RoleNotFoundException::new)))
+                        )
+                );
+        memberRepository.saveAll(memberList);
+    }
+
     private void initCategory() {
-        Category c1 = categoryRepository.save(new Category("category1", null));
-        Category c2 = categoryRepository.save(new Category("category2", c1));
-        Category c3 = categoryRepository.save(new Category("category3", c1));
-        Category c4 = categoryRepository.save(new Category("category4", c2));
-        Category c5 = categoryRepository.save(new Category("category5", c2));
-        Category c6 = categoryRepository.save(new Category("category6", c4));
-        Category c7 = categoryRepository.save(new Category("category7", c3));
-        Category c8 = categoryRepository.save(new Category("category8", null));
+        Category c1 = new Category("category1", null);
+        Category c2 = new Category("category2", c1);
+        Category c3 = new Category("category3", c1);
+        Category c4 = new Category("category4", c2);
+        Category c5 = new Category("category5", c2);
+        Category c6 = new Category("category6", c4);
+        Category c7 = new Category("category7", c3);
+        Category c8 = new Category("category8", null);
+        List<Category> categoryList = List.of(c1, c2, c3, c4, c5, c6, c7, c8);
+        categoryRepository.saveAll(categoryList);
+    }
+
+    private void initPost() {
+        List<Member> memberList = memberRepository.findAll();
+        List<Category> categoryList = categoryRepository.findAll();
+        int memberListSize = memberList.size();
+        int categoryListSize = categoryList.size();
+        List<Post> postList = new ArrayList<>();
+        IntStream.range(0, 400)
+                .forEach(i -> postList.add(new Post(
+                        "title" + i,
+                        "content" + i,
+                        (long) i * 1000000 + 4000000000L,
+                        memberList.get(i % memberListSize),
+                        categoryList.get(i % categoryListSize),
+                        List.of()))
+                );
+        postRepository.saveAll(postList);
     }
 
     private void initComment() {
-        Member member = memberRepository.findAll().get(0);
-        Post post = postRepository.findAll().get(0);
-        Comment c1 = commentRepository.save(new Comment("content", member, post, null));
-        Comment c2 = commentRepository.save(new Comment("content", member, post, c1));
-        Comment c3 = commentRepository.save(new Comment("content", member, post, c1));
-        Comment c4 = commentRepository.save(new Comment("content", member, post, c2));
-        Comment c5 = commentRepository.save(new Comment("content", member, post, c2));
-        Comment c6 = commentRepository.save(new Comment("content", member, post, c4));
-        Comment c7 = commentRepository.save(new Comment("content", member, post, c3));
-        Comment c8 = commentRepository.save(new Comment("content", member, post, null));
+        List<Member> memberList = memberRepository.findAll();
+        List<Post> postList = postRepository.findAll();
+        int memberListSize = memberList.size();
+        int postListSize = postList.size();
+        List<Comment> parentCommentList = new ArrayList<>();
+        IntStream.range(0, 1000)
+                .forEach(i -> parentCommentList.add(new Comment(
+                        "This is comment content" + i,
+                        memberList.get(i % memberListSize),
+                        postList.get(i % postListSize),
+                        null))
+                );
+        commentRepository.saveAll(parentCommentList);
     }
 }

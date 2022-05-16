@@ -11,7 +11,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -23,11 +25,10 @@ public class PostReadConditionDto {
     @NotNull(message = "Enter page number.")
     @PositiveOrZero(message = "Enter not non-negative page number.")
     private Integer page;
-
     @NotNull(message = "Enter page size.")
     @Positive(message = "Enter not positive page size.")
     private Integer size;
-
+    private String keyWord;
     private List<Long> categoryId = new ArrayList<>();
     private List<Long> memberId = new ArrayList<>();
 
@@ -35,8 +36,20 @@ public class PostReadConditionDto {
         this.size = size < DEFAULT_SIZE || size > DEFAULT_MAX_SIZE ? DEFAULT_SIZE : size;
     }
 
-    public Pageable makePageable(int direction, String... property) {
-        Sort.Direction dir = direction == 0 ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return PageRequest.of(this.page - 1, this.size, dir, property);
+    public void setCategoryId(String categoryId) {
+        this.categoryId = Arrays.stream(categoryId.split(","))
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
     }
+
+    public void setMemberId(String memberId) {
+        this.memberId = Arrays.stream(memberId.split(","))
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+    }
+
+//    public Pageable makePageable(int direction, String... property) {
+//        Sort.Direction dir = direction == 0 ? Sort.Direction.DESC : Sort.Direction.ASC;
+//        return PageRequest.of(this.page - 1, this.size, dir, property);
+//    }
 }
