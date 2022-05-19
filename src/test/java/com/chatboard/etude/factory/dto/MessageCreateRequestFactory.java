@@ -1,16 +1,16 @@
 package com.chatboard.etude.factory.dto;
 
-import com.chatboard.etude.dto.message.MessageCreateRequest;
+import com.chatboard.etude.dto.message.MessageCreateRequestDto;
 
 public class MessageCreateRequestFactory {
 
-    public static MessageCreateRequest createMessageCreateRequest() {
-        return new MessageCreateRequest("content", 1L, 2L);
+    public static MessageCreateRequestDto createMessageCreateRequest() {
+        return new MessageCreateRequestDto("content", 1L, 2L);
     }
 
-    public static MessageCreateRequest createMessageCreateRequest(
+    public static MessageCreateRequestDto createMessageCreateRequest(
             String content, Long memberId, Long receiverId) {
-        return new MessageCreateRequest(content, memberId, receiverId);
+        return new MessageCreateRequestDto(content, memberId, receiverId);
     }
 
 }

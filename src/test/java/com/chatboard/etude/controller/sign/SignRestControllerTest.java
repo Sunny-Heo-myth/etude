@@ -1,7 +1,7 @@
 package com.chatboard.etude.controller.sign;
 
-import com.chatboard.etude.dto.sign.SignInRequest;
-import com.chatboard.etude.dto.sign.SignUpRequest;
+import com.chatboard.etude.dto.sign.SignInRequestDto;
+import com.chatboard.etude.dto.sign.SignUpRequestDto;
 import com.chatboard.etude.service.sign.SignService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ public class SignRestControllerTest {
     @Test
     void signUpTest() throws Exception {
         // given
-        SignUpRequest request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
+        SignUpRequestDto request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
 
         // when, then
         mockMvc.perform(
@@ -59,7 +59,7 @@ public class SignRestControllerTest {
     @Test
     void signInTest() throws Exception {
         // given
-        SignInRequest request = createSignInRequest("email@email.com", "123456a!");
+        SignInRequestDto request = createSignInRequest("email@email.com", "123456a!");
         given(signService.signIn(request))
                 .willReturn(createSignInResponse("access", "refresh"));
 
@@ -78,7 +78,7 @@ public class SignRestControllerTest {
     @Test
     void ignoreNullValueInJsonResponseTest() throws Exception {
         // given
-        SignUpRequest request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
+        SignUpRequestDto request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
 
         // when, then
         mockMvc.perform(

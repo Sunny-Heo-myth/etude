@@ -11,16 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MessageReceiverGuard extends Guard{
 
     private final MessageRepository messageRepository;
-    private final List<RoleType> roleTypes = List.of(RoleType.ROLE_ADMIN);
 
-    @Override
-    protected List<RoleType> getRoleTypes() {
-        return roleTypes;
+    public MessageReceiverGuard(MessageRepository messageRepository) {
+        super();
+        this.messageRepository = messageRepository;
     }
 
     @Override
@@ -31,4 +29,5 @@ public class MessageReceiverGuard extends Guard{
                 .filter(receiverId -> receiverId.equals(AuthUtils.extractMemberId()))
                 .isPresent();
     }
+
 }

@@ -1,12 +1,12 @@
 package com.chatboard.etude.service.message;
 
-import com.chatboard.etude.dto.message.MessageCreateRequest;
+import com.chatboard.etude.dto.message.MessageCreateRequestDto;
 import com.chatboard.etude.dto.message.MessageDto;
 import com.chatboard.etude.dto.message.MessageListDto;
-import com.chatboard.etude.dto.message.MessageReadCondition;
+import com.chatboard.etude.dto.message.MessageReadConditionDto;
 import com.chatboard.etude.entity.message.Message;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.MessageNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MessageNotFoundException;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.message.MessageRepository;
 import org.junit.jupiter.api.Test;
@@ -43,8 +43,8 @@ public class MessageServiceTest {
     @Mock
     MemberRepository memberRepository;
 
-    MessageReadCondition condition;
-    MessageCreateRequest request;
+    MessageReadConditionDto condition;
+    MessageCreateRequestDto request;
 
     @Test
     void readAllBySenderTest() {

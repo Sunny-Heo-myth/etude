@@ -1,10 +1,9 @@
 package com.chatboard.etude.controller.message;
 
 import com.chatboard.etude.aop.AssignMemberId;
-import com.chatboard.etude.dto.message.MessageReadCondition;
+import com.chatboard.etude.dto.message.MessageReadConditionDto;
 import com.chatboard.etude.service.message.MessageService;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,7 @@ public class MessageController {
     @GetMapping("/sender")
     @ResponseStatus(HttpStatus.OK)
     @AssignMemberId
-    public ModelAndView readAllMessageBySender(@Valid MessageReadCondition condition) {
+    public ModelAndView readAllMessageBySender(@Valid MessageReadConditionDto condition) {
         ModelAndView modelAndView = new ModelAndView("view");
         modelAndView.addObject(messageService.readAllMessageBySender(condition));
         return modelAndView;
@@ -33,7 +32,7 @@ public class MessageController {
     @GetMapping("/receiver")
     @ResponseStatus(HttpStatus.OK)
     @AssignMemberId
-    public ModelAndView readAllMessageByReceiver(@Valid MessageReadCondition condition) {
+    public ModelAndView readAllMessageByReceiver(@Valid MessageReadConditionDto condition) {
         ModelAndView modelAndView = new ModelAndView("view");
         modelAndView.addObject(messageService.readAllMessageByReceiver(condition));
         return modelAndView;

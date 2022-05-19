@@ -1,7 +1,7 @@
 package com.chatboard.etude.controller.category;
 
-import com.chatboard.etude.dto.category.CategoryCreateRequest;
-import com.chatboard.etude.dto.sign.SignInResponse;
+import com.chatboard.etude.dto.category.CategoryCreateRequestDto;
+import com.chatboard.etude.dto.sign.SignInResponseDto;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.init.TestInitDB;
 import com.chatboard.etude.repository.category.CategoryRepository;
@@ -23,12 +23,10 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 import static com.chatboard.etude.factory.dto.CategoryCreateRequestFactory.createCategoryCreateRequest;
-import static com.chatboard.etude.factory.dto.CategoryCreateRequestFactory.createCategoryCreateRequestWithName;
 import static com.chatboard.etude.factory.dto.SignInRequestFactory.createSignInRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -73,8 +71,8 @@ public class CategoryRestControllerIntegrationTest {
     @Test
     void createTest() throws Exception {
         // given
-        CategoryCreateRequest request = createCategoryCreateRequest();
-        SignInResponse adminSignInResponse = signService.signIn(
+        CategoryCreateRequestDto request = createCategoryCreateRequest();
+        SignInResponseDto adminSignInResponseDto = signService.signIn(
                 createSignInRequest(testInitDB.getAdminEmail(), testInitDB.getPassword()));
 
         int beforeSize = categoryRepository.findAll().size();
@@ -82,7 +80,7 @@ public class CategoryRestControllerIntegrationTest {
         // when, then
         mockMvc.perform(
                 post("/api/categories")
-                        .header("Authorization", adminSignInResponse.getAccessToken())
+                        .header("Authorization", adminSignInResponseDto.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
@@ -94,7 +92,7 @@ public class CategoryRestControllerIntegrationTest {
     @Test
     void createUnauthorizedByNoneTokenTest() throws Exception {
         // given
-        CategoryCreateRequest request = createCategoryCreateRequest();
+        CategoryCreateRequestDto request = createCategoryCreateRequest();
 
         // when, then
         mockMvc.perform(
@@ -108,14 +106,14 @@ public class CategoryRestControllerIntegrationTest {
     @Test
     void createAccessDeniedByNormalMemberTest() throws Exception {
         // given
-        CategoryCreateRequest request = createCategoryCreateRequest();
-        SignInResponse normalMemberSignInResponse = signService.signIn(
+        CategoryCreateRequestDto request = createCategoryCreateRequest();
+        SignInResponseDto normalMemberSignInResponseDto = signService.signIn(
                 createSignInRequest(testInitDB.getMember1Email(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 post("/api/categories")
-                        .header("Authorization", normalMemberSignInResponse.getAccessToken())
+                        .header("Authorization", normalMemberSignInResponseDto.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isForbidden());
@@ -125,12 +123,12 @@ public class CategoryRestControllerIntegrationTest {
     void deleteTest() throws Exception {
         // given
         Long id = categoryRepository.findAll().get(0).getId();
-        SignInResponse adminSignInResponse = signService.signIn(
+        SignInResponseDto adminSignInResponseDto = signService.signIn(
                 createSignInRequest(testInitDB.getAdminEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(delete("/api/categories/{id}", id)
-                .header("Authorization", adminSignInResponse.getAccessToken()))
+                .header("Authorization", adminSignInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
 
         List<Category> result = categoryRepository.findAll();
@@ -151,12 +149,12 @@ public class CategoryRestControllerIntegrationTest {
     void deleteAccessDeniedByNormalMemberTest() throws Exception {
         // given
         Long id = categoryRepository.findAll().get(0).getId();
-        SignInResponse normalSignInResponse = signService.signIn(
+        SignInResponseDto normalSignInResponseDto = signService.signIn(
                 createSignInRequest(testInitDB.getMember1Email(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(delete("/api/categories/{id}", id)
-                .header("Authorization", normalSignInResponse.getAccessToken()))
+                .header("Authorization", normalSignInResponseDto.getAccessToken()))
                 .andExpect(status().isForbidden());
     }
 }

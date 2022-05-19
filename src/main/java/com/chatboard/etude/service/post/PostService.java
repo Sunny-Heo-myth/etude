@@ -5,14 +5,15 @@ import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Image;
 import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.exception.CategoryNotFoundException;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.PostNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CategoryNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.PostNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
 import com.chatboard.etude.service.file.FileService;
 import com.chatboard.etude.dto.post.PostPageDto;
+import com.chatboard.etude.service.sign.SignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,22 @@ import java.util.stream.IntStream;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final FileService fileService;
+
+    public PostService(PostRepository postRepository,
+                       MemberRepository memberRepository,
+                       CategoryRepository categoryRepository,
+                       FileService fileService) {
+        this.postRepository = postRepository;
+        this.memberRepository = memberRepository;
+        this.categoryRepository = categoryRepository;
+        this.fileService = fileService;
+    }
 
     public PostDto readPost(Long id) {
         return PostDto.toDto(postRepository.findById(id)

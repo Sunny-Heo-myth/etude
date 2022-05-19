@@ -1,8 +1,8 @@
 package com.chatboard.etude.controller.message;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
-import com.chatboard.etude.dto.message.MessageCreateRequest;
-import com.chatboard.etude.exception.MessageNotFoundException;
+import com.chatboard.etude.dto.message.MessageCreateRequestDto;
+import com.chatboard.etude.exception.notFoundException.MessageNotFoundException;
 import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.message.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,7 +64,7 @@ public class MessageRestControllerAdviceTest {
     @Test
     void createTest() throws Exception {
         // given
-        MessageCreateRequest request = createMessageCreateRequest("content", null, 2L);
+        MessageCreateRequestDto request = createMessageCreateRequest("content", null, 2L);
         doThrow(MessageNotFoundException.class).when(messageService).createMessage(request);
 
         // when, then

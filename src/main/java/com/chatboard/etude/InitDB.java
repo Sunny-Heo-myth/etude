@@ -6,7 +6,7 @@ import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.exception.RoleNotFoundException;
+import com.chatboard.etude.exception.notFoundException.RoleNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.comment.CommentRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
@@ -21,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

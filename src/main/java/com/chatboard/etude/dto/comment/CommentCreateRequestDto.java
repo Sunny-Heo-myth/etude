@@ -1,12 +1,5 @@
 package com.chatboard.etude.dto.comment;
 
-import com.chatboard.etude.entity.comment.Comment;
-import com.chatboard.etude.exception.CommentNotFoundException;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.PostNotFoundException;
-import com.chatboard.etude.repository.comment.CommentRepository;
-import com.chatboard.etude.repository.member.MemberRepository;
-import com.chatboard.etude.repository.post.PostRepository;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -17,13 +10,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Positive;
-import java.util.Optional;
 
 @ApiOperation(value = "comment create request")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentCreateRequest {
+public class CommentCreateRequestDto {
 
     @ApiModelProperty(value = "comment", notes = "Enter comment.", required = true, example = "my comment")
     @NotBlank(message = "{commentCreateRequest.content.notBlank}")

@@ -1,14 +1,13 @@
 package com.chatboard.etude.controller.message;
 
 import com.chatboard.etude.aop.AssignMemberId;
-import com.chatboard.etude.dto.message.MessageCreateRequest;
-import com.chatboard.etude.dto.message.MessageReadCondition;
+import com.chatboard.etude.dto.message.MessageCreateRequestDto;
+import com.chatboard.etude.dto.message.MessageReadConditionDto;
 import com.chatboard.etude.dto.response.Response;
 import com.chatboard.etude.service.message.MessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +31,7 @@ public class MessageRestController {
     @GetMapping("/sender")
     @ResponseStatus(HttpStatus.OK)
     @AssignMemberId
-    public Response readAllBySender(@Valid MessageReadCondition condition) {
+    public Response readAllBySender(@Valid MessageReadConditionDto condition) {
         return Response.success(messageService.readAllMessageBySender(condition));
     }
 
@@ -43,7 +42,7 @@ public class MessageRestController {
     @GetMapping("/receiver")
     @ResponseStatus(HttpStatus.OK)
     @AssignMemberId
-    public Response readAllByReceiver(@Valid MessageReadCondition condition) {
+    public Response readAllByReceiver(@Valid MessageReadConditionDto condition) {
         return Response.success(messageService.readAllMessageByReceiver(condition));
     }
 
@@ -64,7 +63,7 @@ public class MessageRestController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
-    public Response create(@Valid @RequestBody MessageCreateRequest request) {
+    public Response create(@Valid @RequestBody MessageCreateRequestDto request) {
         messageService.createMessage(request);
         return Response.success();
     }

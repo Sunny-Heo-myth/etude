@@ -11,17 +11,17 @@ import java.util.stream.Collectors;
 import static com.chatboard.etude.factory.dto.SignUpRequestFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SignUpRequestValidationTest {
+public class SignUpRequestDtoValidationTest {
 
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     void validateTest() {
         // given
-        SignUpRequest request = createSignUpRequest();
+        SignUpRequestDto request = createSignUpRequest();
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isEmpty();
@@ -31,10 +31,10 @@ public class SignUpRequestValidationTest {
     void invalidateByNotFormattedEmailTest() {
         // given
         String invalidValue = "email";
-        SignUpRequest request = createSignUpRequestWithEmail(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithEmail(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -48,10 +48,10 @@ public class SignUpRequestValidationTest {
     void invalidateByEmptyEmailTest() {
         // given
         String invalidValue = null;
-        SignUpRequest request = createSignUpRequestWithEmail(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithEmail(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -65,10 +65,10 @@ public class SignUpRequestValidationTest {
     void invalidateByEmptyPasswordTest() {
         // given
         String invalidValue = null;
-        SignUpRequest request = createSignUpRequestWithPassword(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithPassword(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -82,10 +82,10 @@ public class SignUpRequestValidationTest {
     void invalidateByBlankPasswordTest() {
         // given
         String invalidValue = "    ";
-        SignUpRequest request = createSignUpRequestWithPassword(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithPassword(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -99,10 +99,10 @@ public class SignUpRequestValidationTest {
     void invalidateByShortPasswordTest() {
         // given
         String invalidValue = "123";
-        SignUpRequest request = createSignUpRequestWithPassword(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithPassword(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -116,10 +116,10 @@ public class SignUpRequestValidationTest {
     void invalidateByNoneAlphabetPasswordTest() {
         // given
         String invalidValue = "123!@#1312";
-        SignUpRequest request = createSignUpRequestWithPassword(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithPassword(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -133,10 +133,10 @@ public class SignUpRequestValidationTest {
     void invalidateByNoneNumberPasswordTest() {
         // given
         String invalidValue = "adjaf!@dsfss";
-        SignUpRequest request = createSignUpRequestWithPassword(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithPassword(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -150,10 +150,10 @@ public class SignUpRequestValidationTest {
     void invalidateByNoneSpecialCasePasswordTest() {
         // given
         String invalidValue = "adfa142321";
-        SignUpRequest request = createSignUpRequestWithPassword(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithPassword(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -167,10 +167,10 @@ public class SignUpRequestValidationTest {
     void invalidateByEmptyUsernameTest() {
         // given
         String invalidValue = null;
-        SignUpRequest request = createSignUpRequestWithUsername(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithUsername(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -184,10 +184,10 @@ public class SignUpRequestValidationTest {
     void invalidateByBlankUsernameTest() {
         // given
         String invalidValue = " ";
-        SignUpRequest request = createSignUpRequestWithUsername(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithUsername(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -201,10 +201,10 @@ public class SignUpRequestValidationTest {
     void invalidateByShortUsernameTest() {
         // given
         String invalidValue = "허";
-        SignUpRequest request = createSignUpRequestWithUsername(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithUsername(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -218,10 +218,10 @@ public class SignUpRequestValidationTest {
     void invalidateByNotAlphabetOrKoreanTest() {
         // given
         String invalidValue = "허2dfad";
-        SignUpRequest request = createSignUpRequestWithUsername(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithUsername(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -235,10 +235,10 @@ public class SignUpRequestValidationTest {
     void invalidateByEmptyNicknameTest() {
         // given
         String invalidValue = null;
-        SignUpRequest request = createSignUpRequestWithNickname(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithNickname(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -252,10 +252,10 @@ public class SignUpRequestValidationTest {
     void invalidateByBlankNicknameTest() {
         // given
         String invalidValue = "  ";
-        SignUpRequest request = createSignUpRequestWithNickname(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithNickname(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -269,10 +269,10 @@ public class SignUpRequestValidationTest {
     void invalidateByShortNicknameTest() {
         // given
         String invalidValue = "허";
-        SignUpRequest request = createSignUpRequestWithNickname(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithNickname(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -286,10 +286,10 @@ public class SignUpRequestValidationTest {
     void invalidateByNotAlphabetOrKoreanNicknameTest() {
         // given
         String invalidValue = " ";
-        SignUpRequest request = createSignUpRequestWithNickname(invalidValue);
+        SignUpRequestDto request = createSignUpRequestWithNickname(invalidValue);
 
         // when
-        Set<ConstraintViolation<SignUpRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<SignUpRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();

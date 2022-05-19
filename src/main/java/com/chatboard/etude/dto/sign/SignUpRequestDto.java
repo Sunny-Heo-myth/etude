@@ -1,25 +1,21 @@
 package com.chatboard.etude.dto.sign;
 
-import com.chatboard.etude.entity.member.Member;
-import com.chatboard.etude.entity.member.Role;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @ApiModel(value = "Sign Up Request")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpRequest {
+public class SignUpRequestDto {
 
     @ApiModelProperty(
             value = "email",

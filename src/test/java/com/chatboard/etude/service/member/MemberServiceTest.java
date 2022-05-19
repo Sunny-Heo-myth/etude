@@ -2,7 +2,7 @@ package com.chatboard.etude.service.member;
 
 import com.chatboard.etude.dto.member.MemberDto;
 import com.chatboard.etude.entity.member.Member;
-import com.chatboard.etude.exception.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
 import com.chatboard.etude.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

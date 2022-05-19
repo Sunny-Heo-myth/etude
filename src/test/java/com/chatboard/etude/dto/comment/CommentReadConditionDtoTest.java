@@ -1,6 +1,5 @@
 package com.chatboard.etude.dto.comment;
 
-import com.chatboard.etude.dto.comment.CommentReadCondition;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
@@ -13,16 +12,16 @@ import java.util.stream.Collectors;
 import static com.chatboard.etude.factory.dto.CommentReadConditionFactory.createCommentReadCondition;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommentReadConditionTest {
+public class CommentReadConditionDtoTest {
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     void validateTest() {
         // given
-        CommentReadCondition condition = createCommentReadCondition();
+        CommentReadConditionDto condition = createCommentReadCondition();
 
         // when
-        Set<ConstraintViolation<CommentReadCondition>> violations = validator.validate(condition);
+        Set<ConstraintViolation<CommentReadConditionDto>> violations = validator.validate(condition);
 
         // then
         assertThat(violations).isEmpty();
@@ -32,10 +31,10 @@ public class CommentReadConditionTest {
     void invalidateByNegativePostIdTest() {
         // given
         Long invalidValue = -1L;
-        CommentReadCondition condition = createCommentReadCondition(invalidValue);
+        CommentReadConditionDto condition = createCommentReadCondition(invalidValue);
 
         // when
-        Set<ConstraintViolation<CommentReadCondition>> violations = validator.validate(condition);
+        Set<ConstraintViolation<CommentReadConditionDto>> violations = validator.validate(condition);
 
         // then
         assertThat(violations).isNotEmpty();

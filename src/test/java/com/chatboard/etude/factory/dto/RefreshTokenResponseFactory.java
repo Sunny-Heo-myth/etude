@@ -1,10 +1,10 @@
 package com.chatboard.etude.factory.dto;
 
-import com.chatboard.etude.dto.sign.RefreshTokenResponse;
+import com.chatboard.etude.dto.sign.RefreshTokenResponseDto;
 
 public class RefreshTokenResponseFactory {
 
-    public static RefreshTokenResponse createRefreshTokenResponse(String accessToken) {
-        return new RefreshTokenResponse(accessToken);
+    public static RefreshTokenResponseDto createRefreshTokenResponse(String accessToken) {
+        return new RefreshTokenResponseDto(accessToken);
     }
 }

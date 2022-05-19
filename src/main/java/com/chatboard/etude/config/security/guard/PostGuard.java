@@ -7,20 +7,19 @@ import com.chatboard.etude.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class PostGuard extends Guard{
 
     private final PostRepository postRepository;
-    private final List<RoleType> roleTypes = List.of(RoleType.ROLE_ADMIN);
 
-    @Override
-    protected List<RoleType> getRoleTypes() {
-        return roleTypes;
+    public PostGuard(PostRepository postRepository) {
+        super();
+        this.postRepository = postRepository;
     }
 
     @Override

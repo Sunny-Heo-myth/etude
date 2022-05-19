@@ -2,7 +2,7 @@ package com.chatboard.etude.repository.category;
 
 import com.chatboard.etude.config.QuerydslConfig;
 import com.chatboard.etude.entity.category.Category;
-import com.chatboard.etude.exception.CategoryNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CategoryNotFoundException;
 import com.chatboard.etude.factory.entity.CategoryFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

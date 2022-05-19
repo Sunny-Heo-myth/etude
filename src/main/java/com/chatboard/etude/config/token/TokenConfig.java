@@ -7,10 +7,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@RequiredArgsConstructor
 public class TokenConfig {
 
     private final JwtHandler jwtHandler;
+
+    public TokenConfig(JwtHandler jwtHandler) {
+        this.jwtHandler = jwtHandler;
+    }
 
     @Bean
     public TokenHelper accessTokenHelper(@Value("${jwt.key.access}") String key,

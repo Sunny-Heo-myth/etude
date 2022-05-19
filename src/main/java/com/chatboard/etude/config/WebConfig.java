@@ -15,12 +15,15 @@ import java.time.Duration;
 
 @EnableWebMvc
 @Configuration
-@RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
     private final MessageSource messageSource;
     @Value("${upload.image.location}")
     private String location;
+
+    public WebConfig(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -1,12 +1,11 @@
 package com.chatboard.etude.controller.sign;
 
 import com.chatboard.etude.dto.response.Response;
-import com.chatboard.etude.dto.sign.SignInRequest;
-import com.chatboard.etude.dto.sign.SignUpRequest;
+import com.chatboard.etude.dto.sign.SignInRequestDto;
+import com.chatboard.etude.dto.sign.SignUpRequestDto;
 import com.chatboard.etude.service.sign.SignService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -32,7 +31,7 @@ public class SignRestController {
     )
     @PostMapping("/sign-up")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response signUp(@Valid @RequestBody SignUpRequest request) {
+    public Response signUp(@Valid @RequestBody SignUpRequestDto request) {
         signService.signUp(request);
         return success();
     }
@@ -43,7 +42,7 @@ public class SignRestController {
     )
     @PostMapping("/sign-in")
     @ResponseStatus(HttpStatus.OK)
-    public Response signIn(@Valid @RequestBody SignInRequest request) {
+    public Response signIn(@Valid @RequestBody SignInRequestDto request) {
         return success(signService.signIn(request));
     }
 

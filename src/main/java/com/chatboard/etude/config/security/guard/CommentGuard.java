@@ -11,17 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CommentGuard extends Guard {
 
     private final CommentRepository commentRepository;
-    private final List<RoleType> roleTypes = List.of(RoleType.ROLE_ADMIN);
 
-
-    @Override
-    protected List<RoleType> getRoleTypes() {
-        return roleTypes;
+    public CommentGuard(CommentRepository commentRepository) {
+        super();
+        this.commentRepository = commentRepository;
     }
 
     @Override

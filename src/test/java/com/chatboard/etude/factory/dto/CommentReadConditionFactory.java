@@ -1,14 +1,14 @@
 package com.chatboard.etude.factory.dto;
 
-import com.chatboard.etude.dto.comment.CommentReadCondition;
+import com.chatboard.etude.dto.comment.CommentReadConditionDto;
 
 public class CommentReadConditionFactory {
 
-    public static CommentReadCondition createCommentReadCondition() {
-        return new CommentReadCondition(1L);
+    public static CommentReadConditionDto createCommentReadCondition() {
+        return new CommentReadConditionDto(1L);
     }
 
-    public static CommentReadCondition createCommentReadCondition(Long postId) {
-        return new CommentReadCondition(postId);
+    public static CommentReadConditionDto createCommentReadCondition(Long postId) {
+        return new CommentReadConditionDto(postId);
     }
 }

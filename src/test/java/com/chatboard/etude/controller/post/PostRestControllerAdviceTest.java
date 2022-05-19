@@ -2,9 +2,9 @@ package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.dto.post.PostCreateRequestDto;
-import com.chatboard.etude.exception.CategoryNotFoundException;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.PostNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CategoryNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.PostNotFoundException;
 import com.chatboard.etude.exception.UnsupportedImageFormatException;
 import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.post.PostService;

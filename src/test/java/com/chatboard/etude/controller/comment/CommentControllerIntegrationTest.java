@@ -1,13 +1,13 @@
 package com.chatboard.etude.controller.comment;
 
-import com.chatboard.etude.dto.comment.CommentCreateRequest;
+import com.chatboard.etude.dto.comment.CommentCreateRequestDto;
 import com.chatboard.etude.dto.comment.CommentDto;
-import com.chatboard.etude.dto.sign.SignInResponse;
+import com.chatboard.etude.dto.sign.SignInResponseDto;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.comment.Comment;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.exception.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
 import com.chatboard.etude.init.TestInitDB;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.comment.CommentRepository;
@@ -103,16 +103,16 @@ public class CommentControllerIntegrationTest {
     @Test
     void createTest() throws Exception {
         // given
-        CommentCreateRequest request = createCommentCreateRequest(
+        CommentCreateRequestDto request = createCommentCreateRequest(
                 "content", post.getId(), null, null);
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(
                 testInitDB.getMember1Email(), testInitDB.getPassword()
         ));
 
         // when, then
         mockMvc.perform(
                 post("/api/comments")
-                        .header("Authorization", signInResponse.getAccessToken())
+                        .header("Authorization", signInResponseDto.getAccessToken())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
@@ -124,7 +124,7 @@ public class CommentControllerIntegrationTest {
     @Test
     void createUnauthorizedByNoneTokenTest() throws Exception {
         // given
-        CommentCreateRequest request = createCommentCreateRequest("content", post.getId(), member1.getId(), null);
+        CommentCreateRequestDto request = createCommentCreateRequest("content", post.getId(), member1.getId(), null);
 
         // when, then
         mockMvc.perform(
@@ -139,13 +139,13 @@ public class CommentControllerIntegrationTest {
     void deleteByResourceOwnerTest() throws Exception {
         // given
         Comment comment = commentRepository.save(createComment(member1, post, null));
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(
                 testInitDB.getMember1Email(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 delete("/api/comments/{id}", comment.getId())
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
 
         assertThat(commentRepository.findById(comment.getId())).isEmpty();
@@ -155,13 +155,13 @@ public class CommentControllerIntegrationTest {
     void deleteByAdminTest() throws Exception {
         // given
         Comment comment = commentRepository.save(createComment(member1, post, null));
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(
                 testInitDB.getAdminEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                         delete("/api/comments/{id}", comment.getId())
-                                .header("Authorization", signInResponse.getAccessToken()))
+                                .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
 
         assertThat(commentRepository.findById(comment.getId())).isEmpty();
@@ -182,13 +182,13 @@ public class CommentControllerIntegrationTest {
     void deleteAccessDeniedByNotResourceOwnerTest() throws Exception {
         // given
         Comment comment = commentRepository.save(createComment(member1, post, null));
-        SignInResponse invalidSignInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto invalidSignInResponseDto = signService.signIn(createSignInRequest(
                 testInitDB.getMember2Email(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                     delete("/api/comments/{id}", comment.getId())
-                    .header("Authorization", invalidSignInResponse.getAccessToken()))
+                    .header("Authorization", invalidSignInResponseDto.getAccessToken()))
                 .andExpect(status().isForbidden());
     }
 }

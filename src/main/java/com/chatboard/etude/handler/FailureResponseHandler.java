@@ -9,13 +9,16 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 @Slf4j
 // from ExceptionType & MessageSource
 // into exception code & exception message for Response object.
 public class FailureResponseHandler {
 
     private final MessageSource messageSource;
+
+    public FailureResponseHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     public Response getFailureResponse(ExceptionType exceptionType) {
         log.info("code = {}, msg = {}", getCode(exceptionType.getCode()), getMessage(exceptionType.getMessage()));

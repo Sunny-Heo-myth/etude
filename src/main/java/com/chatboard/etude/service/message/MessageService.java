@@ -1,16 +1,15 @@
 package com.chatboard.etude.service.message;
 
-import com.chatboard.etude.dto.message.MessageCreateRequest;
+import com.chatboard.etude.dto.message.MessageCreateRequestDto;
 import com.chatboard.etude.dto.message.MessageDto;
 import com.chatboard.etude.dto.message.MessageListDto;
-import com.chatboard.etude.dto.message.MessageReadCondition;
+import com.chatboard.etude.dto.message.MessageReadConditionDto;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.message.Message;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.MessageNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MessageNotFoundException;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.message.MessageRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -18,23 +17,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Consumer;
 
-@RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
+@Transactional(readOnly = true)
 public class MessageService {
 
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
 
+    public MessageService(MessageRepository messageRepository, MemberRepository memberRepository) {
+        this.messageRepository = messageRepository;
+        this.memberRepository = memberRepository;
+    }
 
-
-    public MessageListDto readAllMessageBySender(MessageReadCondition condition) {
+    public MessageListDto readAllMessageBySender(MessageReadConditionDto condition) {
         return MessageListDto.toDto(messageRepository.findAllBySenderIdOrderByMessageIdDesc(
                 condition.getMemberId(), condition.getLastMessageId(), Pageable.ofSize(condition.getSize())
         ));
     }
 
-    public MessageListDto readAllMessageByReceiver(MessageReadCondition condition) {
+    public MessageListDto readAllMessageByReceiver(MessageReadConditionDto condition) {
         return MessageListDto.toDto(messageRepository.findAllByReceiverIdOrderByMessageIdDesc(
                 condition.getMemberId(), condition.getLastMessageId(), Pageable.ofSize(condition.getSize())
         ));
@@ -49,7 +50,7 @@ public class MessageService {
     }
 
     @Transactional
-    public void createMessage(MessageCreateRequest request) {
+    public void createMessage(MessageCreateRequestDto request) {
 
         Member sender = memberRepository.findById(request.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);

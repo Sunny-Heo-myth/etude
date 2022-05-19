@@ -12,7 +12,7 @@ import javax.validation.constraints.Positive;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageReadCondition {
+public class MessageReadConditionDto {
 
     @ApiModelProperty(hidden = true)
     @Null

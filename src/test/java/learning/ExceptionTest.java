@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 public class ExceptionTest {
 
-    @Test
+
     void exceptionTest() {
         try {
             test1();

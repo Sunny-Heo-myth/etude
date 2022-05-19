@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 import static com.chatboard.etude.factory.dto.MessageReadConditionFactory.createMessageReadCondition;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MessageReadConditionValidationTest {
+public class MessageReadConditionDtoValidationTest {
 
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    Set<ConstraintViolation<MessageReadCondition>> violations;
-    MessageReadCondition condition;
+    Set<ConstraintViolation<MessageReadConditionDto>> violations;
+    MessageReadConditionDto condition;
 
     @Test
     void validateTest() {

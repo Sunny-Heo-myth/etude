@@ -6,7 +6,7 @@ import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Image;
 import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.exception.PostNotFoundException;
+import com.chatboard.etude.exception.notFoundException.PostNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,12 @@
 package com.chatboard.etude.controller.sign;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
-import com.chatboard.etude.dto.sign.SignInRequest;
-import com.chatboard.etude.dto.sign.SignUpRequest;
+import com.chatboard.etude.dto.sign.SignInRequestDto;
+import com.chatboard.etude.dto.sign.SignUpRequestDto;
 import com.chatboard.etude.exception.*;
+import com.chatboard.etude.exception.notFoundException.RoleNotFoundException;
+import com.chatboard.etude.exception.validationException.MemberEmailAlreadyExistsException;
+import com.chatboard.etude.exception.validationException.MemberNicknameAlreadyExistsException;
 import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.sign.SignService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,7 +58,7 @@ public class SignRestControllerAdviceTest {
     @Test
     void signInLoginFailureExceptionTest() throws Exception {
         // given
-        SignInRequest request = createSignInRequest("email@email.com", "123456a!");
+        SignInRequestDto request = createSignInRequest("email@email.com", "123456a!");
         given(signService.signIn(any()))
                 .willThrow(LoginFailureException.class);
 
@@ -70,7 +73,7 @@ public class SignRestControllerAdviceTest {
     @Test
     void signInMethodArgumentNotValidExceptionTest() throws Exception {
         // given
-        SignInRequest request = createSignInRequest("email", "1234567");
+        SignInRequestDto request = createSignInRequest("email", "1234567");
         
         // when, then
         mockMvc.perform(
@@ -83,7 +86,7 @@ public class SignRestControllerAdviceTest {
     @Test
     void signUpMemberEmailAlreadyExistsExceptionTest() throws Exception {
         // given
-        SignUpRequest request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
+        SignUpRequestDto request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
         doThrow(MemberEmailAlreadyExistsException.class)
                 .when(signService).signUp(any());
 
@@ -98,7 +101,7 @@ public class SignRestControllerAdviceTest {
     @Test
     void signUpMemberNicknameAlreadyExistsExceptionTest() throws Exception {
         // given
-        SignUpRequest request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
+        SignUpRequestDto request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
         doThrow(MemberNicknameAlreadyExistsException.class)
                 .when(signService).signUp(any());
 
@@ -113,7 +116,7 @@ public class SignRestControllerAdviceTest {
     @Test
     void signUpRoleNotFoundExceptionTest() throws Exception{
         // given
-        SignUpRequest request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
+        SignUpRequestDto request = createSignUpRequest("email@email.com", "123456a!", "username", "nickname");
         doThrow(RoleNotFoundException.class)
                 .when(signService).signUp(any());
 
@@ -128,7 +131,7 @@ public class SignRestControllerAdviceTest {
     @Test
     void signUpMethodArgumentNotValidExceptionTest() throws Exception {
         // given
-        SignUpRequest request = createSignUpRequest("", "", "", "");
+        SignUpRequestDto request = createSignUpRequest("", "", "", "");
 
         // when, then
         mockMvc.perform(

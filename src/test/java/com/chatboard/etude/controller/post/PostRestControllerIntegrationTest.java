@@ -2,12 +2,12 @@ package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.dto.post.PostCreateRequestDto;
 import com.chatboard.etude.dto.post.PostReadConditionDto;
-import com.chatboard.etude.dto.sign.SignInResponse;
+import com.chatboard.etude.dto.sign.SignInResponseDto;
 import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.PostNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.PostNotFoundException;
 import com.chatboard.etude.init.TestInitDB;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
@@ -100,7 +100,7 @@ public class PostRestControllerIntegrationTest {
     @Test
     void createTest() throws Exception {
         // given
-        SignInResponse signInResponse = signService.signIn(
+        SignInResponseDto signInResponseDto = signService.signIn(
                 createSignInRequest(member1.getEmail(), testInitDB.getPassword()));
         PostCreateRequestDto request = createPostCreateRequest(
                 "title", "content", 1000L, member1.getId(), category.getId(), List.of());
@@ -117,7 +117,7 @@ public class PostRestControllerIntegrationTest {
                             return requestProcessor;
                         })
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isCreated());
     }
 
@@ -145,7 +145,7 @@ public class PostRestControllerIntegrationTest {
     @Test
     void updateByResourceOwnerTest() throws Exception {
         // given
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(member1.getEmail(), testInitDB.getPassword()));
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(member1.getEmail(), testInitDB.getPassword()));
         Post post = postRepository.save(createPost(member1, category));
         String updatedTitle = "updatedTitle";
         String updatedContent = "updatedContent";
@@ -162,7 +162,7 @@ public class PostRestControllerIntegrationTest {
                             return requestProcessor;
                         })
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
 
         Post updatedPost = postRepository.findById(post.getId())
@@ -176,7 +176,7 @@ public class PostRestControllerIntegrationTest {
     @Test
     void updateByAdminTest() throws Exception {
         // given
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(admin.getEmail(), testInitDB.getPassword()));
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(admin.getEmail(), testInitDB.getPassword()));
         Post post = postRepository.save(createPost(member1, category));
         String updatedTitle = "updatedTitle";
         String updatedContent = "updatedContent";
@@ -193,7 +193,7 @@ public class PostRestControllerIntegrationTest {
                             return requestProcessor;
                         })
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
 
         Post updatedPost = postRepository.findById(post.getId())
@@ -232,7 +232,7 @@ public class PostRestControllerIntegrationTest {
     @Test
     void updateAccessDeniedByNotResourceOwnerTest() throws Exception {
         // given
-        SignInResponse notOwnerSignInResponse = signService.signIn(createSignInRequest(member2.getEmail(), testInitDB.getPassword()));
+        SignInResponseDto notOwnerSignInResponseDto = signService.signIn(createSignInRequest(member2.getEmail(), testInitDB.getPassword()));
         Post post = postRepository.save(createPost(member1, category));
         String updatedTitle = "updatedTitle";
         String updatedContent = "updatedContent";
@@ -249,7 +249,7 @@ public class PostRestControllerIntegrationTest {
                             return requestProcessor;
                         })
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header("Authorization", notOwnerSignInResponse.getAccessToken()))
+                        .header("Authorization", notOwnerSignInResponseDto.getAccessToken()))
                 .andExpect(status().isForbidden());
     }
 
@@ -257,13 +257,13 @@ public class PostRestControllerIntegrationTest {
     void deleteByResourceOwnerTest() throws Exception {
         // given
         Post post = postRepository.save(createPost(member1, category));
-        SignInResponse signInResponse = signService.signIn(
+        SignInResponseDto signInResponseDto = signService.signIn(
                 createSignInRequest(member1.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 delete("/api/posts/{id}", post.getId())
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
 
         assertThatThrownBy(() -> postService.readPost(post.getId()))
@@ -274,13 +274,13 @@ public class PostRestControllerIntegrationTest {
     void deleteByAdminTest() throws Exception {
         // given
         Post post = postRepository.save(createPost(member1, category));
-        SignInResponse adminSignInResponse = signService.signIn(
+        SignInResponseDto adminSignInResponseDto = signService.signIn(
                 createSignInRequest(admin.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 delete("/api/posts/{id}", post.getId())
-                        .header("Authorization", adminSignInResponse.getAccessToken()))
+                        .header("Authorization", adminSignInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
 
         assertThatThrownBy(() -> postService.readPost(post.getId()))

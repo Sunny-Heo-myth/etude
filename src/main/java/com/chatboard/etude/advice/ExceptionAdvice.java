@@ -2,7 +2,10 @@ package com.chatboard.etude.advice;
 
 import com.chatboard.etude.dto.response.Response;
 import com.chatboard.etude.exception.*;
+import com.chatboard.etude.exception.notFoundException.*;
 import com.chatboard.etude.exception.type.ExceptionType;
+import com.chatboard.etude.exception.validationException.MemberEmailAlreadyExistsException;
+import com.chatboard.etude.exception.validationException.MemberNicknameAlreadyExistsException;
 import com.chatboard.etude.handler.FailureResponseHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +21,15 @@ import java.util.Objects;
 
 import static com.chatboard.etude.exception.type.ExceptionType.*;
 
-@RestControllerAdvice   // including @ResponseBody
-@RequiredArgsConstructor
+@RestControllerAdvice
 @Slf4j
 public class ExceptionAdvice {
 
     private final FailureResponseHandler failureResponseHandler;
+
+    public ExceptionAdvice(FailureResponseHandler failureResponseHandler) {
+        this.failureResponseHandler = failureResponseHandler;
+    }
 
     // AccessDeniedException(SC.FORBIDDEN) will be filtered before dispatcherServlet.
     // AuthenticationEntryPointException(SC.UNAUTHORIZED) will be filtered before dispatcherServlet.

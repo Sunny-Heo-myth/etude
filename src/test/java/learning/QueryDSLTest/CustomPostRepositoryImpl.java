@@ -1,12 +1,13 @@
-package com.chatboard.etude.repository.post;
+package learning.QueryDSLTest;
 
 import com.chatboard.etude.dto.post.PostReadConditionDto;
 import com.chatboard.etude.dto.post.PostSimpleDto;
 import com.chatboard.etude.entity.post.Post;
+import com.chatboard.etude.repository.post.CustomPostRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,15 +23,13 @@ import static com.chatboard.etude.entity.post.QPost.post;
 import static com.querydsl.core.types.Projections.constructor;
 
 @Transactional(readOnly = true)
-public class CustomPostRepositoryImpl
-        extends QuerydslRepositorySupport
-        implements CustomPostRepository {
+public class CustomPostRepositoryImpl extends QuerydslRepositorySupport implements CustomPostRepository {
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory queryFactory;
 
-    public CustomPostRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
+    public CustomPostRepositoryImpl(JPAQueryFactory queryFactory) {
         super(Post.class);
-        this.jpaQueryFactory = jpaQueryFactory;
+        this.queryFactory = queryFactory;
     }
 
     @Override
@@ -45,9 +44,9 @@ public class CustomPostRepositoryImpl
     }
 
     private List<PostSimpleDto> fetchAll(Predicate predicate, Pageable pageable) {
-        return Objects.requireNonNull(getQuerydsl()).applyPagination(   // build query with paging applied.
+        return Objects.requireNonNull(getQuerydsl()).applyPagination(
                 pageable,
-                jpaQueryFactory
+                queryFactory
                         .select(constructor(
                                 PostSimpleDto.class,
                                 post.id,
@@ -84,10 +83,11 @@ public class CustomPostRepositoryImpl
     }
 
     private Long fetchCount(Predicate predicate) {
-        return jpaQueryFactory
+        return queryFactory
                 .select(post.count())
                 .from(post)
                 .where(predicate)
                 .fetchOne();
     }
+
 }

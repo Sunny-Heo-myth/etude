@@ -4,7 +4,7 @@ import com.chatboard.etude.config.QuerydslConfig;
 import com.chatboard.etude.dto.message.MessageSimpleDto;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.message.Message;
-import com.chatboard.etude.exception.MessageNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MessageNotFoundException;
 import com.chatboard.etude.factory.entity.MemberFactory;
 import com.chatboard.etude.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;

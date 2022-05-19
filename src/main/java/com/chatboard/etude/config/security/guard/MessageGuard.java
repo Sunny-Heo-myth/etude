@@ -11,16 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MessageGuard extends Guard{
 
     private final MessageRepository messageRepository;
-    private final List<RoleType> roleTypes = List.of(RoleType.ROLE_ADMIN);
 
-    @Override
-    protected List<RoleType> getRoleTypes() {
-        return roleTypes;
+    public MessageGuard(MessageRepository messageRepository) {
+        super();
+        this.messageRepository = messageRepository;
     }
 
     @Override

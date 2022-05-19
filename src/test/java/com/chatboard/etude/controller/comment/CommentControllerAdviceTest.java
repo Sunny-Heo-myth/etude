@@ -1,10 +1,10 @@
 package com.chatboard.etude.controller.comment;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
-import com.chatboard.etude.dto.comment.CommentCreateRequest;
-import com.chatboard.etude.exception.CommentNotFoundException;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.PostNotFoundException;
+import com.chatboard.etude.dto.comment.CommentCreateRequestDto;
+import com.chatboard.etude.exception.notFoundException.CommentNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.PostNotFoundException;
 import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.comment.CommentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +57,7 @@ public class CommentControllerAdviceTest {
     void createExceptionByMemberNotFoundTest() throws Exception {
         // given
         doThrow(MemberNotFoundException.class).when(commentService).createComment(any());
-        CommentCreateRequest request = createCommentCreateRequestWithMemberId(null);
+        CommentCreateRequestDto request = createCommentCreateRequestWithMemberId(null);
 
         // when, then
         mockMvc.perform(
@@ -71,7 +71,7 @@ public class CommentControllerAdviceTest {
     void createExceptionByPostNotFoundTest() throws Exception {
         // given
         doThrow(PostNotFoundException.class).when(commentService).createComment(any());
-        CommentCreateRequest request = createCommentCreateRequestWithMemberId(null);
+        CommentCreateRequestDto request = createCommentCreateRequestWithMemberId(null);
 
         // when, then
         mockMvc.perform(
@@ -85,7 +85,7 @@ public class CommentControllerAdviceTest {
     void createExceptionByCommentNotFoundTest() throws Exception {
         // given
         doThrow(CommentNotFoundException.class).when(commentService).createComment(any());
-        CommentCreateRequest request = createCommentCreateRequestWithMemberId(null);
+        CommentCreateRequestDto request = createCommentCreateRequestWithMemberId(null);
 
         // when, then
         mockMvc.perform(

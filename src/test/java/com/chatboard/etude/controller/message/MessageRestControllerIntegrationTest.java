@@ -1,9 +1,9 @@
 package com.chatboard.etude.controller.message;
 
-import com.chatboard.etude.dto.message.MessageCreateRequest;
-import com.chatboard.etude.dto.sign.SignInResponse;
+import com.chatboard.etude.dto.message.MessageCreateRequestDto;
+import com.chatboard.etude.dto.sign.SignInResponseDto;
 import com.chatboard.etude.entity.member.Member;
-import com.chatboard.etude.exception.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
 import com.chatboard.etude.init.TestInitDB;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.message.MessageRepository;
@@ -71,14 +71,14 @@ public class MessageRestControllerIntegrationTest {
     void readAllBySenderTest() throws Exception {
         // given
         Integer size = 2;
-        SignInResponse signInResponse = signService.signIn(
+        SignInResponseDto signInResponseDto = signService.signIn(
                 createSignInRequest(sender.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 get("/api/messages/sender")
                         .param("size", String.valueOf(size))
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.responseResult.data.numberOfElements").value(2));
     }
@@ -99,14 +99,14 @@ public class MessageRestControllerIntegrationTest {
     void readAllByReceiverTest() throws Exception {
         // given
         Integer size = 2;
-        SignInResponse signInResponse = signService.signIn(
+        SignInResponseDto signInResponseDto = signService.signIn(
                 createSignInRequest(receiver.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                         get("/api/messages/receiver")
                                 .param("size", String.valueOf(size))
-                                .header("Authorization", signInResponse.getAccessToken()))
+                                .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.responseResult.data.numberOfElements").value(2));
     }
@@ -127,13 +127,13 @@ public class MessageRestControllerIntegrationTest {
     void readByResourceOwnerTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(
                 sender.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 get("/api/messages/{id}", id)
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
     }
 
@@ -141,13 +141,13 @@ public class MessageRestControllerIntegrationTest {
     void readByAdminTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse adminSignInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto adminSignInResponseDto = signService.signIn(createSignInRequest(
                 admin.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 get("/api/messages/{id}", id)
-                        .header("Authorization", adminSignInResponse.getAccessToken()))
+                        .header("Authorization", adminSignInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
     }
 
@@ -166,23 +166,23 @@ public class MessageRestControllerIntegrationTest {
     void readAccessDeniedByNotResourceOwnerTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse notOwnerSignInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto notOwnerSignInResponseDto = signService.signIn(createSignInRequest(
                 receiver.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 get("/api/messages/{id}", id)
-                        .header("Authorization", notOwnerSignInResponse.getAccessToken()))
+                        .header("Authorization", notOwnerSignInResponseDto.getAccessToken()))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void createTest() throws Exception {
         // given
-        MessageCreateRequest request =
+        MessageCreateRequestDto request =
                 createMessageCreateRequest("content", null, receiver.getId());
 
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(
                 sender.getEmail(), testInitDB.getPassword()));
 
         // when, then
@@ -190,14 +190,14 @@ public class MessageRestControllerIntegrationTest {
                 post("/api/messages")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isCreated());
     }
 
     @Test
     void createUnauthorizedByNoneTokenTest() throws Exception {
         // given
-        MessageCreateRequest request =
+        MessageCreateRequestDto request =
                 createMessageCreateRequest("content", null, receiver.getId());
 
         // when, then
@@ -212,13 +212,13 @@ public class MessageRestControllerIntegrationTest {
     void deleteBySenderByResourceOwnerTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(
                 sender.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 delete("/api/messages/sender/{id}", id)
-                        .header("Authorization", signInResponse.getAccessToken()))
+                        .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
     }
 
@@ -226,13 +226,13 @@ public class MessageRestControllerIntegrationTest {
     void deleteBySenderByAdminTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse adminSignInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto adminSignInResponseDto = signService.signIn(createSignInRequest(
                 admin.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 delete("/api/messages/sender/{id}", id)
-                        .header("Authorization", adminSignInResponse.getAccessToken()))
+                        .header("Authorization", adminSignInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
     }
 
@@ -251,13 +251,13 @@ public class MessageRestControllerIntegrationTest {
     void deleteBySenderAccessDeniedByNotResourceOwnerTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse notOwnerSignInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto notOwnerSignInResponseDto = signService.signIn(createSignInRequest(
                 receiver.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                 delete("/api/messages/sender/{id}", id)
-                        .header("Authorization", notOwnerSignInResponse.getAccessToken()))
+                        .header("Authorization", notOwnerSignInResponseDto.getAccessToken()))
                 .andExpect(status().isForbidden());
     }
 
@@ -266,13 +266,13 @@ public class MessageRestControllerIntegrationTest {
     void deleteByReceiverByResourceOwnerTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse signInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto signInResponseDto = signService.signIn(createSignInRequest(
                 receiver.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                         delete("/api/messages/receiver/{id}", id)
-                                .header("Authorization", signInResponse.getAccessToken()))
+                                .header("Authorization", signInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
     }
 
@@ -280,13 +280,13 @@ public class MessageRestControllerIntegrationTest {
     void deleteByReceiverByAdminTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse adminSignInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto adminSignInResponseDto = signService.signIn(createSignInRequest(
                 admin.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                         delete("/api/messages/receiver/{id}", id)
-                                .header("Authorization", adminSignInResponse.getAccessToken()))
+                                .header("Authorization", adminSignInResponseDto.getAccessToken()))
                 .andExpect(status().isOk());
     }
 
@@ -305,13 +305,13 @@ public class MessageRestControllerIntegrationTest {
     void deleteByReceiverAccessDeniedByNotResourceOwnerTest() throws Exception {
         // given
         Long id = messageRepository.findAll().get(0).getId();
-        SignInResponse notOwnerSignInResponse = signService.signIn(createSignInRequest(
+        SignInResponseDto notOwnerSignInResponseDto = signService.signIn(createSignInRequest(
                 sender.getEmail(), testInitDB.getPassword()));
 
         // when, then
         mockMvc.perform(
                         delete("/api/messages/receiver/{id}", id)
-                                .header("Authorization", notOwnerSignInResponse.getAccessToken()))
+                                .header("Authorization", notOwnerSignInResponseDto.getAccessToken()))
                 .andExpect(status().isForbidden());
     }
 }

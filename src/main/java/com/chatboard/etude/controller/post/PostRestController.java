@@ -9,7 +9,6 @@ import com.chatboard.etude.service.post.PostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +29,11 @@ public class PostRestController {
             value = "read post",
             notes = "Read post."
     )
-    @GetMapping("/{id}")
+    @GetMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
     public Response read(
-            @ApiParam(value = "post id", required = true) @PathVariable Long id) {
-        return Response.success(postService.readPost(id));
+            @ApiParam(value = "post id", required = true) @PathVariable Long postId) {
+        return Response.success(postService.readPost(postId));
     }
 
     @ApiOperation(

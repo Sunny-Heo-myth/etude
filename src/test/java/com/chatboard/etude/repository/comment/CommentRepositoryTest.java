@@ -5,7 +5,7 @@ import com.chatboard.etude.entity.category.Category;
 import com.chatboard.etude.entity.comment.Comment;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.exception.CommentNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CommentNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;

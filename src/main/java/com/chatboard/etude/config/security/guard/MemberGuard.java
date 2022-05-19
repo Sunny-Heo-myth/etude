@@ -4,19 +4,16 @@ import com.chatboard.etude.entity.member.RoleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
-@Slf4j
+@Transactional(readOnly = true)
 public class MemberGuard extends Guard{
 
-    private final List<RoleType> roleTypes = List.of(RoleType.ROLE_ADMIN);
-
-    @Override
-    protected List<RoleType> getRoleTypes() {
-        return roleTypes;
+    public MemberGuard() {
+        super();
     }
 
     @Override

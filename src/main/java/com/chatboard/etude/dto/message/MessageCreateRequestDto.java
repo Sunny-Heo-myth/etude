@@ -1,8 +1,5 @@
 package com.chatboard.etude.dto.message;
 
-import com.chatboard.etude.entity.message.Message;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.repository.member.MemberRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -18,7 +15,7 @@ import javax.validation.constraints.Positive;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageCreateRequest {
+public class MessageCreateRequestDto {
 
     @ApiModelProperty(
             value = "message",

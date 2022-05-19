@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 // helper is not main "service" which this application serves.
 // JwtHandler <-> TokenHelper <-> SignService
 //                            <-> UserDetailService
@@ -20,6 +19,12 @@ public class TokenHelper {
     private final JwtHandler jwtHandler;
     private final String key;
     private final long maxAgeSeconds;
+
+    public TokenHelper(JwtHandler jwtHandler, String key, long maxAgeSeconds) {
+        this.jwtHandler = jwtHandler;
+        this.key = key;
+        this.maxAgeSeconds = maxAgeSeconds;
+    }
 
     private static final String SEPARATION =",";
     private static final String ROLE_TYPES = "ROLE_TYPES";
@@ -50,10 +55,15 @@ public class TokenHelper {
 
     // claims which converted as payload of JWT
     @Getter
-    @AllArgsConstructor
     public static class PrivateClaims {
-        private String memberId;
-        private List<String> roleTypes;
+
+        private final String memberId;
+        private final List<String> roleTypes;
+
+        public PrivateClaims(String memberId, List<String> roleTypes) {
+            this.memberId = memberId;
+            this.roleTypes = roleTypes;
+        }
     }
 
 }

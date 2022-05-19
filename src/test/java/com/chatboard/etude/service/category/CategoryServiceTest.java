@@ -1,8 +1,8 @@
 package com.chatboard.etude.service.category;
 
-import com.chatboard.etude.dto.category.CategoryCreateRequest;
+import com.chatboard.etude.dto.category.CategoryCreateRequestDto;
 import com.chatboard.etude.dto.category.CategoryDto;
-import com.chatboard.etude.exception.CategoryNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CategoryNotFoundException;
 import com.chatboard.etude.factory.entity.CategoryFactory;
 import com.chatboard.etude.repository.category.CategoryRepository;
 import org.junit.jupiter.api.Test;
@@ -52,7 +52,7 @@ public class CategoryServiceTest {
     @Test
     void createTest() {
         // given
-        CategoryCreateRequest request = createCategoryCreateRequest();
+        CategoryCreateRequestDto request = createCategoryCreateRequest();
 
         // when
         categoryService.createCategory(request);

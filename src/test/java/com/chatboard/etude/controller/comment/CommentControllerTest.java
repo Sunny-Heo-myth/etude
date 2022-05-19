@@ -1,7 +1,7 @@
 package com.chatboard.etude.controller.comment;
 
-import com.chatboard.etude.dto.comment.CommentCreateRequest;
-import com.chatboard.etude.dto.comment.CommentReadCondition;
+import com.chatboard.etude.dto.comment.CommentCreateRequestDto;
+import com.chatboard.etude.dto.comment.CommentReadConditionDto;
 import com.chatboard.etude.service.comment.CommentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ public class CommentControllerTest {
     @Test
     void readAllTest() throws Exception {
         // given
-        CommentReadCondition condition = createCommentReadCondition();
+        CommentReadConditionDto condition = createCommentReadCondition();
 
         // when, then
         mockMvc.perform(
@@ -50,7 +50,7 @@ public class CommentControllerTest {
     @Test
     void createTest() throws Exception {
         // given
-        CommentCreateRequest request = createCommentCreateRequestWithMemberId(null);
+        CommentCreateRequestDto request = createCommentCreateRequestWithMemberId(null);
 
         // when, then
         mockMvc.perform(

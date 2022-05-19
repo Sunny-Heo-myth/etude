@@ -2,7 +2,7 @@ package com.chatboard.etude.controller.category;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
 import com.chatboard.etude.exception.CannotConvertNestedStructureException;
-import com.chatboard.etude.exception.CategoryNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CategoryNotFoundException;
 import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.category.CategoryService;
 import org.junit.jupiter.api.BeforeEach;

@@ -8,10 +8,13 @@ import org.springframework.context.annotation.Configuration;
 import javax.persistence.EntityManager;
 
 @Configuration
-@RequiredArgsConstructor
 public class QuerydslConfig {
 
     private final EntityManager entityManager;
+
+    public QuerydslConfig(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Bean
     public JPAQueryFactory jpaQueryFactory() {

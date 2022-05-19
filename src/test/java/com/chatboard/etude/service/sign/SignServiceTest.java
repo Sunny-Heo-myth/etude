@@ -1,20 +1,21 @@
 package com.chatboard.etude.service.sign;
 
 import com.chatboard.etude.config.token.TokenHelper;
-import com.chatboard.etude.dto.sign.RefreshTokenResponse;
-import com.chatboard.etude.dto.sign.SignInRequest;
-import com.chatboard.etude.dto.sign.SignInResponse;
-import com.chatboard.etude.dto.sign.SignUpRequest;
+import com.chatboard.etude.dto.sign.RefreshTokenResponseDto;
+import com.chatboard.etude.dto.sign.SignInResponseDto;
+import com.chatboard.etude.dto.sign.SignUpRequestDto;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.exception.*;
+import com.chatboard.etude.exception.notFoundException.RoleNotFoundException;
+import com.chatboard.etude.exception.validationException.MemberEmailAlreadyExistsException;
+import com.chatboard.etude.exception.validationException.MemberNicknameAlreadyExistsException;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,7 +64,7 @@ public class SignServiceTest {
     @Test
     void signUpTest() {
         // given
-        SignUpRequest request = createSignUpRequest();
+        SignUpRequestDto request = createSignUpRequest();
         given(roleRepository.findByRoleType(RoleType.ROLE_NORMAL))
                 .willReturn(Optional.of(new Role(RoleType.ROLE_NORMAL)));
 
@@ -125,7 +126,7 @@ public class SignServiceTest {
                 .willReturn("refresh");
 
         // when
-        SignInResponse response = signService.signIn(createSignInRequest("email", "password"));
+        SignInResponseDto response = signService.signIn(createSignInRequest("email", "password"));
 
         // then
         assertThat(response.getAccessToken()).isEqualTo("access");
@@ -168,7 +169,7 @@ public class SignServiceTest {
         given(accessTokenHelper.createToken(any())).willReturn(accessToken);
 
         // when
-        RefreshTokenResponse response = signService.refreshToken(refreshToken);
+        RefreshTokenResponseDto response = signService.refreshToken(refreshToken);
 
         // then
         assertThat(response.getAccessToken()).isEqualTo(accessToken);

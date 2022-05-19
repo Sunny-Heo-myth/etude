@@ -5,12 +5,11 @@ import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.MemberRole;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
-import com.chatboard.etude.exception.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
 import com.chatboard.etude.repository.role.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -18,7 +17,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.chatboard.etude.factory.entity.MemberFactory.createMember;
 import static com.chatboard.etude.factory.entity.MemberFactory.createMemberWithRoles;

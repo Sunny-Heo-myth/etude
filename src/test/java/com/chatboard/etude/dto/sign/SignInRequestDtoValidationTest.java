@@ -1,43 +1,61 @@
-package com.chatboard.etude.dto.message;
+package com.chatboard.etude.dto.sign;
 
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.chatboard.etude.factory.dto.MessageCreateRequestFactory.createMessageCreateRequest;
+import static com.chatboard.etude.factory.dto.SignInRequestFactory.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MessageCreateRequestValidationTest {
+public class SignInRequestDtoValidationTest {
+
+    // dependency
 
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    MessageCreateRequest request = createMessageCreateRequest("content", null, 2L);
-    Set<ConstraintViolation<MessageCreateRequest>> violations;
+
+    // test
 
     @Test
     void validateTest() {
         // given
-        request = createMessageCreateRequest("content", null, 2L);
+        SignInRequestDto request = createSignInRequest();
 
         // when
-        violations = validator.validate(request);
+        Set<ConstraintViolation<SignInRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isEmpty();
     }
 
     @Test
-    void invalidateByEmptyContentTest() {
+    void invalidateByNotFormattedEmailTest() {
+        // given
+        String invalidValue = "email";
+        SignInRequestDto request = createSignInRequestWithEmail(invalidValue);
+
+        // when
+        Set<ConstraintViolation<SignInRequestDto>> violations = validator.validate(request);
+
+        // then
+        assertThat(violations).isNotEmpty();
+        assertThat(violations.stream()
+                .map(ConstraintViolation::getInvalidValue)
+                .collect(Collectors.toSet()))
+                .contains(invalidValue);
+    }
+
+    @Test
+    void invalidByEmptyEmailTest() {
         // given
         String invalidValue = null;
-        request = createMessageCreateRequest(invalidValue, null, 2L);
+        SignInRequestDto request = createSignInRequestWithEmail(invalidValue);
 
         // when
-        violations = validator.validate(request);
+        Set<ConstraintViolation<SignInRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -48,13 +66,13 @@ public class MessageCreateRequestValidationTest {
     }
 
     @Test
-    void invalidateByBlankContentTest() {
+    void invalidByBlankEmailTest() {
         // given
         String invalidValue = " ";
-        request = createMessageCreateRequest(invalidValue, null, 2L);
+        SignInRequestDto request = createSignInRequestWithEmail(invalidValue);
 
         // when
-        violations = validator.validate(request);
+        Set<ConstraintViolation<SignInRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -65,13 +83,13 @@ public class MessageCreateRequestValidationTest {
     }
 
     @Test
-    void invalidateByNotNullMemberIdTest() {
+    void invalidByEmptyPasswordTest() {
         // given
-        Long invalidValue = 1L;
-        request = createMessageCreateRequest("content", invalidValue, 2L);
+        String invalidValue = null;
+        SignInRequestDto request = createSignInRequestWithPassword(invalidValue);
 
         // when
-        violations = validator.validate(request);
+        Set<ConstraintViolation<SignInRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();
@@ -82,30 +100,13 @@ public class MessageCreateRequestValidationTest {
     }
 
     @Test
-    void invalidateByNullReceiverIdTest() {
+    void invalidByBlankPasswordTest() {
         // given
-        Long invalidValue = null;
-        request = createMessageCreateRequest("content", null, invalidValue);
+        String invalidValue = " ";
+        SignInRequestDto request = createSignInRequestWithPassword(invalidValue);
 
         // when
-        violations = validator.validate(request);
-
-        // then
-        assertThat(violations).isNotEmpty();
-        assertThat(violations.stream()
-                .map(ConstraintViolation::getInvalidValue)
-                .collect(Collectors.toSet()))
-                .contains(invalidValue);
-    }
-
-    @Test
-    void invalidateByNegativeOrZeroReceiverIdTest() {
-        // given
-        Long invalidValue = 0L;
-        request = createMessageCreateRequest("content", 1L, invalidValue);
-
-        // when
-        violations = validator.validate(request);
+        Set<ConstraintViolation<SignInRequestDto>> violations = validator.validate(request);
 
         // then
         assertThat(violations).isNotEmpty();

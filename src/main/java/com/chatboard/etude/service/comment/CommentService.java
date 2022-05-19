@@ -1,18 +1,17 @@
 package com.chatboard.etude.service.comment;
 
-import com.chatboard.etude.dto.comment.CommentCreateRequest;
+import com.chatboard.etude.dto.comment.CommentCreateRequestDto;
 import com.chatboard.etude.dto.comment.CommentDto;
-import com.chatboard.etude.dto.comment.CommentReadCondition;
+import com.chatboard.etude.dto.comment.CommentReadConditionDto;
 import com.chatboard.etude.entity.comment.Comment;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.exception.CommentNotFoundException;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.PostNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CommentNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.PostNotFoundException;
 import com.chatboard.etude.repository.comment.CommentRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +23,6 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 @Slf4j
 public class CommentService {
 
@@ -33,7 +31,17 @@ public class CommentService {
     private final PostRepository postRepository;
     private final ApplicationEventPublisher publisher;
 
-    public List<CommentDto> readAllComments(CommentReadCondition condition) {
+    public CommentService(CommentRepository commentRepository,
+                          MemberRepository memberRepository,
+                          PostRepository postRepository,
+                          ApplicationEventPublisher publisher) {
+        this.commentRepository = commentRepository;
+        this.memberRepository = memberRepository;
+        this.postRepository = postRepository;
+        this.publisher = publisher;
+    }
+
+    public List<CommentDto> readAllComments(CommentReadConditionDto condition) {
         return CommentDto.toDtoList(
                 commentRepository.findAllWithMemberAndParentByPostIdOrderByParentIdAscNullsFirstCommentIdAsc(
                         condition.getPostId()
@@ -42,7 +50,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void createComment(CommentCreateRequest request) {
+    public void createComment(CommentCreateRequestDto request) {
 
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(MemberNotFoundException::new);
@@ -63,14 +71,22 @@ public class CommentService {
     }
 
     @Transactional
-    @PreAuthorize("@commentGuard.check(#id)")
-    public void deleteComment(Long id) {
+    @PreAuthorize("@commentGuard.check(#commentId)")
+    public void deleteComment(Long commentId) {
 
-        Comment comment = commentRepository.findWithParentById(id)
+        Comment comment = commentRepository.findWithParentById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
         comment.findDeletableComment()
                 .ifPresentOrElse(commentRepository::delete, comment::delete);
     }
 
+    @Transactional
+    @PreAuthorize("@commentGuard.check(#commentId)")
+    public void updateComment(Long commentId) {
+
+        Comment comment = commentRepository.findWithParentById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
+
+    }
 }

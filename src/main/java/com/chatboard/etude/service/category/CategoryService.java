@@ -1,22 +1,24 @@
 package com.chatboard.etude.service.category;
 
-import com.chatboard.etude.dto.category.CategoryCreateRequest;
+import com.chatboard.etude.dto.category.CategoryCreateRequestDto;
 import com.chatboard.etude.dto.category.CategoryDto;
 import com.chatboard.etude.entity.category.Category;
-import com.chatboard.etude.exception.CategoryNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CategoryNotFoundException;
 import com.chatboard.etude.repository.category.CategoryRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     public List<CategoryDto> readAllCategory() {
         List<Category> categories = categoryRepository.findAllOrderByParentIdAscNullsFirstCateGoryIdAsc();
@@ -24,7 +26,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void createCategory(CategoryCreateRequest request) {
+    public void createCategory(CategoryCreateRequestDto request) {
 
         // Optional for when it is a root category :
         Category parent = Optional.ofNullable(request.getParentId())

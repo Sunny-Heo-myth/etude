@@ -2,7 +2,7 @@ package com.chatboard.etude.repository.role;
 
 import com.chatboard.etude.config.QuerydslConfig;
 import com.chatboard.etude.entity.member.Role;
-import com.chatboard.etude.exception.RoleNotFoundException;
+import com.chatboard.etude.exception.notFoundException.RoleNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

@@ -2,9 +2,9 @@ package com.chatboard.etude.controller.member;
 
 import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.init.TestInitDB;
-import com.chatboard.etude.dto.sign.SignInResponse;
+import com.chatboard.etude.dto.sign.SignInResponseDto;
 import com.chatboard.etude.entity.member.Member;
-import com.chatboard.etude.exception.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
 import com.chatboard.etude.service.sign.SignService;
@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -86,7 +85,7 @@ public class MemberRestControllerIntegrationTest {
         // given
         Member member = memberRepository.findByEmail(testInitDB.getMember1Email())
                 .orElseThrow(MemberNotFoundException::new);
-        SignInResponse response = signService.signIn(
+        SignInResponseDto response = signService.signIn(
                 createSignInRequest(testInitDB.getMember1Email(), testInitDB.getPassword()));
 
         // when, then
@@ -101,7 +100,7 @@ public class MemberRestControllerIntegrationTest {
         // given
         Member member = memberRepository.findByEmail(testInitDB.getMember1Email())
                 .orElseThrow(MemberNotFoundException::new);
-        SignInResponse adminResponse = signService.signIn(
+        SignInResponseDto adminResponse = signService.signIn(
                 createSignInRequest(testInitDB.getAdminEmail(), testInitDB.getPassword()));
 
         // when, then
@@ -129,7 +128,7 @@ public class MemberRestControllerIntegrationTest {
         Member member = memberRepository.findByEmail(testInitDB.getMember1Email())
                 .orElseThrow(MemberNotFoundException::new);
 
-        SignInResponse attackerResponse = signService.signIn(
+        SignInResponseDto attackerResponse = signService.signIn(
                 createSignInRequest(testInitDB.getMember2Email(), testInitDB.getPassword()));
 
         // when, then
@@ -144,7 +143,7 @@ public class MemberRestControllerIntegrationTest {
         // given
         Member member = memberRepository.findByEmail(testInitDB.getMember1Email())
                 .orElseThrow(MemberNotFoundException::new);
-        SignInResponse response = signService.signIn(
+        SignInResponseDto response = signService.signIn(
                 createSignInRequest(testInitDB.getMember1Email(), testInitDB.getPassword()));
 
         // when, then

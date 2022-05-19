@@ -1,19 +1,21 @@
 package com.chatboard.etude.service.sign;
 
 import com.chatboard.etude.config.token.TokenHelper;
-import com.chatboard.etude.dto.sign.RefreshTokenResponse;
-import com.chatboard.etude.dto.sign.SignInRequest;
-import com.chatboard.etude.dto.sign.SignInResponse;
-import com.chatboard.etude.dto.sign.SignUpRequest;
+import com.chatboard.etude.dto.sign.RefreshTokenResponseDto;
+import com.chatboard.etude.dto.sign.SignInRequestDto;
+import com.chatboard.etude.dto.sign.SignInResponseDto;
+import com.chatboard.etude.dto.sign.SignUpRequestDto;
 import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.MemberRole;
 import com.chatboard.etude.entity.member.Role;
 import com.chatboard.etude.entity.member.RoleType;
 import com.chatboard.etude.exception.*;
+import com.chatboard.etude.exception.notFoundException.RoleNotFoundException;
+import com.chatboard.etude.exception.validationException.MemberEmailAlreadyExistsException;
+import com.chatboard.etude.exception.validationException.MemberNicknameAlreadyExistsException;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.role.RoleRepository;
 import io.swagger.annotations.Api;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +25,6 @@ import java.util.stream.Collectors;
 
 @Api(value = "Sign controller", tags = "Sign")
 @Service
-@RequiredArgsConstructor
 public class SignService {
 
     private final MemberRepository memberRepository;
@@ -32,10 +33,20 @@ public class SignService {
     private final TokenHelper accessTokenHelper;
     private final TokenHelper refreshTokenHelper;
 
-
+    public SignService(MemberRepository memberRepository,
+                       RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder,
+                       TokenHelper accessTokenHelper,
+                       TokenHelper refreshTokenHelper) {
+        this.memberRepository = memberRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.accessTokenHelper = accessTokenHelper;
+        this.refreshTokenHelper = refreshTokenHelper;
+    }
 
     @Transactional
-    public void signUp(SignUpRequest request) {
+    public void signUp(SignUpRequestDto request) {
 
         validateSignUpInfo(request);
 
@@ -52,7 +63,7 @@ public class SignService {
     }
 
     @Transactional(readOnly = true)
-    public SignInResponse signIn(SignInRequest request) {
+    public SignInResponseDto signIn(SignInRequestDto request) {
 
         // find in DB FIRST before authenticate :
         // after member deletion,
@@ -71,22 +82,22 @@ public class SignService {
         String accessToken = accessTokenHelper.createToken(privateClaims);
         String refreshToken = refreshTokenHelper.createToken(privateClaims);
 
-        return new SignInResponse(accessToken, refreshToken);
+        return new SignInResponseDto(accessToken, refreshToken);
     }
 
-    public RefreshTokenResponse refreshToken(String refreshToken) {
+    public RefreshTokenResponseDto refreshToken(String refreshToken) {
 
         TokenHelper.PrivateClaims privateClaims = refreshTokenHelper.parse(refreshToken)
                 .orElseThrow(RefreshTokenFailureException::new);
 
         String accessToken = accessTokenHelper.createToken(privateClaims);
-        return new RefreshTokenResponse(accessToken);
+        return new RefreshTokenResponseDto(accessToken);
     }
 
 
 
     // checking uniqueness of email and nickname when sign-up
-    private void validateSignUpInfo(SignUpRequest request) {
+    private void validateSignUpInfo(SignUpRequestDto request) {
 
         if (memberRepository.existsByEmail(request.getEmail())) {
             throw new MemberEmailAlreadyExistsException(request.getEmail());
@@ -97,7 +108,7 @@ public class SignService {
     }
 
     // check request raw password and encoded db password when sign-in
-    private void validatePassword(SignInRequest request, Member member) {
+    private void validatePassword(SignInRequestDto request, Member member) {
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new LoginFailureException();
         }

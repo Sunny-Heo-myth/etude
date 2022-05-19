@@ -1,7 +1,7 @@
 package com.chatboard.etude.controller.member;
 
 import com.chatboard.etude.advice.ExceptionAdvice;
-import com.chatboard.etude.exception.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
 import com.chatboard.etude.handler.FailureResponseHandler;
 import com.chatboard.etude.service.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;

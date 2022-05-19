@@ -2,9 +2,9 @@ package com.chatboard.etude.service.comment;
 
 import com.chatboard.etude.dto.comment.CommentDto;
 import com.chatboard.etude.event.comment.CommentCreatedEvent;
-import com.chatboard.etude.exception.CommentNotFoundException;
-import com.chatboard.etude.exception.MemberNotFoundException;
-import com.chatboard.etude.exception.PostNotFoundException;
+import com.chatboard.etude.exception.notFoundException.CommentNotFoundException;
+import com.chatboard.etude.exception.notFoundException.MemberNotFoundException;
+import com.chatboard.etude.exception.notFoundException.PostNotFoundException;
 import com.chatboard.etude.repository.comment.CommentRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;

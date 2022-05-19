@@ -1,7 +1,7 @@
 package com.chatboard.etude.controller.message;
 
-import com.chatboard.etude.dto.message.MessageCreateRequest;
-import com.chatboard.etude.dto.message.MessageReadCondition;
+import com.chatboard.etude.dto.message.MessageCreateRequestDto;
+import com.chatboard.etude.dto.message.MessageReadConditionDto;
 import com.chatboard.etude.service.message.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +52,7 @@ public class MessageRestControllerTest {
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk());
 
-        verify(messageService).readAllMessageBySender(any(MessageReadCondition.class));
+        verify(messageService).readAllMessageBySender(any(MessageReadConditionDto.class));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class MessageRestControllerTest {
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk());
 
-        verify(messageService).readAllMessageByReceiver(any(MessageReadCondition.class));
+        verify(messageService).readAllMessageByReceiver(any(MessageReadConditionDto.class));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class MessageRestControllerTest {
     @Test
     void createTest() throws Exception {
         // given
-        MessageCreateRequest req = createMessageCreateRequest("content", null, 2L);
+        MessageCreateRequestDto req = createMessageCreateRequest("content", null, 2L);
 
         // when, then
         mockMvc.perform(

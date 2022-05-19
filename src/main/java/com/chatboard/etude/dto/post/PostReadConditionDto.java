@@ -48,8 +48,4 @@ public class PostReadConditionDto {
                 .collect(Collectors.toList());
     }
 
-//    public Pageable makePageable(int direction, String... property) {
-//        Sort.Direction dir = direction == 0 ? Sort.Direction.DESC : Sort.Direction.ASC;
-//        return PageRequest.of(this.page - 1, this.size, dir, property);
-//    }
 }

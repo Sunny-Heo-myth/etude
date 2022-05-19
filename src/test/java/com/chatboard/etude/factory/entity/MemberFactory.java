@@ -4,7 +4,6 @@ import com.chatboard.etude.entity.member.Member;
 import com.chatboard.etude.entity.member.Role;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;

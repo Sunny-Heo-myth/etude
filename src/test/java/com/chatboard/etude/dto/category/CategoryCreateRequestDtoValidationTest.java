@@ -13,17 +13,17 @@ import static com.chatboard.etude.factory.dto.CategoryCreateRequestFactory.creat
 import static com.chatboard.etude.factory.dto.CategoryCreateRequestFactory.createCategoryCreateRequestWithName;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CategoryCreateRequestValidationTest {
+public class CategoryCreateRequestDtoValidationTest {
 
     Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     void validateTest() {
         // given
-        CategoryCreateRequest request = createCategoryCreateRequest();
+        CategoryCreateRequestDto request = createCategoryCreateRequest();
 
         // when
-        Set<ConstraintViolation<CategoryCreateRequest>> validate = validator.validate(request);
+        Set<ConstraintViolation<CategoryCreateRequestDto>> validate = validator.validate(request);
 
         // then
         assertThat(validate).isEmpty();
@@ -33,10 +33,10 @@ public class CategoryCreateRequestValidationTest {
     void invalidateByEmptyNameTest() {
         // given
         String invalidValue = null;
-        CategoryCreateRequest request = createCategoryCreateRequestWithName(invalidValue);
+        CategoryCreateRequestDto request = createCategoryCreateRequestWithName(invalidValue);
 
         // when
-        Set<ConstraintViolation<CategoryCreateRequest>> validate = validator.validate(request);
+        Set<ConstraintViolation<CategoryCreateRequestDto>> validate = validator.validate(request);
 
         // then
         assertThat(validate).isNotEmpty();
@@ -44,17 +44,17 @@ public class CategoryCreateRequestValidationTest {
                 .map(ConstraintViolation::getInvalidValue)
                 .collect(Collectors.toSet())
                 .contains(invalidValue)
-        );
+        ).isTrue();
     }
 
     @Test
     void invalidateByBlankNameTest() {
         // given
         String invalidValue = " ";
-        CategoryCreateRequest req = createCategoryCreateRequestWithName(invalidValue);
+        CategoryCreateRequestDto req = createCategoryCreateRequestWithName(invalidValue);
 
         // when
-        Set<ConstraintViolation<CategoryCreateRequest>> validate = validator.validate(req);
+        Set<ConstraintViolation<CategoryCreateRequestDto>> validate = validator.validate(req);
 
         // then
         assertThat(validate).isNotEmpty();
@@ -68,10 +68,10 @@ public class CategoryCreateRequestValidationTest {
     void invalidateByShortNameTest() {
         // given
         String invalidValue = "c";
-        CategoryCreateRequest req = createCategoryCreateRequestWithName(invalidValue);
+        CategoryCreateRequestDto req = createCategoryCreateRequestWithName(invalidValue);
 
         // when
-        Set<ConstraintViolation<CategoryCreateRequest>> validate = validator.validate(req);
+        Set<ConstraintViolation<CategoryCreateRequestDto>> validate = validator.validate(req);
 
         // then
         assertThat(validate).isNotEmpty();
@@ -86,10 +86,10 @@ public class CategoryCreateRequestValidationTest {
         // given
         String invalidValue = "c".repeat(50);
 
-        CategoryCreateRequest req = createCategoryCreateRequestWithName(invalidValue);
+        CategoryCreateRequestDto req = createCategoryCreateRequestWithName(invalidValue);
 
         // when
-        Set<ConstraintViolation<CategoryCreateRequest>> validate = validator.validate(req);
+        Set<ConstraintViolation<CategoryCreateRequestDto>> validate = validator.validate(req);
 
         // then
         assertThat(validate).isNotEmpty();

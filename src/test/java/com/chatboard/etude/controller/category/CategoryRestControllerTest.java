@@ -1,6 +1,6 @@
 package com.chatboard.etude.controller.category;
 
-import com.chatboard.etude.dto.category.CategoryCreateRequest;
+import com.chatboard.etude.dto.category.CategoryCreateRequestDto;
 import com.chatboard.etude.service.category.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +46,7 @@ public class CategoryRestControllerTest {
     @Test
     void createTest() throws Exception {
         // given
-        CategoryCreateRequest request = createCategoryCreateRequest();
+        CategoryCreateRequestDto request = createCategoryCreateRequest();
 
         // when, then
         mockMvc.perform(
