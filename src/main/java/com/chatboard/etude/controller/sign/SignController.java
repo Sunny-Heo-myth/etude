@@ -22,17 +22,29 @@ public class SignController {
         this.signService = signService;
     }
 
-    @PostMapping("/sign-up")
+    @GetMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ModelAndView signUp(@Valid @RequestBody SignUpRequestDto request) {
-        signService.signUp(request);
+    public ModelAndView signUpPage() {
         return new ModelAndView("/sign/signUpPage");
     }
 
-    @PostMapping("/sign-in")
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ModelAndView signUp(@Valid @RequestBody SignUpRequestDto request) {
+        signService.signUp(request);
+        return new ModelAndView("/common/index");
+    }
+
+    @GetMapping("/sign")
     @ResponseStatus(HttpStatus.OK)
-    public ModelAndView signIn(@Valid @RequestBody SignInRequestDto request) {
-        ModelAndView modelAndView = new ModelAndView("/sign/signInPage");
+    public ModelAndView signInPage() {
+        return new ModelAndView("/sign/signInPage");
+    }
+
+    @PostMapping("/sign")
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView signIn(@RequestBody @Valid SignInRequestDto request) {
+        ModelAndView modelAndView = new ModelAndView("/common/index");
         modelAndView.addObject(signService.signIn(request));
         return modelAndView;
     }

@@ -12,7 +12,6 @@ import com.chatboard.etude.exception.notFoundException.PostNotFoundException;
 import com.chatboard.etude.repository.comment.CommentRepository;
 import com.chatboard.etude.repository.member.MemberRepository;
 import com.chatboard.etude.repository.post.PostRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-@Slf4j
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -41,9 +39,17 @@ public class CommentService {
         this.publisher = publisher;
     }
 
+    public List<CommentDto> readAllCommentsHierarchical(CommentReadConditionDto condition) {
+        return CommentDto.toHierarchicalDtoList(
+                commentRepository.findAllCommentWithMemberAndParentByPostId(
+                        condition.getPostId()
+                )
+        );
+    }
+
     public List<CommentDto> readAllComments(CommentReadConditionDto condition) {
         return CommentDto.toDtoList(
-                commentRepository.findAllWithMemberAndParentByPostIdOrderByParentIdAscNullsFirstCommentIdAsc(
+                commentRepository.findAllCommentWithMemberByPostId(
                         condition.getPostId()
                 )
         );

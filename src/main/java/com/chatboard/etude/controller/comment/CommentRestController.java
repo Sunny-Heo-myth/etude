@@ -25,16 +25,6 @@ public class CommentRestController {
     }
 
     @ApiOperation(
-            value = "comment list lookup",
-            notes = "Lookup comment list."
-    )
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Response readAll(@Valid CommentReadConditionDto condition) {
-        return Response.success(commentService.readAllComments(condition));
-    }
-
-    @ApiOperation(
             value = "create comment",
             notes = "Create comment."
     )
@@ -44,6 +34,22 @@ public class CommentRestController {
     public Response create(@Valid @RequestBody CommentCreateRequestDto request) {
         commentService.createComment(request);
         return Response.success();
+    }
+
+    @ApiOperation(
+            value = "comment list lookup",
+            notes = "Lookup comment list."
+    )
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAllHierarchical(@Valid CommentReadConditionDto condition) {
+        return Response.success(commentService.readAllCommentsHierarchical(condition));
+    }
+
+    @GetMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response readAll(@PathVariable Long postId) {
+        return Response.success(commentService.readAllComments(new CommentReadConditionDto(postId)));
     }
 
     @ApiOperation(

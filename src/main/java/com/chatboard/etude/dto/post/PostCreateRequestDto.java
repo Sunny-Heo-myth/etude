@@ -43,7 +43,7 @@ public class PostCreateRequestDto {
     private Long price;
 
     @ApiModelProperty(hidden = true)
-    @Null   // use token to get memberId from SecurityContextHolder instead by AssignMemberId
+    @Null
     private Long memberId;
 
     @ApiModelProperty(value = "category id",

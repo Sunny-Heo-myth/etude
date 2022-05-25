@@ -25,6 +25,18 @@ public class MessageRestController {
     }
 
     @ApiOperation(
+            value = "create message",
+            notes = "Create message."
+    )
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @AssignMemberId
+    public Response create(@Valid @RequestBody MessageCreateRequestDto request) {
+        messageService.createMessage(request);
+        return Response.success();
+    }
+
+    @ApiOperation(
             value = "Read messages from the sender",
             notes = "Read messages from the sender."
     )
@@ -54,18 +66,6 @@ public class MessageRestController {
     @ResponseStatus(HttpStatus.OK)
     public Response read(@ApiParam(value = "message id", required = true) @PathVariable Long messageId) {
         return Response.success(messageService.readAMessage(messageId));
-    }
-
-    @ApiOperation(
-            value = "create message",
-            notes = "Create message."
-    )
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @AssignMemberId
-    public Response create(@Valid @RequestBody MessageCreateRequestDto request) {
-        messageService.createMessage(request);
-        return Response.success();
     }
 
     @ApiOperation(

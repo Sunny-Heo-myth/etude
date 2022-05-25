@@ -250,9 +250,7 @@ public class CommentRepositoryTest {
 
         // when
         List<Comment> result = commentRepository
-                .findAllWithMemberAndParentByPostIdOrderByParentIdAscNullsFirstCommentIdAsc(
-                post.getId()
-                );
+                .findAllCommentWithMemberAndParentByPostId(post.getId());
 
         // then
         assertThat(result.size()).isEqualTo(8);
@@ -264,5 +262,26 @@ public class CommentRepositoryTest {
         assertThat(result.get(5).getId()).isEqualTo(c5.getId());
         assertThat(result.get(6).getId()).isEqualTo(c7.getId());
         assertThat(result.get(7).getId()).isEqualTo(c6.getId());
+    }
+
+    @Test
+    void findAllCommentWithMemberByPostIdTest() {
+        // given
+        Comment c1 = commentRepository.save(createComment(member, post, null));
+        Comment c2 = commentRepository.save(createComment(member, post, c1));
+        Comment c3 = commentRepository.save(createComment(member, post, c1));
+        Comment c4 = commentRepository.save(createComment(member, post, c2));
+        Comment c5 = commentRepository.save(createComment(member, post, c2));
+        Comment c6 = commentRepository.save(createComment(member, post, c4));
+        Comment c7 = commentRepository.save(createComment(member, post, c3));
+        Comment c8 = commentRepository.save(createComment(member, post, null));
+        clear();
+
+        // when
+        List<Comment> result = commentRepository
+                .findAllCommentWithMemberByPostId(post.getId());
+
+        // then
+        assertThat(result.size()).isEqualTo(8);
     }
 }

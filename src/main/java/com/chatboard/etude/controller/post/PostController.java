@@ -1,22 +1,23 @@
 package com.chatboard.etude.controller.post;
 
 import com.chatboard.etude.aop.AssignMemberId;
-import com.chatboard.etude.dto.post.PostCreateRequestDto;
-import com.chatboard.etude.dto.post.PostReadConditionDto;
-import com.chatboard.etude.dto.post.PostUpdateRequestDto;
+import com.chatboard.etude.dto.post.*;
+import com.chatboard.etude.dto.response.Response;
 import com.chatboard.etude.service.post.PostService;
-import com.chatboard.etude.dto.post.PostPageDto;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/posts")
+@Slf4j
 public class PostController {
     private final PostService postService;
 
@@ -24,41 +25,102 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/{postId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ModelAndView readPost(
-            @ApiParam(value = "post id", required = true) @PathVariable Long postId) {
-        ModelAndView modelAndView = new ModelAndView("/post/postReadPage");
-        modelAndView.addObject("post", postService.readPost(postId));
-        return modelAndView;
-    }
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ModelAndView readAllPost(@Valid PostReadConditionDto condition) {
-        ModelAndView modelAndView = new ModelAndView("/post/postListPage");
-        PostPageDto postPageDto = postService.readAllPostWithPage(condition);
-        modelAndView.addObject("pageMakerDto", postPageDto);
-        modelAndView.addObject("postSimpleDtos", postPageDto.getResult().getContent());
-        return modelAndView;
+    @AssignMemberId
+    public ModelAndView getPostCreatePage() {
+        return new ModelAndView("/post/postCreatePage");
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @AssignMemberId
-    public ModelAndView createPost(@Valid @RequestBody PostCreateRequestDto request) {
-        ModelAndView modelAndView = new ModelAndView("/post/postCreatePage");
-        modelAndView.addObject(postService.createPost(request));
+    public String createPost(
+            @Valid @ModelAttribute("request") PostCreateRequestDto request,
+            RedirectAttributes redirectAttributes) {
+
+        postService.createPost(request);
+
+        redirectAttributes.addFlashAttribute("msg", "success");
+
+        return "redirect:/list";
+    }
+
+    @GetMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView readPost(
+            @ApiParam(value = "post id", required = true) @PathVariable Long postId,
+            @ModelAttribute("readCondition") PostReadConditionDto conditionDto) {
+
+        ModelAndView modelAndView = new ModelAndView("/post/postReadPage");
+        modelAndView.addObject("readCondition", conditionDto);
+        modelAndView.addObject("postVO", postService.readPost(postId));
+
+        return modelAndView;
+    }
+
+    @GetMapping("/list")
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView readAllPost(@Valid PostReadConditionDto condition) {
+
+        PostPageDto postPageDto = postService.readAllPostWithPage(condition);
+
+        ModelAndView modelAndView = new ModelAndView("/post/postListPage");
+        modelAndView.addObject("pageMakerDto", postPageDto);
+        modelAndView.addObject("postSimpleDtos", postPageDto.getResult().getContent());
+
+        return modelAndView;
+    }
+
+    @GetMapping("/{postId}/update")
+    @ResponseStatus(HttpStatus.OK)
+    public ModelAndView GetPostUpdatePage(
+            @ApiParam(value = "post id", required = true) @PathVariable Long postId,
+            @ModelAttribute("readCondition") PostReadConditionDto conditionDto) {
+
+        ModelAndView modelAndView = new ModelAndView("/post/postUpdatePage");
+        modelAndView.addObject("readCondition", conditionDto);
+        modelAndView.addObject("postVO", postService.readPost(postId));
+
         return modelAndView;
     }
 
     @PutMapping("/{postId}")
     @ResponseStatus(HttpStatus.OK)
-    public ModelAndView updatePost(
+    public String updatePost(
             @ApiParam(value = "post id", required = true) @PathVariable Long postId,
-            @Valid @RequestBody PostUpdateRequestDto request) {
-        ModelAndView modelAndView = new ModelAndView("/post/postUpdatePage");
-        modelAndView.addObject(postService.updatePost(postId, request));
-        return modelAndView;
+            @ModelAttribute("readCondition") PostReadConditionDto conditionDto,
+            @Valid @ModelAttribute PostUpdateRequestDto request,
+            RedirectAttributes redirectAttributes) {
+
+        postService.updatePost(postId, request);
+
+        redirectAttributes.addFlashAttribute("msg", "success");
+
+        redirectAttributes.addAttribute("id", postId);
+        redirectAttributes.addAttribute("page", conditionDto.getPage());
+        redirectAttributes.addAttribute("size", conditionDto.getSize());
+        redirectAttributes.addAttribute("categoryId", conditionDto.getCategoryId());
+        redirectAttributes.addAttribute("memberId", conditionDto.getMemberId());
+
+        return "redirect:/posts/" + postId;
+    }
+
+    @DeleteMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public String deletePost(
+            @ApiParam(value = "post id", required = true) @PathVariable Long postId,
+            @ModelAttribute("readCondition") PostReadConditionDto conditionDto,
+            RedirectAttributes redirectAttributes) {
+
+        postService.deletePost(postId);
+
+        redirectAttributes.addFlashAttribute("msg", "success");
+        redirectAttributes.addAttribute("page", conditionDto.getPage());
+        redirectAttributes.addAttribute("size", conditionDto.getSize());
+        redirectAttributes.addAttribute("categoryId", conditionDto.getCategoryId());
+        redirectAttributes.addAttribute("memberId", conditionDto.getMemberId());
+
+        return "redirect:/list";
     }
 }

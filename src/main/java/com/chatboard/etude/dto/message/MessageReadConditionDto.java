@@ -23,7 +23,7 @@ public class MessageReadConditionDto {
             notes = "Enter the id of last found message.",
             required = true,
             example = "7")
-    private Long LastMessageId = Long.MAX_VALUE;
+    private Long lastMessageId = Long.MAX_VALUE;
 
     @ApiModelProperty(
             value = "page size",

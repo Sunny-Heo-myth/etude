@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
@@ -29,8 +30,7 @@ public class CommentDto {
     private LocalDateTime createdAt;
     private List<CommentDto> children;
 
-    // todo raw type
-    public static List<CommentDto> toDtoList(List<Comment> comments) {
+    public static List<CommentDto> toHierarchicalDtoList(List<Comment> comments) {
         NestedConvertHelper helper = NestedConvertHelper.newInstance(
                 comments,
                 comment -> new CommentDto(
@@ -47,4 +47,17 @@ public class CommentDto {
         return helper.convert();
     }
 
+    public static List<CommentDto> toDtoList(List<Comment> comments) {
+        return comments.stream()
+                .map(comment -> CommentDto.of(
+                        comment.getId(),
+                        comment.isDeleted() ? null : comment.getContent(),
+                        comment.isDeleted() ? null : MemberDto.toDto(comment.getMember()),
+                        comment.getCreatedAt()
+                )).collect(Collectors.toList());
+    }
+
+    private static CommentDto of(Long id, String content, MemberDto memberDto, LocalDateTime createdAt) {
+        return new CommentDto(id, content, memberDto, createdAt, null);
+    }
 }

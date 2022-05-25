@@ -23,9 +23,9 @@ public class AssignMemberIdAspect {
         // get argument type of this joinPoint (ex : PostCreateRequest)
         Arrays.stream(joinPoint.getArgs())
                 // if there is method called "setMemberId" for each argument
-                .forEach(arg -> getMethod(arg.getClass())
+                .forEach(request -> getMethod(request.getClass())
                         // invokeMethod with argument extracted from SecurityContextHolder
-                        .ifPresent(setMemberId -> invokeMethod(arg, setMemberId, AuthUtils.extractMemberId())));
+                        .ifPresent(setMemberId -> invokeMethod(request, setMemberId, AuthUtils.extractMemberId())));
 
     }
 

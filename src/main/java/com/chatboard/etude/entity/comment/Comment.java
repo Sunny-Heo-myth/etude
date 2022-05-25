@@ -21,7 +21,6 @@ import java.util.Optional;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Slf4j
 public class Comment extends EntityDate {
 
     @Id

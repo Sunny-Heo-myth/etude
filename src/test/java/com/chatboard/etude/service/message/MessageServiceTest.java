@@ -50,7 +50,7 @@ public class MessageServiceTest {
     void readAllBySenderTest() {
         // given
         condition = createMessageReadCondition();
-        given(messageRepository.findAllBySenderIdOrderByMessageIdDesc(
+        given(messageRepository.findAllMessageBySenderIdOrderByMessageIdDesc(
                 anyLong(), anyLong(), any(Pageable.class)))
                 .willReturn(new SliceImpl<>(List.of(), Pageable.ofSize(2), false));
 
@@ -67,7 +67,7 @@ public class MessageServiceTest {
     void readAllByReceiverTest() {
         // given
         condition = createMessageReadCondition();
-        given(messageRepository.findAllByReceiverIdOrderByMessageIdDesc(
+        given(messageRepository.findAllMessageByReceiverIdOrderByMessageIdDesc(
                 anyLong(), anyLong(), any(Pageable.class)))
                 .willReturn(new SliceImpl<>(List.of(), Pageable.ofSize(2), false));
 
@@ -85,7 +85,7 @@ public class MessageServiceTest {
         // given
         Long id = 1L;
         Message message = createMessage();
-        given(messageRepository.findWithSenderAndReceiverById(id)).willReturn(Optional.of(message));
+        given(messageRepository.findMessageWithSenderAndReceiverById(id)).willReturn(Optional.of(message));
 
         // when
         MessageDto result = messageService.readAMessage(id);
@@ -98,7 +98,7 @@ public class MessageServiceTest {
     void readExceptionByMessageNotFoundTest() {
         // given
         Long id = 1L;
-        given(messageRepository.findWithSenderAndReceiverById(id)).willReturn(Optional.empty());
+        given(messageRepository.findMessageWithSenderAndReceiverById(id)).willReturn(Optional.empty());
 
         // when, then
         assertThatThrownBy(() -> messageService.readAMessage(id))

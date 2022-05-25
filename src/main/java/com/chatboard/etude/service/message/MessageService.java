@@ -29,26 +29,6 @@ public class MessageService {
         this.memberRepository = memberRepository;
     }
 
-    public MessageListDto readAllMessageBySender(MessageReadConditionDto condition) {
-        return MessageListDto.toDto(messageRepository.findAllBySenderIdOrderByMessageIdDesc(
-                condition.getMemberId(), condition.getLastMessageId(), Pageable.ofSize(condition.getSize())
-        ));
-    }
-
-    public MessageListDto readAllMessageByReceiver(MessageReadConditionDto condition) {
-        return MessageListDto.toDto(messageRepository.findAllByReceiverIdOrderByMessageIdDesc(
-                condition.getMemberId(), condition.getLastMessageId(), Pageable.ofSize(condition.getSize())
-        ));
-    }
-
-    @PreAuthorize("@messageGuard.check(#id)")
-    public MessageDto readAMessage(Long id) {
-        return MessageDto.toDto(
-                messageRepository.findWithSenderAndReceiverById(id)
-                        .orElseThrow(MessageNotFoundException::new)
-        );
-    }
-
     @Transactional
     public void createMessage(MessageCreateRequestDto request) {
 
@@ -61,6 +41,26 @@ public class MessageService {
         Message message = new Message(request.getContent(), sender, receiver);
 
         messageRepository.save(message);
+    }
+
+    @PreAuthorize("@messageGuard.check(#id)")
+    public MessageDto readAMessage(Long id) {
+        return MessageDto.toDto(
+                messageRepository.findMessageWithSenderAndReceiverById(id)
+                        .orElseThrow(MessageNotFoundException::new)
+        );
+    }
+
+    public MessageListDto readAllMessageBySender(MessageReadConditionDto condition) {
+        return MessageListDto.toDto(messageRepository.findAllMessageBySenderIdOrderByMessageIdDesc(
+                condition.getMemberId(), condition.getLastMessageId(), Pageable.ofSize(condition.getSize())
+        ));
+    }
+
+    public MessageListDto readAllMessageByReceiver(MessageReadConditionDto condition) {
+        return MessageListDto.toDto(messageRepository.findAllMessageByReceiverIdOrderByMessageIdDesc(
+                condition.getMemberId(), condition.getLastMessageId(), Pageable.ofSize(condition.getSize())
+        ));
     }
 
     @Transactional

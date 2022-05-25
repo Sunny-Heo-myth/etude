@@ -65,6 +65,7 @@ public class PostRestControllerTest {
                 get("/api/posts")
                         .param("page", String.valueOf(condition.getPage()))
                         .param("size", String.valueOf(condition.getSize()))
+                        .param("keyWord", String.valueOf(condition.getKeyWord()))
                         .param("categoryId",
                                 String.valueOf(condition.getCategoryId().get(0)),
                                 String.valueOf(condition.getCategoryId().get(1)))
@@ -138,6 +139,7 @@ public class PostRestControllerTest {
                         })
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk());
+
         verify(postService).updatePost(anyLong(), postUpdateRequestArgumentCaptor.capture());
 
         PostUpdateRequestDto capturedRequest = postUpdateRequestArgumentCaptor.getValue();

@@ -117,7 +117,7 @@ public class CommentControllerIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
 
-        List<CommentDto> result = commentService.readAllComments(createCommentReadCondition(post.getId()));
+        List<CommentDto> result = commentService.readAllCommentsHierarchical(createCommentReadCondition(post.getId()));
         assertThat(result.size()).isEqualTo(1);
     }
 

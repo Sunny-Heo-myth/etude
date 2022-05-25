@@ -26,6 +26,18 @@ public class PostRestController {
     }
 
     @ApiOperation(
+            value = "post create",
+            notes = "Create post."
+    )
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @AssignMemberId
+    public Response create(
+            @Valid @ModelAttribute PostCreateRequestDto request) {
+        return Response.success(postService.createPost(request));
+    }
+
+    @ApiOperation(
             value = "read post",
             notes = "Read post."
     )
@@ -47,15 +59,15 @@ public class PostRestController {
     }
 
     @ApiOperation(
-            value = "post create",
-            notes = "Create post."
+            value = "update post",
+            notes = "Update post."
     )
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @AssignMemberId
-    public Response create(
-            @Valid @RequestBody PostCreateRequestDto request) {
-        return Response.success(postService.createPost(request));
+    @PutMapping("/{postId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response update(
+            @ApiParam(value = "post id", required = true) @PathVariable Long postId,
+            @Valid @ModelAttribute PostUpdateRequestDto request) {
+        return Response.success(postService.updatePost(postId, request));
     }
 
     @ApiOperation(
@@ -68,18 +80,6 @@ public class PostRestController {
             @ApiParam(value = "post id", required = true) @PathVariable Long postId) {
         postService.deletePost(postId);
         return Response.success();
-    }
-
-    @ApiOperation(
-            value = "update post",
-            notes = "Update post."
-    )
-    @PutMapping("/{postId}")
-    @ResponseStatus(HttpStatus.OK)
-    public Response update(
-            @ApiParam(value = "post id", required = true) @PathVariable Long postId,
-            @Valid @RequestBody PostUpdateRequestDto request) {
-        return Response.success(postService.updatePost(postId, request));
     }
 
 }

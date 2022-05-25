@@ -109,7 +109,7 @@ public class MessageRepositoryTest {
         clear();
 
         // when
-        Message foundMessage = messageRepository.findWithSenderAndReceiverById(message.getId())
+        Message foundMessage = messageRepository.findMessageWithSenderAndReceiverById(message.getId())
                 .orElseThrow(MessageNotFoundException::new);
 
         // then
@@ -130,13 +130,13 @@ public class MessageRepositoryTest {
         clear();
 
         // when
-        Slice<MessageSimpleDto> result1 = messageRepository.findAllBySenderIdOrderByMessageIdDesc(
+        Slice<MessageSimpleDto> result1 = messageRepository.findAllMessageBySenderIdOrderByMessageIdDesc(
                 sender.getId(), Long.MAX_VALUE, Pageable.ofSize(size));
 
         List<MessageSimpleDto> content1 = result1.getContent();
         Long lastMessageId1 = content1.get(content1.size() - 1).getId();
 
-        Slice<MessageSimpleDto> result2 = messageRepository.findAllBySenderIdOrderByMessageIdDesc(
+        Slice<MessageSimpleDto> result2 = messageRepository.findAllMessageBySenderIdOrderByMessageIdDesc(
                 sender.getId(), lastMessageId1, Pageable.ofSize(size));
         List<MessageSimpleDto> content2 = result2.getContent();
 
@@ -163,12 +163,12 @@ public class MessageRepositoryTest {
         clear();
 
         // when
-        Slice<MessageSimpleDto> result1 = messageRepository.findAllByReceiverIdOrderByMessageIdDesc(
+        Slice<MessageSimpleDto> result1 = messageRepository.findAllMessageByReceiverIdOrderByMessageIdDesc(
                 receiver.getId(), Long.MAX_VALUE, Pageable.ofSize(size));
         List<MessageSimpleDto> content1 = result1.getContent();
         Long lastMessageId1 = content1.get(content1.size() - 1).getId();
 
-        Slice<MessageSimpleDto> result2 = messageRepository.findAllByReceiverIdOrderByMessageIdDesc(
+        Slice<MessageSimpleDto> result2 = messageRepository.findAllMessageByReceiverIdOrderByMessageIdDesc(
                 receiver.getId(), lastMessageId1, Pageable.ofSize(size));
         List<MessageSimpleDto> content2 = result2.getContent();
 

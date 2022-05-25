@@ -3,6 +3,7 @@ package com.chatboard.etude.dto.post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,30 +23,46 @@ public class PostReadConditionDto {
 
     private static final int DEFAULT_SIZE = 10;
     private static final int DEFAULT_MAX_SIZE = 50;
+
     @NotNull(message = "Enter page number.")
     @PositiveOrZero(message = "Enter not non-negative page number.")
     private Integer page;
     @NotNull(message = "Enter page size.")
     @Positive(message = "Enter not positive page size.")
     private Integer size;
+
     private String keyWord;
+
     private List<Long> categoryId = new ArrayList<>();
+
     private List<Long> memberId = new ArrayList<>();
 
     public void setSize(int size) {
         this.size = size < DEFAULT_SIZE || size > DEFAULT_MAX_SIZE ? DEFAULT_SIZE : size;
     }
 
+    // parsing query string
     public void setCategoryId(String categoryId) {
-        this.categoryId = Arrays.stream(categoryId.split(","))
-                .map(Long::valueOf)
-                .collect(Collectors.toList());
+        if (StringUtils.isBlank(categoryId)) {
+            this.categoryId = Arrays.asList(1L,2L,3L,4L,5L,6L,7L,8L);
+        }
+        else {
+            this.categoryId = Arrays.stream(categoryId.split(","))
+                    .map(Long::valueOf)
+                    .collect(Collectors.toList());
+        }
     }
 
+    // parsing query string
     public void setMemberId(String memberId) {
-        this.memberId = Arrays.stream(memberId.split(","))
-                .map(Long::valueOf)
-                .collect(Collectors.toList());
+        if (StringUtils.isBlank(memberId)) {
+            this.memberId = Arrays.asList(1L,2L,3L,4L,5L,6L,7L,8L);
+        }
+        else {
+            this.memberId = Arrays.stream(memberId.split(","))
+                    .map(Long::valueOf)
+                    .collect(Collectors.toList());
+        }
     }
 
 }

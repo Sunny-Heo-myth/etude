@@ -48,13 +48,13 @@ public class CommentServiceTest {
     @Test
     void readAllTest() {
         // given
-        given(commentRepository.findAllWithMemberAndParentByPostIdOrderByParentIdAscNullsFirstCommentIdAsc(anyLong()))
+        given(commentRepository.findAllCommentWithMemberAndParentByPostId(anyLong()))
                 .willReturn(
                         List.of(createComment(null), createComment(null))
                 );
 
         // when
-        List<CommentDto> result = commentService.readAllComments(createCommentReadCondition());
+        List<CommentDto> result = commentService.readAllCommentsHierarchical(createCommentReadCondition());
 
         // then
         assertThat(result.size()).isEqualTo(2);
@@ -63,13 +63,13 @@ public class CommentServiceTest {
     @Test
     void readAllDeletedCommentTest() {
         // given
-        given(commentRepository.findAllWithMemberAndParentByPostIdOrderByParentIdAscNullsFirstCommentIdAsc(anyLong()))
+        given(commentRepository.findAllCommentWithMemberAndParentByPostId(anyLong()))
                 .willReturn(
                         List.of(createDeletedComment(null), createDeletedComment(null))
                 );
 
         // when
-        List<CommentDto> result = commentService.readAllComments(createCommentReadCondition());
+        List<CommentDto> result = commentService.readAllCommentsHierarchical(createCommentReadCondition());
 
         // then
         assertThat(result.size()).isEqualTo(2);

@@ -1,6 +1,5 @@
 package com.chatboard.etude.config.security;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,11 +14,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 // filters before spring context
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService userDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     public void configure(WebSecurity webSecurity) {
@@ -70,8 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.DELETE, "/api/messages/receiver/{id}").authenticated()
                     .antMatchers(HttpMethod.GET, "/api/**").permitAll()
 
-
-                    .antMatchers(HttpMethod.POST, "/sign-in", "/sign-up", "/refresh-token").permitAll()
+                    .antMatchers(HttpMethod.POST, "/sign", "/register", "/refresh-token").permitAll()
                     .antMatchers(HttpMethod.DELETE, "/members/{id}/**").authenticated()
                     .antMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN")
                     .antMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN")

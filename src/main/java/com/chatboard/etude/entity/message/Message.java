@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Message extends EntityDate {
 
-    @Id // Message id always saved as created order.
+    @Id // Message id will be created with ascending order.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -37,8 +37,6 @@ public class Message extends EntityDate {
 
     @Column(nullable = false)
     private boolean deletedByReceiver;
-
-
 
     public Message(String content, Member sender, Member receiver) {
         this.content = content;
