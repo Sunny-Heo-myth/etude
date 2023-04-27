@@ -1,13 +1,13 @@
 package learning.QueryDSLTest;
 
-import com.chatboard.etude.dto.post.PostReadConditionDto;
-import com.chatboard.etude.dto.post.PostSimpleDto;
-import com.chatboard.etude.entity.post.Post;
-import com.chatboard.etude.repository.post.CustomPostRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.alan.etude.dto.post.PostReadConditionDto;
+import org.alan.etude.dto.post.PostSimpleDto;
+import org.alan.etude.entity.post.Post;
+import org.alan.etude.repository.post.CustomPostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +20,6 @@ import java.util.Objects;
 import java.util.function.Function;
 
 import static com.chatboard.etude.entity.post.QPost.post;
-import static com.querydsl.core.types.Projections.constructor;
 
 @Transactional(readOnly = true)
 public class CustomPostRepositoryImpl extends QuerydslRepositorySupport implements CustomPostRepository {

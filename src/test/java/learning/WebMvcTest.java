@@ -1,6 +1,6 @@
 package learning;
 
-import com.chatboard.etude.dto.response.Response;
+import org.alan.etude.dto.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
