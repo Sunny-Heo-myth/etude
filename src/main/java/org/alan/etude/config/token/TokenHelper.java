@@ -32,9 +32,9 @@ public class TokenHelper {
     public String createToken(PrivateClaims privateClaims) {
         return jwtHandler.createToken(
                 key,
-                Map.of(MEMBER_ID, privateClaims.getMemberId(),
+                Map.of(MEMBER_ID, privateClaims.memberId(),
                         // multiple roles will be saved as a single string.
-                        ROLE_TYPES, String.join(SEPARATION, privateClaims.getRoleTypes())
+                        ROLE_TYPES, String.join(SEPARATION, privateClaims.roleTypes())
                 ),
                 maxAgeSeconds);
     }
@@ -52,16 +52,9 @@ public class TokenHelper {
     }
 
     // claims which converted as payload of JWT
-    @Getter
-    public static class PrivateClaims {
+        @Getter
+        public record PrivateClaims(String memberId, List<String> roleTypes) {
 
-        private final String memberId;
-        private final List<String> roleTypes;
-
-        public PrivateClaims(String memberId, List<String> roleTypes) {
-            this.memberId = memberId;
-            this.roleTypes = roleTypes;
-        }
     }
 
 }

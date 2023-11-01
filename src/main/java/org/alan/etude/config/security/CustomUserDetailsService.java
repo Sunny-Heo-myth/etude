@@ -27,8 +27,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     // payload to userDetail
     private CustomUserDetails convert(TokenHelper.PrivateClaims privateClaims) {
         return new CustomUserDetails(
-                privateClaims.getMemberId(),
-                privateClaims.getRoleTypes().stream()
+                privateClaims.memberId(),
+                privateClaims.roleTypes().stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toSet())
         );

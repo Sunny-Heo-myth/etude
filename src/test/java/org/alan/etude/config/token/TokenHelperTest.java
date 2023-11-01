@@ -33,8 +33,8 @@ public class TokenHelperTest {
         // then
         TokenHelper.PrivateClaims parsedPrivateClaims = tokenHelper.parse(token)
                 .orElseThrow(RuntimeException::new);
-        assertThat(parsedPrivateClaims.getMemberId()).isEqualTo(memberId);
-        assertThat(parsedPrivateClaims.getRoleTypes()).contains(roleTypes.get(0), roleTypes.get(1));
+        assertThat(parsedPrivateClaims.memberId()).isEqualTo(memberId);
+        assertThat(parsedPrivateClaims.roleTypes()).contains(roleTypes.get(0), roleTypes.get(1));
     }
 
 
